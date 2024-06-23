@@ -8,6 +8,7 @@ import '../../models/temple_lat_lng_model.dart';
 import '../../utility/utility.dart';
 
 part 'temple_lat_lng.freezed.dart';
+
 part 'temple_lat_lng.g.dart';
 
 @freezed
@@ -30,7 +31,7 @@ class TempleLatLng extends _$TempleLatLng {
   Future<void> getAllTempleLatLng() async {
     final client = ref.read(httpClientProvider);
 
-    await client.post(path: APIPath.getAllTemple).then((value) {
+    await client.post(path: APIPath.getTempleLatLng).then((value) {
       final list = <TempleLatLngModel>[];
       final map = <String, TempleLatLngModel>{};
 

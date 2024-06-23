@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/extensions/extensions.dart';
-import 'package:flutter_temple4/utility/utility.dart';
 
+import '../extensions/extensions.dart';
 import '../state/temple/temple.dart';
+import '../utility/utility.dart';
+import '_components/_temple_dialog.dart';
+import '_components/temple_detail_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -146,9 +149,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: ListTile(
             leading: SizedBox(
               width: 40,
-              child: FadeInImage.assetNetwork(
-                placeholder: 'assets/images/no_image.png',
-                image: element.thumbnail,
+              child: CachedNetworkImage(
+                imageUrl: element.thumbnail,
+                placeholder: (context, url) =>
+                    Image.asset('assets/images/no_image.png'),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
             title: DefaultTextStyle(
@@ -181,7 +186,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             trailing: Column(
               children: [
-                const Icon(Icons.ac_unit),
+                GestureDetector(
+                  onTap: () {
+                    TempleDialog(
+                      context: context,
+                      widget: TempleDetailAlert(
+                        date: element.date,
+                      ),
+                    );
+                  },
+                  child: const Icon(Icons.call_made),
+                ),
                 CircleAvatar(
                   radius: 15,
                   backgroundColor: utility.getLeadingBgColor(
