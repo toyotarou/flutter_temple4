@@ -34,8 +34,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   Widget build(BuildContext context) {
     makeTempleDataList();
 
-    print(templeDataList);
-
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
