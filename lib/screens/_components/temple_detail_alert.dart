@@ -58,18 +58,12 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (e.mark == 'end') ...[
-                            const Divider(color: Colors.white)
-                          ],
                           Text(e.name),
                           Text(e.address),
                           Text(e.latitude),
                           Text(e.longitude),
                           Text(e.mark),
                           const SizedBox(height: 30),
-                          if (e.mark == 'start') ...[
-                            const Divider(color: Colors.white)
-                          ],
                         ],
                       );
                     }).toList()),
@@ -103,12 +97,13 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
             address: templeLatLngMap[temple.temple]!.address,
             latitude: templeLatLngMap[temple.temple]!.lat,
             longitude: templeLatLngMap[temple.temple]!.lng,
-            mark: 'main',
+            mark: '01',
           ),
         );
       }
 
       if (temple.memo != '') {
+        var i = 2;
         temple.memo.split('、').forEach((element) {
           final latlng = templeLatLngMap[element];
 
@@ -119,10 +114,12 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                 address: latlng.address,
                 latitude: latlng.lat,
                 longitude: latlng.lng,
-                mark: 'sub',
+                mark: i.toString().padLeft(2, '0'),
               ),
             );
           }
+
+          i++;
         });
       }
 
@@ -153,7 +150,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
           address: stationMap[point]!.address,
           latitude: stationMap[point]!.lat,
           longitude: stationMap[point]!.lng,
-          mark: flag,
+          mark: (flag == 'start') ? 'S' : 'E',
         ),
       );
     } else {
@@ -165,7 +162,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
               address: '千葉県船橋市二子町492-25-101',
               latitude: '35.7102009',
               longitude: '139.9490672',
-              mark: flag,
+              mark: (flag == 'start') ? 'S' : 'E',
             ),
           );
 
@@ -176,7 +173,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
               address: '東京都杉並区善福寺4-22-11',
               latitude: '35.7185071',
               longitude: '139.5869534',
-              mark: flag,
+              mark: (flag == 'start') ? 'S' : 'E',
             ),
           );
       }
