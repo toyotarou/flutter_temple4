@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/screens/_components/temple_train_list_alert.dart';
 
 import '../extensions/extensions.dart';
 import '../state/temple/temple.dart';
@@ -68,16 +69,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           backgroundColor: Colors.black.withOpacity(0.7),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            // leading: Row(
-            //   children: [
-            //     IconButton(
-            //       onPressed: () {},
-            //       icon: const Icon(Icons.train),
-            //     ),
-            //   ],
-            // ),
-            //
-
+            leading: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    TempleDialog(
+                      context: context,
+                      widget: const TempleTrainListAlert(),
+                    );
+                  },
+                  icon: const Icon(Icons.train),
+                ),
+              ],
+            ),
             actions: [
               SizedBox(
                 width: 240,
