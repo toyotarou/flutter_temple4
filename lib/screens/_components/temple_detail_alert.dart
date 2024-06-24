@@ -37,6 +37,9 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
 
   Utility utility = Utility();
 
+  String start = '';
+  String end = '';
+
   ///
   @override
   void initState() {
@@ -50,11 +53,18 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   ///
   @override
   Widget build(BuildContext context) {
+    final templeMap =
+        ref.watch(templeProvider.select((value) => value.templeMap));
+
+    final temple = templeMap[widget.date.yyyymmdd];
+
     makeTempleDataList();
 
     makeBounds();
 
     makeMarker();
+
+    makeStartEnd();
 
     return Stack(
       children: [
@@ -97,19 +107,55 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                 ],
               )
             : Container(),
-        IconButton(
-          onPressed: () {
-            TempleDialog(
-              context: context,
-              widget: TempleCourseDisplayAlert(data: templeDataList),
-              paddingLeft: context.screenSize.width * 0.3,
-              clearBarrierColor: true,
-            );
-          },
-          icon: const Icon(
-            Icons.info_outline,
-            size: 40,
-            color: Colors.redAccent,
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  TempleDialog(
+                    context: context,
+                    widget: TempleCourseDisplayAlert(data: templeDataList),
+                    paddingLeft: context.screenSize.width * 0.3,
+                    clearBarrierColor: true,
+                  );
+                },
+                icon: const Icon(
+                  Icons.info_outline,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
+              (temple == null)
+                  ? Container()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(widget.date.yyyymmdd),
+                        Text(temple.temple),
+                        const SizedBox(height: 10),
+                        Text(start),
+                        Text(end),
+                        const SizedBox(height: 10),
+                        if (temple.memo != '') ...[
+                          Flexible(
+                            child: SizedBox(
+                              width: context.screenSize.width * 0.6,
+                              child: Text(temple.memo),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+            ],
           ),
         ),
       ],
@@ -298,6 +344,25 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
         ),
       );
     }
+  }
+
+  void makeStartEnd() {
+    if (templeDataList.isNotEmpty) {
+      final sWhere = templeDataList
+          .where((element) => element.mark == 'S' || element.mark == 'S/E');
+      if (sWhere.isNotEmpty) {
+        start = sWhere.first.name;
+      }
+
+      final eWhere = templeDataList
+          .where((element) => element.mark == 'E' || element.mark == 'S/E');
+
+      if (eWhere.isNotEmpty) {
+        end = eWhere.first.name;
+      }
+    }
+
+    setState(() {});
   }
 }
 

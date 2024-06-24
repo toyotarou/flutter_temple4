@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../extensions/extensions.dart';
@@ -53,7 +51,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       makeYearList();
     }
 
-    var templeState = ref.watch(templeProvider);
+    final templeState = ref.watch(templeProvider);
 
     return DefaultTabController(
       length: yearList.length,
@@ -186,7 +184,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget displayTempleList() {
     final list = <Widget>[];
 
-    var templeState = ref.watch(templeProvider);
+    final templeState = ref.watch(templeProvider);
 
     var year = 0;
     var i = 0;

@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_temple4/extensions/extensions.dart';
 
+import '../../extensions/extensions.dart';
 import '../function.dart';
 import 'temple_detail_alert.dart';
 
