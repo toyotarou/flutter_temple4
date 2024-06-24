@@ -11,6 +11,9 @@ import '../../state/station/station.dart';
 import '../../state/temple/temple.dart';
 import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../../utility/utility.dart';
+import '../function.dart';
+import '_temple_dialog.dart';
+import 'temple_course_display_alert.dart';
 
 class TempleDetailAlert extends ConsumerStatefulWidget {
   const TempleDetailAlert({super.key, required this.date});
@@ -31,8 +34,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   List<Marker> markerList = [];
 
   List<Polyline> polylineList = [];
-
-//  MapboxpolylinePoints mapboxpolylinePoints = MapboxpolylinePoints();
 
   Utility utility = Utility();
 
@@ -96,6 +97,21 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                 ],
               )
             : Container(),
+        IconButton(
+          onPressed: () {
+            TempleDialog(
+              context: context,
+              widget: TempleCourseDisplayAlert(data: templeDataList),
+              paddingLeft: context.screenSize.width * 0.3,
+              clearBarrierColor: true,
+            );
+          },
+          icon: const Icon(
+            Icons.info_outline,
+            size: 40,
+            color: Colors.redAccent,
+          ),
+        ),
       ],
     );
   }
@@ -179,7 +195,9 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
               ? (temple.startPoint == temple.endPoint)
                   ? 'S/E'
                   : 'E'
-              : 'S',
+              : (temple.startPoint == temple.endPoint)
+                  ? 'S/E'
+                  : 'S',
         ),
       );
     } else {
@@ -195,7 +213,9 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                   ? (temple.startPoint == temple.endPoint)
                       ? 'S/E'
                       : 'E'
-                  : 'S',
+                  : (temple.startPoint == temple.endPoint)
+                      ? 'S/E'
+                      : 'S',
             ),
           );
 
@@ -210,7 +230,9 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                   ? (temple.startPoint == temple.endPoint)
                       ? 'S/E'
                       : 'E'
-                  : 'S',
+                  : (temple.startPoint == temple.endPoint)
+                      ? 'S/E'
+                      : 'S',
             ),
           );
       }
@@ -264,27 +286,17 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
             return CircleAvatar(
               backgroundColor:
                   getCircleAvatarBgColor(element: templeDataList[i]),
-              child: Text(templeDataList[i].mark,
-              style: const TextStyle(color: Colors.white),
+              child: Text(
+                templeDataList[i].mark,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             );
           },
         ),
       );
-    }
-  }
-
-  ///
-  Color? getCircleAvatarBgColor({required TempleData element}) {
-    switch (element.mark) {
-      case 'S':
-      case 'E':
-      case 'S/E':
-        return Colors.green[900];
-      case '01':
-        return Colors.redAccent;
-      default:
-        return Colors.orangeAccent;
     }
   }
 }

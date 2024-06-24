@@ -16,6 +16,10 @@ class TempleState with _$TempleState {
   const factory TempleState({
     @Default([]) List<TempleModel> templeList,
     @Default({}) Map<String, TempleModel> templeMap,
+
+    ///
+    @Default('') String searchWord,
+    @Default(false) bool doSearch,
   }) = _TempleState;
 }
 
@@ -47,12 +51,16 @@ class Temple extends _$Temple {
       }
 
       state = state.copyWith(templeList: list, templeMap: map);
+    }).catchError((error, _) {
+      utility.showError('予期せぬエラーが発生しました');
     });
-
-
-    //
-    // .catchError((error, _) {
-    //   utility.showError('予期せぬエラーが発生しました');
-    // });
   }
+
+  ///
+  Future<void> doSearch({required String searchWord}) async =>
+      state = state.copyWith(searchWord: searchWord, doSearch: true);
+
+  ///
+  Future<void> clearSearch() async =>
+      state = state.copyWith(searchWord: '', doSearch: false);
 }

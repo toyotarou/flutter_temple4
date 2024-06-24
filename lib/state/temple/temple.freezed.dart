@@ -19,6 +19,10 @@ mixin _$TempleState {
   List<TempleModel> get templeList => throw _privateConstructorUsedError;
   Map<String, TempleModel> get templeMap => throw _privateConstructorUsedError;
 
+  ///
+  String get searchWord => throw _privateConstructorUsedError;
+  bool get doSearch => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $TempleStateCopyWith<TempleState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -30,7 +34,11 @@ abstract class $TempleStateCopyWith<$Res> {
           TempleState value, $Res Function(TempleState) then) =
       _$TempleStateCopyWithImpl<$Res, TempleState>;
   @useResult
-  $Res call({List<TempleModel> templeList, Map<String, TempleModel> templeMap});
+  $Res call(
+      {List<TempleModel> templeList,
+      Map<String, TempleModel> templeMap,
+      String searchWord,
+      bool doSearch});
 }
 
 /// @nodoc
@@ -48,6 +56,8 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
   $Res call({
     Object? templeList = null,
     Object? templeMap = null,
+    Object? searchWord = null,
+    Object? doSearch = null,
   }) {
     return _then(_value.copyWith(
       templeList: null == templeList
@@ -58,6 +68,14 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
           ? _value.templeMap
           : templeMap // ignore: cast_nullable_to_non_nullable
               as Map<String, TempleModel>,
+      searchWord: null == searchWord
+          ? _value.searchWord
+          : searchWord // ignore: cast_nullable_to_non_nullable
+              as String,
+      doSearch: null == doSearch
+          ? _value.doSearch
+          : doSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -70,7 +88,11 @@ abstract class _$$TempleStateImplCopyWith<$Res>
       __$$TempleStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<TempleModel> templeList, Map<String, TempleModel> templeMap});
+  $Res call(
+      {List<TempleModel> templeList,
+      Map<String, TempleModel> templeMap,
+      String searchWord,
+      bool doSearch});
 }
 
 /// @nodoc
@@ -86,6 +108,8 @@ class __$$TempleStateImplCopyWithImpl<$Res>
   $Res call({
     Object? templeList = null,
     Object? templeMap = null,
+    Object? searchWord = null,
+    Object? doSearch = null,
   }) {
     return _then(_$TempleStateImpl(
       templeList: null == templeList
@@ -96,6 +120,14 @@ class __$$TempleStateImplCopyWithImpl<$Res>
           ? _value._templeMap
           : templeMap // ignore: cast_nullable_to_non_nullable
               as Map<String, TempleModel>,
+      searchWord: null == searchWord
+          ? _value.searchWord
+          : searchWord // ignore: cast_nullable_to_non_nullable
+              as String,
+      doSearch: null == doSearch
+          ? _value.doSearch
+          : doSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -105,7 +137,9 @@ class __$$TempleStateImplCopyWithImpl<$Res>
 class _$TempleStateImpl implements _TempleState {
   const _$TempleStateImpl(
       {final List<TempleModel> templeList = const [],
-      final Map<String, TempleModel> templeMap = const {}})
+      final Map<String, TempleModel> templeMap = const {},
+      this.searchWord = '',
+      this.doSearch = false})
       : _templeList = templeList,
         _templeMap = templeMap;
 
@@ -127,9 +161,17 @@ class _$TempleStateImpl implements _TempleState {
     return EqualUnmodifiableMapView(_templeMap);
   }
 
+  ///
+  @override
+  @JsonKey()
+  final String searchWord;
+  @override
+  @JsonKey()
+  final bool doSearch;
+
   @override
   String toString() {
-    return 'TempleState(templeList: $templeList, templeMap: $templeMap)';
+    return 'TempleState(templeList: $templeList, templeMap: $templeMap, searchWord: $searchWord, doSearch: $doSearch)';
   }
 
   @override
@@ -140,14 +182,20 @@ class _$TempleStateImpl implements _TempleState {
             const DeepCollectionEquality()
                 .equals(other._templeList, _templeList) &&
             const DeepCollectionEquality()
-                .equals(other._templeMap, _templeMap));
+                .equals(other._templeMap, _templeMap) &&
+            (identical(other.searchWord, searchWord) ||
+                other.searchWord == searchWord) &&
+            (identical(other.doSearch, doSearch) ||
+                other.doSearch == doSearch));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_templeList),
-      const DeepCollectionEquality().hash(_templeMap));
+      const DeepCollectionEquality().hash(_templeMap),
+      searchWord,
+      doSearch);
 
   @JsonKey(ignore: true)
   @override
@@ -159,12 +207,20 @@ class _$TempleStateImpl implements _TempleState {
 abstract class _TempleState implements TempleState {
   const factory _TempleState(
       {final List<TempleModel> templeList,
-      final Map<String, TempleModel> templeMap}) = _$TempleStateImpl;
+      final Map<String, TempleModel> templeMap,
+      final String searchWord,
+      final bool doSearch}) = _$TempleStateImpl;
 
   @override
   List<TempleModel> get templeList;
   @override
   Map<String, TempleModel> get templeMap;
+  @override
+
+  ///
+  String get searchWord;
+  @override
+  bool get doSearch;
   @override
   @JsonKey(ignore: true)
   _$$TempleStateImplCopyWith<_$TempleStateImpl> get copyWith =>
