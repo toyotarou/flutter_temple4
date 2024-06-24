@@ -1,11 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/temple_model.dart';
 import '../../state/station/station.dart';
 import '../../state/temple/temple.dart';
 import '../../state/temple_lat_lng/temple_lat_lng.dart';
+import '../../utility/utility.dart';
 
 class TempleDetailAlert extends ConsumerStatefulWidget {
   const TempleDetailAlert({super.key, required this.date});
@@ -18,6 +23,18 @@ class TempleDetailAlert extends ConsumerStatefulWidget {
 
 class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   List<TempleData> templeDataList = [];
+
+  Map<String, double> boundsLatLngMap = {};
+
+  double boundsInner = 0;
+
+  List<Marker> markerList = [];
+
+  List<Polyline> polylineList = [];
+
+//  MapboxpolylinePoints mapboxpolylinePoints = MapboxpolylinePoints();
+
+  Utility utility = Utility();
 
   ///
   @override
@@ -34,42 +51,40 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   Widget build(BuildContext context) {
     makeTempleDataList();
 
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Container(width: context.screenSize.width),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: templeDataList.map((e) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(e.name),
-                          Text(e.address),
-                          Text(e.latitude),
-                          Text(e.longitude),
-                          Text(e.mark),
-                          const SizedBox(height: 30),
-                        ],
-                      );
-                    }).toList()),
-              ),
-            ),
-          ],
-        ),
-      ),
+    makeBounds();
+
+    return Stack(
+      children: [
+        (boundsLatLngMap.isNotEmpty)
+            ? FlutterMap(
+                options: MapOptions(
+                  bounds: LatLngBounds(
+                    LatLng(
+                      boundsLatLngMap['minLat']! - boundsInner,
+                      boundsLatLngMap['minLng']! - boundsInner,
+                    ),
+                    LatLng(
+                      boundsLatLngMap['maxLat']! + boundsInner,
+                      boundsLatLngMap['maxLng']! + boundsInner,
+                    ),
+                  ),
+                  // onMapReady: makePolyline,
+                  //
+                  //
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  ),
+                  // PolylineLayer(polylines: polylineList),
+                  // MarkerLayer(markers: markerList),
+                  //
+                  //
+                ],
+              )
+            : Container(),
+      ],
     );
   }
 
@@ -128,7 +143,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   ///
   Future<void> getStartEndPointInfo(
       {required TempleModel temple, required String flag}) async {
-    var stationMap =
+    final stationMap =
         ref.watch(stationProvider.select((value) => value.stationMap));
 
     var point = '';
@@ -177,15 +192,39 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
       }
     }
   }
+
+  ///
+  void makeBounds() {
+    final latList = <double>[];
+    final lngList = <double>[];
+
+    templeDataList.forEach((element) {
+      latList.add(element.latitude.toDouble());
+      lngList.add(element.longitude.toDouble());
+    });
+
+    if (latList.isNotEmpty && lngList.isNotEmpty) {
+      final minLat = latList.reduce(min);
+      final maxLat = latList.reduce(max);
+      final minLng = lngList.reduce(min);
+      final maxLng = lngList.reduce(max);
+
+      final latDiff = maxLat - minLat;
+      final lngDiff = maxLng - minLng;
+      final small = (latDiff < lngDiff) ? latDiff : lngDiff;
+      boundsInner = small;
+
+      boundsLatLngMap = {
+        'minLat': minLat,
+        'maxLat': maxLat,
+        'minLng': minLng,
+        'maxLng': maxLng,
+      };
+    }
+  }
 }
 
 class TempleData {
-  String name;
-  String address;
-  String latitude;
-  String longitude;
-  String mark;
-
   TempleData({
     required this.name,
     required this.address,
@@ -193,4 +232,10 @@ class TempleData {
     required this.longitude,
     required this.mark,
   });
+
+  String name;
+  String address;
+  String latitude;
+  String longitude;
+  String mark;
 }

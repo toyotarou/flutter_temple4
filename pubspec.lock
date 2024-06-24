@@ -265,14 +265,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.3"
-  dart_earcut:
-    dependency: transitive
-    description:
-      name: dart_earcut
-      sha256: "41b493147e30a051efb2da1e3acb7f38fe0db60afba24ac1ea5684cee272721e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   dart_style:
     dependency: transitive
     description:
@@ -322,10 +314,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_cache_manager
-      sha256: "395d6b7831f21f3b989ebedbb785545932adb9afe2622c1ffacf7f4b53a7e544"
+      sha256: "8207f27539deb83732fdda03e259349046a39a4c767269285f449ade355d54ba"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.2"
+    version: "3.3.1"
   flutter_hooks:
     dependency: transitive
     description:
@@ -354,10 +346,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_map
-      sha256: cc102fe5eeab1a740c321e1982706061e46259cd75115b3b3779195f21d57cc3
+      sha256: "59dfd14267b691bea55760786b47d3172d47cdcc0d79ff930746a5ad123491b8"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.1"
+    version: "3.1.0"
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -370,10 +362,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_polyline_points
-      sha256: "0e07862139cb65a88789cd6efbe284c0b6f1fcb5ed5ec87781759c48190d84b9"
+      sha256: "02699e69142f51a248d784b6e3eec524194467fca5f7c4da19699ce2368b6980"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "1.0.0"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -460,10 +452,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: "761a297c042deedc1ffbb156d6e2af13886bb305c2a343a4d972504cd67dd938"
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "0.13.6"
   http_multi_server:
     dependency: transitive
     description:
@@ -532,10 +524,10 @@ packages:
     dependency: transitive
     description:
       name: latlong2
-      sha256: "98227922caf49e6056f91b6c56945ea1c7b166f28ffcd5fb8e72fc0b453cc8fe"
+      sha256: "08ef7282ba9f76e8495e49e2dc4d653015ac929dce5f92b375a415d30b407ea0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.1"
+    version: "0.8.2"
   leak_tracker:
     dependency: transitive
     description:
@@ -576,14 +568,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  logger:
-    dependency: transitive
-    description:
-      name: logger
-      sha256: af05cc8714f356fd1f3888fb6741cbe9fbe25cdb6eedbab80e1a6db21047d4a4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.0"
   logging:
     dependency: transitive
     description:
@@ -744,6 +728,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  positioned_tap_detector_2:
+    dependency: transitive
+    description:
+      name: positioned_tap_detector_2
+      sha256: "52e06863ad3e1f82b058fd05054fc8c9caeeb3b47d5cea7a24bd9320746059c1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   proj4dart:
     dependency: transitive
     description:
@@ -957,6 +949,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:
