@@ -68,14 +68,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           backgroundColor: Colors.black.withOpacity(0.7),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            leading: Row(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.train),
-                ),
-              ],
-            ),
+            // leading: Row(
+            //   children: [
+            //     IconButton(
+            //       onPressed: () {},
+            //       icon: const Icon(Icons.train),
+            //     ),
+            //   ],
+            // ),
+            //
+
             actions: [
               SizedBox(
                 width: 240,

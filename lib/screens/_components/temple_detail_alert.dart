@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +15,7 @@ import '../../utility/utility.dart';
 import '../function.dart';
 import '_temple_dialog.dart';
 import 'temple_course_display_alert.dart';
+import 'temple_photo_gallery_alert.dart';
 
 class TempleDetailAlert extends ConsumerStatefulWidget {
   const TempleDetailAlert({super.key, required this.date});
@@ -53,11 +55,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   ///
   @override
   Widget build(BuildContext context) {
-    final templeMap =
-        ref.watch(templeProvider.select((value) => value.templeMap));
-
-    final temple = templeMap[widget.date.yyyymmdd];
-
     makeTempleDataList();
 
     makeBounds();
@@ -107,58 +104,116 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                 ],
               )
             : Container(),
-        Container(
-          width: double.infinity,
-          margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.6),
-            borderRadius: BorderRadius.circular(10),
+        displayInfoPlate(),
+      ],
+    );
+  }
+
+  ///
+  Widget displayInfoPlate() {
+    final templeMap =
+        ref.watch(templeProvider.select((value) => value.templeMap));
+
+    final temple = templeMap[widget.date.yyyymmdd];
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconButton(
+            onPressed: () {
+              TempleDialog(
+                context: context,
+                widget: TempleCourseDisplayAlert(data: templeDataList),
+                paddingLeft: context.screenSize.width * 0.3,
+                clearBarrierColor: true,
+              );
+            },
+            icon: const Icon(
+              Icons.info_outline,
+              size: 30,
+              color: Colors.white,
+            ),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                onPressed: () {
-                  TempleDialog(
-                    context: context,
-                    widget: TempleCourseDisplayAlert(data: templeDataList),
-                    paddingLeft: context.screenSize.width * 0.3,
-                    clearBarrierColor: true,
-                  );
-                },
-                icon: const Icon(
-                  Icons.info_outline,
-                  size: 30,
-                  color: Colors.white,
+          (temple == null)
+              ? Container()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(widget.date.yyyymmdd),
+                    Text(temple.temple),
+                    const SizedBox(height: 10),
+                    Text(start),
+                    Text(end),
+                    if (temple.memo != '') ...[
+                      const SizedBox(height: 10),
+                      Flexible(
+                        child: SizedBox(
+                          width: context.screenSize.width * 0.6,
+                          child: Text(temple.memo),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    displayThumbNailPhoto(),
+                  ],
+                ),
+        ],
+      ),
+    );
+  }
+
+  ///
+  Widget displayThumbNailPhoto() {
+    final templeMap =
+        ref.watch(templeProvider.select((value) => value.templeMap));
+
+    final temple = templeMap[widget.date.yyyymmdd];
+
+    final list = <Widget>[];
+
+    if (temple != null) {
+      if (temple.photo.isNotEmpty) {
+        for (var i = 0; i < temple.photo.length; i++) {
+          list.add(
+            GestureDetector(
+              onTap: () {
+                TempleDialog(
+                  context: context,
+                  widget: TemplePhotoGalleryAlert(
+                    photoList: temple.photo,
+                    number: i,
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                width: 50,
+                child: CachedNetworkImage(
+                  imageUrl: temple.photo[i],
+                  placeholder: (context, url) =>
+                      Image.asset('assets/images/no_image.png'),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
-              (temple == null)
-                  ? Container()
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(widget.date.yyyymmdd),
-                        Text(temple.temple),
-                        const SizedBox(height: 10),
-                        Text(start),
-                        Text(end),
-                        const SizedBox(height: 10),
-                        if (temple.memo != '') ...[
-                          Flexible(
-                            child: SizedBox(
-                              width: context.screenSize.width * 0.6,
-                              child: Text(temple.memo),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-            ],
-          ),
-        ),
-      ],
+            ),
+          );
+        }
+      }
+    }
+
+    return SizedBox(
+      width: context.screenSize.width * 0.6,
+      child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal, child: Row(children: list)),
     );
   }
 
