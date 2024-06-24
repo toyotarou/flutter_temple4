@@ -53,6 +53,8 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
 
     makeBounds();
 
+    makeMarker();
+
     return Stack(
       children: [
         (boundsLatLngMap.isNotEmpty)
@@ -68,19 +70,29 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                       boundsLatLngMap['maxLng']! + boundsInner,
                     ),
                   ),
-                  // onMapReady: makePolyline,
-                  //
-                  //
+                  // minZoom: 8,
+                  // maxZoom: 12,
                 ),
                 children: [
                   TileLayer(
                     urlTemplate:
                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   ),
-                  // PolylineLayer(polylines: polylineList),
-                  // MarkerLayer(markers: markerList),
-                  //
-                  //
+                  PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: templeDataList.map((e) {
+                          return LatLng(
+                            e.latitude.toDouble(),
+                            e.longitude.toDouble(),
+                          );
+                        }).toList(),
+                        color: Colors.redAccent,
+                        strokeWidth: 5,
+                      ),
+                    ],
+                  ),
+                  MarkerLayer(markers: markerList),
                 ],
               )
             : Container(),
@@ -163,7 +175,11 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
           address: stationMap[point]!.address,
           latitude: stationMap[point]!.lat,
           longitude: stationMap[point]!.lng,
-          mark: (flag == 'start') ? 'S' : 'E',
+          mark: (flag == 'end')
+              ? (temple.startPoint == temple.endPoint)
+                  ? 'S/E'
+                  : 'E'
+              : 'S',
         ),
       );
     } else {
@@ -175,7 +191,11 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
               address: '千葉県船橋市二子町492-25-101',
               latitude: '35.7102009',
               longitude: '139.9490672',
-              mark: (flag == 'start') ? 'S' : 'E',
+              mark: (flag == 'end')
+                  ? (temple.startPoint == temple.endPoint)
+                      ? 'S/E'
+                      : 'E'
+                  : 'S',
             ),
           );
 
@@ -186,7 +206,11 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
               address: '東京都杉並区善福寺4-22-11',
               latitude: '35.7185071',
               longitude: '139.5869534',
-              mark: (flag == 'start') ? 'S' : 'E',
+              mark: (flag == 'end')
+                  ? (temple.startPoint == temple.endPoint)
+                      ? 'S/E'
+                      : 'E'
+                  : 'S',
             ),
           );
       }
@@ -220,6 +244,47 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
         'minLng': minLng,
         'maxLng': maxLng,
       };
+    }
+
+    setState(() {});
+  }
+
+  ///
+  void makeMarker() {
+    markerList = [];
+
+    for (var i = 0; i < templeDataList.length; i++) {
+      markerList.add(
+        Marker(
+          point: LatLng(
+            templeDataList[i].latitude.toDouble(),
+            templeDataList[i].longitude.toDouble(),
+          ),
+          builder: (context) {
+            return CircleAvatar(
+              backgroundColor:
+                  getCircleAvatarBgColor(element: templeDataList[i]),
+              child: Text(templeDataList[i].mark,
+              style: const TextStyle(color: Colors.white),
+              ),
+            );
+          },
+        ),
+      );
+    }
+  }
+
+  ///
+  Color? getCircleAvatarBgColor({required TempleData element}) {
+    switch (element.mark) {
+      case 'S':
+      case 'E':
+      case 'S/E':
+        return Colors.green[900];
+      case '01':
+        return Colors.redAccent;
+      default:
+        return Colors.orangeAccent;
     }
   }
 }
