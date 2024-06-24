@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/screens/_components/_temple_dialog.dart';
+import 'package:flutter_temple4/screens/_components/temple_not_reach_station_list_alert.dart';
 
 import '../../extensions/extensions.dart';
 import '../../state/temple_list/temple_list.dart';
 import '../../state/tokyo_train/tokyo_train.dart';
 
-class TempleTrainListAlert extends ConsumerStatefulWidget {
-  const TempleTrainListAlert({super.key});
+class TempleTrainStationListAlert extends ConsumerStatefulWidget {
+  const TempleTrainStationListAlert({super.key});
 
   @override
-  ConsumerState<TempleTrainListAlert> createState() =>
+  ConsumerState<TempleTrainStationListAlert> createState() =>
       _TempleTrainListAlertState();
 }
 
-class _TempleTrainListAlertState extends ConsumerState<TempleTrainListAlert> {
+class _TempleTrainListAlertState
+    extends ConsumerState<TempleTrainStationListAlert> {
+  ///
   @override
   void initState() {
     super.initState();
@@ -48,7 +52,35 @@ class _TempleTrainListAlertState extends ConsumerState<TempleTrainListAlert> {
           children: [
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
-            _displayStationTempleCount(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _displayStationTempleCount(),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        TempleDialog(
+                          context: context,
+                          widget: const TempleNotReachStationListAlert(),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.train,
+                        color: Colors.white.withOpacity(0.4),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: (searchStationId == '') ? null : () {},
+                      icon: Icon(
+                        Icons.map,
+                        color: Colors.white.withOpacity(0.4),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
