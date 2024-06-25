@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../extensions/extensions.dart';
 import '../function.dart';
-import 'temple_detail_alert.dart';
+import 'temple_detail_map_alert.dart';
 
 class TempleCourseDisplayAlert extends StatefulWidget {
   const TempleCourseDisplayAlert({super.key, required this.data});

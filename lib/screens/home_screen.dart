@@ -7,7 +7,7 @@ import '../extensions/extensions.dart';
 import '../state/temple/temple.dart';
 import '../utility/utility.dart';
 import '_components/_temple_dialog.dart';
-import '_components/temple_detail_alert.dart';
+import '_components/temple_detail_map_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -277,7 +277,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     onTap: () {
                       TempleDialog(
                         context: context,
-                        widget: TempleDetailAlert(
+                        widget: TempleDetailMapAlert(
                           date: element.date,
                         ),
                       );

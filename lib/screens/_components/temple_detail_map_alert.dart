@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -17,16 +15,17 @@ import '_temple_dialog.dart';
 import 'temple_course_display_alert.dart';
 import 'temple_photo_gallery_alert.dart';
 
-class TempleDetailAlert extends ConsumerStatefulWidget {
-  const TempleDetailAlert({super.key, required this.date});
+class TempleDetailMapAlert extends ConsumerStatefulWidget {
+  const TempleDetailMapAlert({super.key, required this.date});
 
   final DateTime date;
 
   @override
-  ConsumerState<TempleDetailAlert> createState() => _TempleDetailDialogState();
+  ConsumerState<TempleDetailMapAlert> createState() =>
+      _TempleDetailDialogState();
 }
 
-class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
+class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
   List<TempleData> templeDataList = [];
 
   Map<String, double> boundsLatLngMap = {};
@@ -57,7 +56,12 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
   Widget build(BuildContext context) {
     makeTempleDataList();
 
-    makeBounds();
+    final boundsData = makeBounds(data: templeDataList);
+
+    if (boundsData.isNotEmpty) {
+      boundsLatLngMap = boundsData['boundsLatLngMap'];
+      boundsInner = boundsData['boundsInner'];
+    }
 
     makeMarker();
 
@@ -240,6 +244,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
             latitude: templeLatLngMap[temple.temple]!.lat,
             longitude: templeLatLngMap[temple.temple]!.lng,
             mark: '01',
+            cnt: 0,
           ),
         );
       }
@@ -257,6 +262,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                 latitude: latlng.lat,
                 longitude: latlng.lng,
                 mark: i.toString().padLeft(2, '0'),
+                cnt: 0,
               ),
             );
           }
@@ -299,6 +305,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
               : (temple.startPoint == temple.endPoint)
                   ? 'S/E'
                   : 'S',
+          cnt: 0,
         ),
       );
     } else {
@@ -317,6 +324,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                   : (temple.startPoint == temple.endPoint)
                       ? 'S/E'
                       : 'S',
+              cnt: 0,
             ),
           );
 
@@ -334,42 +342,11 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailAlert> {
                   : (temple.startPoint == temple.endPoint)
                       ? 'S/E'
                       : 'S',
+              cnt: 0,
             ),
           );
       }
     }
-  }
-
-  ///
-  void makeBounds() {
-    final latList = <double>[];
-    final lngList = <double>[];
-
-    templeDataList.forEach((element) {
-      latList.add(element.latitude.toDouble());
-      lngList.add(element.longitude.toDouble());
-    });
-
-    if (latList.isNotEmpty && lngList.isNotEmpty) {
-      final minLat = latList.reduce(min);
-      final maxLat = latList.reduce(max);
-      final minLng = lngList.reduce(min);
-      final maxLng = lngList.reduce(max);
-
-      final latDiff = maxLat - minLat;
-      final lngDiff = maxLng - minLng;
-      final small = (latDiff < lngDiff) ? latDiff : lngDiff;
-      boundsInner = small;
-
-      boundsLatLngMap = {
-        'minLat': minLat,
-        'maxLat': maxLat,
-        'minLng': minLng,
-        'maxLng': maxLng,
-      };
-    }
-
-    setState(() {});
   }
 
   ///
@@ -428,6 +405,7 @@ class TempleData {
     required this.latitude,
     required this.longitude,
     required this.mark,
+    required this.cnt,
   });
 
   String name;
@@ -435,4 +413,5 @@ class TempleData {
   String latitude;
   String longitude;
   String mark;
+  int cnt;
 }

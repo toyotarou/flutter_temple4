@@ -1,3 +1,4 @@
+import 'package:flutter_temple4/models/tokyo_station_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,6 +18,7 @@ class TokyoTrainState with _$TokyoTrainState {
     @Default([]) List<TokyoTrainModel> tokyoTrainList,
     @Default({}) Map<String, TokyoTrainModel> tokyoTrainMap,
     @Default({}) Map<String, TokyoTrainModel> tokyoTrainIdMap,
+    @Default({}) Map<String, TokyoStationModel> tokyoStationMap,
   }) = _TokyoTrainState;
 }
 
@@ -36,6 +38,7 @@ class TokyoTrain extends _$TokyoTrain {
       final list = <TokyoTrainModel>[];
       final map = <String, TokyoTrainModel>{};
       final idMap = <String, TokyoTrainModel>{};
+      final stationMap = <String, TokyoStationModel>{};
 
       // ignore: avoid_dynamic_calls
       for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
@@ -48,9 +51,17 @@ class TokyoTrain extends _$TokyoTrain {
         map[val.trainName] = val;
 
         idMap[val.trainNumber.toString()] = val;
+
+        val.station.forEach((element) {
+          stationMap[element.id] = element;
+        });
       }
 
-      state = state.copyWith(tokyoTrainList: list, tokyoTrainMap: map);
+      state = state.copyWith(
+        tokyoTrainList: list,
+        tokyoTrainMap: map,
+        tokyoStationMap: stationMap,
+      );
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

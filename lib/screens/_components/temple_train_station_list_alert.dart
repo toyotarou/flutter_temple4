@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/screens/_components/_temple_dialog.dart';
-import 'package:flutter_temple4/screens/_components/temple_not_reach_station_list_alert.dart';
 
 import '../../extensions/extensions.dart';
+import '../../state/lat_lng_temple/lat_lng_temple.dart';
 import '../../state/temple_list/temple_list.dart';
 import '../../state/tokyo_train/tokyo_train.dart';
+import '_temple_dialog.dart';
+import 'lat_lng_temple_display_alert.dart';
+import 'temple_not_reach_station_list_alert.dart';
 
 class TempleTrainStationListAlert extends ConsumerStatefulWidget {
   const TempleTrainStationListAlert({super.key});
@@ -32,11 +34,13 @@ class _TempleTrainListAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    final tokyoTrainList =
-        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
+    final tokyoTrainState = ref.watch(tokyoTrainProvider);
 
     final searchStationId =
         ref.watch(templeListProvider.select((value) => value.searchStationId));
+
+    final latLngTempleList = ref
+        .watch(latLngTempleProvider.select((value) => value.latLngTempleList));
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -52,31 +56,69 @@ class _TempleTrainListAlertState
           children: [
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
-                _displayStationTempleCount(),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        TempleDialog(
-                          context: context,
-                          widget: const TempleNotReachStationListAlert(),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.train,
-                        color: Colors.white.withOpacity(0.4),
-                      ),
+                    _displayStationTempleCount(),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            TempleDialog(
+                              context: context,
+                              widget: const TempleNotReachStationListAlert(),
+                              paddingLeft: context.screenSize.width * 0.2,
+                            );
+                          },
+                          icon: Icon(
+                            Icons.train,
+                            color: Colors.white.withOpacity(0.4),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: (searchStationId == '')
+                              ? null
+                              : () {
+                                  if (latLngTempleList.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text('no hit')));
+                                    return;
+                                  }
+
+                                  TempleDialog(
+                                    context: context,
+                                    widget: LatLngTempleDisplayAlert(
+                                      templeList: latLngTempleList,
+                                      station: tokyoTrainState
+                                          .tokyoStationMap[searchStationId],
+                                    ),
+                                  );
+                                },
+                          icon: Icon(
+                            Icons.map,
+                            color: (searchStationId != '' &&
+                                    latLngTempleList.isNotEmpty)
+                                ? Colors.yellowAccent.withOpacity(0.4)
+                                : Colors.white.withOpacity(0.4),
+                          ),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: (searchStationId == '') ? null : () {},
-                      icon: Icon(
-                        Icons.map,
-                        color: Colors.white.withOpacity(0.4),
-                      ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      (tokyoTrainState.tokyoStationMap[searchStationId] != null)
+                          ? tokyoTrainState
+                              .tokyoStationMap[searchStationId]!.stationName
+                          : '-----',
                     ),
+                    Text(latLngTempleList.length.toString()),
                   ],
                 ),
               ],
@@ -86,7 +128,7 @@ class _TempleTrainListAlertState
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: tokyoTrainList.map((e) {
+                  children: tokyoTrainState.tokyoTrainList.map((e) {
                     return ExpansionTile(
                       title: Text(e.trainName),
                       children: e.station.map((e2) {
@@ -111,6 +153,13 @@ class _TempleTrainListAlertState
                                 Text(e2.stationName),
                                 GestureDetector(
                                   onTap: () {
+                                    ref
+                                        .read(latLngTempleProvider.notifier)
+                                        .getLatLngTemple(param: {
+                                      'latitude': e2.lat,
+                                      'longitude': e2.lng,
+                                    });
+
                                     ref
                                         .read(templeListProvider.notifier)
                                         .setSearchStationId(id: e2.id);
