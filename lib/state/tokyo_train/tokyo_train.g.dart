@@ -6,7 +6,7 @@ part of 'tokyo_train.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$tokyoTrainHash() => r'0da6bc4316b1bb9d6fdb1a7899f9613c6f82d933';
+String _$tokyoTrainHash() => r'370531e05211203be5c0ab1a0d18327b2707c979';
 
 /// See also [TokyoTrain].
 @ProviderFor(TokyoTrain)

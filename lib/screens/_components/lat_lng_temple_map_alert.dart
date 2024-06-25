@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/screens/_components/lat_lng_temple_list_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -11,6 +9,7 @@ import '../../models/lat_lng_temple_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../function.dart';
 import '_temple_dialog.dart';
+import 'lat_lng_temple_list_alert.dart';
 import 'temple_detail_map_alert.dart';
 import 'temple_info_display_alert.dart';
 
@@ -87,7 +86,7 @@ class _LatLngTempleDisplayAlertState
                       onPressed: () {
                         TempleDialog(
                           context: context,
-                          widget: LatLngTempleListAlert(),
+                          widget: const LatLngTempleListAlert(),
                           paddingLeft: context.screenSize.width * 0.2,
                           clearBarrierColor: true,
                         );

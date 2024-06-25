@@ -1,13 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/screens/_components/temple_train_station_list_alert.dart';
 
 import '../extensions/extensions.dart';
 import '../state/temple/temple.dart';
 import '../utility/utility.dart';
 import '_components/_temple_dialog.dart';
 import '_components/temple_detail_map_alert.dart';
+import '_components/temple_train_station_list_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

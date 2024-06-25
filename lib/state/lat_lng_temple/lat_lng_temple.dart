@@ -16,6 +16,9 @@ class LatLngTempleState with _$LatLngTempleState {
   const factory LatLngTempleState({
     @Default([]) List<LatLngTempleModel> latLngTempleList,
     @Default({}) Map<String, LatLngTempleModel> latLngTempleMap,
+
+    ///
+    @Default(false) bool listSorting,
   }) = _LatLngTempleState;
 }
 
@@ -62,5 +65,11 @@ class LatLngTemple extends _$LatLngTemple {
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
+  }
+
+  ///
+  Future<void> toggleListSorting() async {
+    final listSorting = state.listSorting;
+    state = state.copyWith(listSorting: !listSorting);
   }
 }

@@ -33,6 +33,24 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
             children: [
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(),
+                  IconButton(
+                    onPressed: () {
+                      ref
+                          .read(latLngTempleProvider.notifier)
+                          .toggleListSorting();
+                    },
+                    icon: const Icon(Icons.sort),
+                  ),
+                ],
+              ),
+              const Divider(
+                color: Colors.white,
+                thickness: 3,
+              ),
               Expanded(child: displayLatLngTempleList()),
             ],
           ),
@@ -45,9 +63,22 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
   Widget displayLatLngTempleList() {
     final list = <Widget>[];
 
-    ref
-        .watch(latLngTempleProvider.select((value) => value.latLngTempleList))
-        .forEach((element) {
+    final listSorting =
+        ref.watch(latLngTempleProvider.select((value) => value.listSorting));
+
+    final latLngTempleList = ref
+        .watch(latLngTempleProvider.select((value) => value.latLngTempleList));
+
+    final roopList = List.from(latLngTempleList);
+
+    if (listSorting) {
+      roopList.sort((a, b) {
+        // ignore: avoid_dynamic_calls
+        return a.id.compareTo(b.id);
+      });
+    }
+
+    roopList.forEach((element) {
       list.add(Column(
         children: [
           Row(

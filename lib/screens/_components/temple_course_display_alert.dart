@@ -28,7 +28,7 @@ class _TempleCourseDisplayAlertState extends State<TempleCourseDisplayAlert> {
         height: double.infinity,
         child: SingleChildScrollView(
           child: DefaultTextStyle(
-            style: TextStyle(fontSize: 12),
+            style: const TextStyle(fontSize: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

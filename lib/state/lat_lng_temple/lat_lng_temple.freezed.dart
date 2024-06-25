@@ -21,6 +21,9 @@ mixin _$LatLngTempleState {
   Map<String, LatLngTempleModel> get latLngTempleMap =>
       throw _privateConstructorUsedError;
 
+  ///
+  bool get listSorting => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $LatLngTempleStateCopyWith<LatLngTempleState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -34,7 +37,8 @@ abstract class $LatLngTempleStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<LatLngTempleModel> latLngTempleList,
-      Map<String, LatLngTempleModel> latLngTempleMap});
+      Map<String, LatLngTempleModel> latLngTempleMap,
+      bool listSorting});
 }
 
 /// @nodoc
@@ -52,6 +56,7 @@ class _$LatLngTempleStateCopyWithImpl<$Res, $Val extends LatLngTempleState>
   $Res call({
     Object? latLngTempleList = null,
     Object? latLngTempleMap = null,
+    Object? listSorting = null,
   }) {
     return _then(_value.copyWith(
       latLngTempleList: null == latLngTempleList
@@ -62,6 +67,10 @@ class _$LatLngTempleStateCopyWithImpl<$Res, $Val extends LatLngTempleState>
           ? _value.latLngTempleMap
           : latLngTempleMap // ignore: cast_nullable_to_non_nullable
               as Map<String, LatLngTempleModel>,
+      listSorting: null == listSorting
+          ? _value.listSorting
+          : listSorting // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -76,7 +85,8 @@ abstract class _$$LatLngTempleStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<LatLngTempleModel> latLngTempleList,
-      Map<String, LatLngTempleModel> latLngTempleMap});
+      Map<String, LatLngTempleModel> latLngTempleMap,
+      bool listSorting});
 }
 
 /// @nodoc
@@ -92,6 +102,7 @@ class __$$LatLngTempleStateImplCopyWithImpl<$Res>
   $Res call({
     Object? latLngTempleList = null,
     Object? latLngTempleMap = null,
+    Object? listSorting = null,
   }) {
     return _then(_$LatLngTempleStateImpl(
       latLngTempleList: null == latLngTempleList
@@ -102,6 +113,10 @@ class __$$LatLngTempleStateImplCopyWithImpl<$Res>
           ? _value._latLngTempleMap
           : latLngTempleMap // ignore: cast_nullable_to_non_nullable
               as Map<String, LatLngTempleModel>,
+      listSorting: null == listSorting
+          ? _value.listSorting
+          : listSorting // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -111,7 +126,8 @@ class __$$LatLngTempleStateImplCopyWithImpl<$Res>
 class _$LatLngTempleStateImpl implements _LatLngTempleState {
   const _$LatLngTempleStateImpl(
       {final List<LatLngTempleModel> latLngTempleList = const [],
-      final Map<String, LatLngTempleModel> latLngTempleMap = const {}})
+      final Map<String, LatLngTempleModel> latLngTempleMap = const {},
+      this.listSorting = false})
       : _latLngTempleList = latLngTempleList,
         _latLngTempleMap = latLngTempleMap;
 
@@ -134,9 +150,14 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
     return EqualUnmodifiableMapView(_latLngTempleMap);
   }
 
+  ///
+  @override
+  @JsonKey()
+  final bool listSorting;
+
   @override
   String toString() {
-    return 'LatLngTempleState(latLngTempleList: $latLngTempleList, latLngTempleMap: $latLngTempleMap)';
+    return 'LatLngTempleState(latLngTempleList: $latLngTempleList, latLngTempleMap: $latLngTempleMap, listSorting: $listSorting)';
   }
 
   @override
@@ -147,14 +168,17 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
             const DeepCollectionEquality()
                 .equals(other._latLngTempleList, _latLngTempleList) &&
             const DeepCollectionEquality()
-                .equals(other._latLngTempleMap, _latLngTempleMap));
+                .equals(other._latLngTempleMap, _latLngTempleMap) &&
+            (identical(other.listSorting, listSorting) ||
+                other.listSorting == listSorting));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_latLngTempleList),
-      const DeepCollectionEquality().hash(_latLngTempleMap));
+      const DeepCollectionEquality().hash(_latLngTempleMap),
+      listSorting);
 
   @JsonKey(ignore: true)
   @override
@@ -166,14 +190,18 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
 
 abstract class _LatLngTempleState implements LatLngTempleState {
   const factory _LatLngTempleState(
-          {final List<LatLngTempleModel> latLngTempleList,
-          final Map<String, LatLngTempleModel> latLngTempleMap}) =
-      _$LatLngTempleStateImpl;
+      {final List<LatLngTempleModel> latLngTempleList,
+      final Map<String, LatLngTempleModel> latLngTempleMap,
+      final bool listSorting}) = _$LatLngTempleStateImpl;
 
   @override
   List<LatLngTempleModel> get latLngTempleList;
   @override
   Map<String, LatLngTempleModel> get latLngTempleMap;
+  @override
+
+  ///
+  bool get listSorting;
   @override
   @JsonKey(ignore: true)
   _$$LatLngTempleStateImplCopyWith<_$LatLngTempleStateImpl> get copyWith =>

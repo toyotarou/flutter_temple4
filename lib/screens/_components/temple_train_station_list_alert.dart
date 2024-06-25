@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -58,7 +57,7 @@ class _TempleTrainListAlertState
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
             DefaultTextStyle(
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
               child: Column(
                 children: [
                   Row(
@@ -85,8 +84,8 @@ class _TempleTrainListAlertState
                                 ? null
                                 : () {
                                     if (latLngTempleList.isEmpty) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
                                               content: Text('no hit')));
                                       return;
                                     }
@@ -116,7 +115,8 @@ class _TempleTrainListAlertState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        (tokyoTrainState.tokyoStationMap[searchStationId] != null)
+                        (tokyoTrainState.tokyoStationMap[searchStationId] !=
+                                null)
                             ? tokyoTrainState
                                 .tokyoStationMap[searchStationId]!.stationName
                             : '-----',
@@ -134,8 +134,9 @@ class _TempleTrainListAlertState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: tokyoTrainState.tokyoTrainList.map((e) {
                     return ExpansionTile(
-                      title: Text(e.trainName,
-                      style: TextStyle(fontSize: 12),
+                      title: Text(
+                        e.trainName,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       children: e.station.map((e2) {
                         return Container(
@@ -150,10 +151,10 @@ class _TempleTrainListAlertState
                           ),
                           child: DefaultTextStyle(
                             style: TextStyle(
-                                color: (e2.id == searchStationId)
-                                    ? Colors.yellowAccent
-                                    : Colors.white,
-                            fontSize: 12,
+                              color: (e2.id == searchStationId)
+                                  ? Colors.yellowAccent
+                                  : Colors.white,
+                              fontSize: 12,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
