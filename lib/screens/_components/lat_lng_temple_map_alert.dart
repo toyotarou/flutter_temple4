@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/screens/_components/lat_lng_temple_list_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -12,20 +14,20 @@ import '_temple_dialog.dart';
 import 'temple_detail_map_alert.dart';
 import 'temple_info_display_alert.dart';
 
-class LatLngTempleDisplayAlert extends ConsumerStatefulWidget {
-  const LatLngTempleDisplayAlert(
+class LatLngTempleMapAlert extends ConsumerStatefulWidget {
+  const LatLngTempleMapAlert(
       {super.key, required this.templeList, this.station});
 
   final List<LatLngTempleModel> templeList;
   final TokyoStationModel? station;
 
   @override
-  ConsumerState<LatLngTempleDisplayAlert> createState() =>
+  ConsumerState<LatLngTempleMapAlert> createState() =>
       _LatLngTempleDisplayAlertState();
 }
 
 class _LatLngTempleDisplayAlertState
-    extends ConsumerState<LatLngTempleDisplayAlert> {
+    extends ConsumerState<LatLngTempleMapAlert> {
   List<TempleData> templeDataList = [];
 
   Map<String, double> boundsLatLngMap = {};
@@ -74,35 +76,56 @@ class _LatLngTempleDisplayAlertState
 
     makeMarker();
 
-    return Stack(
-      children: [
-        (boundsLatLngMap.isNotEmpty)
-            ? FlutterMap(
-                options: MapOptions(
-                  bounds: LatLngBounds(
-                    LatLng(
-                      boundsLatLngMap['minLat']! - boundsInner,
-                      boundsLatLngMap['minLng']! - boundsInner,
+    return (boundsLatLngMap.isNotEmpty)
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.station != null) ...[
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        TempleDialog(
+                          context: context,
+                          widget: LatLngTempleListAlert(),
+                          paddingLeft: context.screenSize.width * 0.2,
+                          clearBarrierColor: true,
+                        );
+                      },
+                      icon: const Icon(Icons.list),
                     ),
-                    LatLng(
-                      boundsLatLngMap['maxLat']! + boundsInner,
-                      boundsLatLngMap['maxLng']! + boundsInner,
-                    ),
-                  ),
-                  // minZoom: 8,
-                  // maxZoom: 12,
+                    Text(widget.station!.stationName),
+                  ],
                 ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              ],
+              Expanded(
+                child: FlutterMap(
+                  options: MapOptions(
+                    bounds: LatLngBounds(
+                      LatLng(
+                        boundsLatLngMap['minLat']! - boundsInner,
+                        boundsLatLngMap['minLng']! - boundsInner,
+                      ),
+                      LatLng(
+                        boundsLatLngMap['maxLat']! + boundsInner,
+                        boundsLatLngMap['maxLng']! + boundsInner,
+                      ),
+                    ),
+                    minZoom: 10,
+                    maxZoom: 14,
                   ),
-                  MarkerLayer(markers: markerList),
-                ],
-              )
-            : Container(),
-      ],
-    );
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    ),
+                    MarkerLayer(markers: markerList),
+                  ],
+                ),
+              ),
+            ],
+          )
+        : Container();
   }
 
   void makeMarker() {
@@ -121,10 +144,12 @@ class _LatLngTempleDisplayAlertState
                   ? null
                   : () {
                       TempleDialog(
-                          context: context,
-                          widget:
-                              TempleInfoDisplayAlert(temple: templeDataList[i]),
-                          paddingTop: context.screenSize.height * 0.7);
+                        context: context,
+                        widget:
+                            TempleInfoDisplayAlert(temple: templeDataList[i]),
+                        paddingTop: context.screenSize.height * 0.7,
+                        clearBarrierColor: true,
+                      );
                     },
               child: CircleAvatar(
                 backgroundColor:

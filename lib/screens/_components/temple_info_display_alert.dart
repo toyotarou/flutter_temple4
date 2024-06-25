@@ -24,16 +24,20 @@ class _TempleInfoDisplayAlertState extends State<TempleInfoDisplayAlert> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         width: double.infinity,
         height: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Container(width: context.screenSize.width),
-            Text(widget.temple.name),
-            Text(widget.temple.address),
-            Text(widget.temple.latitude),
-            Text(widget.temple.longitude),
-          ],
+        child: DefaultTextStyle(
+          style: const TextStyle(fontSize: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Container(width: context.screenSize.width),
+              Text(widget.temple.mark.padLeft(2, '0')),
+              Text(widget.temple.name),
+              Text(widget.temple.address),
+              Text(widget.temple.latitude),
+              Text(widget.temple.longitude),
+            ],
+          ),
         ),
       ),
     );

@@ -82,8 +82,8 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
                       boundsLatLngMap['maxLng']! + boundsInner,
                     ),
                   ),
-                  // minZoom: 8,
-                  // maxZoom: 12,
+                  minZoom: 10,
+                  maxZoom: 14,
                 ),
                 children: [
                   TileLayer(
@@ -136,7 +136,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
               TempleDialog(
                 context: context,
                 widget: TempleCourseDisplayAlert(data: templeDataList),
-                paddingLeft: context.screenSize.width * 0.3,
+                paddingLeft: context.screenSize.width * 0.2,
                 clearBarrierColor: true,
               );
             },

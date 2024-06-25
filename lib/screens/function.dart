@@ -12,15 +12,15 @@ Color? getCircleAvatarBgColor({required TempleData element}) {
     case 'E':
     case 'S/E':
     case '0':
-      return Colors.green[900];
+      return Colors.green[900]?.withOpacity(0.5);
     case '01':
-      return Colors.redAccent;
+      return Colors.redAccent.withOpacity(0.5);
     default:
       if (element.cnt > 0) {
-        return Colors.pinkAccent;
+        return Colors.pinkAccent.withOpacity(0.5);
       }
 
-      return Colors.orangeAccent;
+      return Colors.orangeAccent.withOpacity(0.5);
   }
 }
 

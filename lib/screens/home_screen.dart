@@ -234,20 +234,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Card(
             color: Colors.black.withOpacity(0.3),
             child: ListTile(
-              leading: SizedBox(
-                width: 40,
-                child: CachedNetworkImage(
-                  imageUrl: element.thumbnail,
-                  placeholder: (context, url) =>
-                      Image.asset('assets/images/no_image.png'),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-              ),
               title: DefaultTextStyle(
                 style: const TextStyle(fontSize: 12),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: context.screenSize.height / 10,
+                    minHeight: context.screenSize.height / 8,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,6 +251,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ],
                       ),
                       Text(element.temple),
+                      const SizedBox(height: 5),
+                      Text(element.address),
                       const SizedBox(height: 5),
                       Text(
                         element.memo,
