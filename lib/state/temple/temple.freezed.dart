@@ -23,6 +23,9 @@ mixin _$TempleState {
   String get searchWord => throw _privateConstructorUsedError;
   bool get doSearch => throw _privateConstructorUsedError;
 
+  ///
+  dynamic get selectYear => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $TempleStateCopyWith<TempleState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -38,7 +41,8 @@ abstract class $TempleStateCopyWith<$Res> {
       {List<TempleModel> templeList,
       Map<String, TempleModel> templeMap,
       String searchWord,
-      bool doSearch});
+      bool doSearch,
+      dynamic selectYear});
 }
 
 /// @nodoc
@@ -58,6 +62,7 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
     Object? templeMap = null,
     Object? searchWord = null,
     Object? doSearch = null,
+    Object? selectYear = freezed,
   }) {
     return _then(_value.copyWith(
       templeList: null == templeList
@@ -76,6 +81,10 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
           ? _value.doSearch
           : doSearch // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectYear: freezed == selectYear
+          ? _value.selectYear
+          : selectYear // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
@@ -92,7 +101,8 @@ abstract class _$$TempleStateImplCopyWith<$Res>
       {List<TempleModel> templeList,
       Map<String, TempleModel> templeMap,
       String searchWord,
-      bool doSearch});
+      bool doSearch,
+      dynamic selectYear});
 }
 
 /// @nodoc
@@ -110,6 +120,7 @@ class __$$TempleStateImplCopyWithImpl<$Res>
     Object? templeMap = null,
     Object? searchWord = null,
     Object? doSearch = null,
+    Object? selectYear = freezed,
   }) {
     return _then(_$TempleStateImpl(
       templeList: null == templeList
@@ -128,6 +139,7 @@ class __$$TempleStateImplCopyWithImpl<$Res>
           ? _value.doSearch
           : doSearch // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectYear: freezed == selectYear ? _value.selectYear! : selectYear,
     ));
   }
 }
@@ -139,7 +151,8 @@ class _$TempleStateImpl implements _TempleState {
       {final List<TempleModel> templeList = const [],
       final Map<String, TempleModel> templeMap = const {},
       this.searchWord = '',
-      this.doSearch = false})
+      this.doSearch = false,
+      this.selectYear = ''})
       : _templeList = templeList,
         _templeMap = templeMap;
 
@@ -169,9 +182,14 @@ class _$TempleStateImpl implements _TempleState {
   @JsonKey()
   final bool doSearch;
 
+  ///
+  @override
+  @JsonKey()
+  final dynamic selectYear;
+
   @override
   String toString() {
-    return 'TempleState(templeList: $templeList, templeMap: $templeMap, searchWord: $searchWord, doSearch: $doSearch)';
+    return 'TempleState(templeList: $templeList, templeMap: $templeMap, searchWord: $searchWord, doSearch: $doSearch, selectYear: $selectYear)';
   }
 
   @override
@@ -186,7 +204,9 @@ class _$TempleStateImpl implements _TempleState {
             (identical(other.searchWord, searchWord) ||
                 other.searchWord == searchWord) &&
             (identical(other.doSearch, doSearch) ||
-                other.doSearch == doSearch));
+                other.doSearch == doSearch) &&
+            const DeepCollectionEquality()
+                .equals(other.selectYear, selectYear));
   }
 
   @override
@@ -195,7 +215,8 @@ class _$TempleStateImpl implements _TempleState {
       const DeepCollectionEquality().hash(_templeList),
       const DeepCollectionEquality().hash(_templeMap),
       searchWord,
-      doSearch);
+      doSearch,
+      const DeepCollectionEquality().hash(selectYear));
 
   @JsonKey(ignore: true)
   @override
@@ -209,7 +230,8 @@ abstract class _TempleState implements TempleState {
       {final List<TempleModel> templeList,
       final Map<String, TempleModel> templeMap,
       final String searchWord,
-      final bool doSearch}) = _$TempleStateImpl;
+      final bool doSearch,
+      final dynamic selectYear}) = _$TempleStateImpl;
 
   @override
   List<TempleModel> get templeList;
@@ -221,6 +243,10 @@ abstract class _TempleState implements TempleState {
   String get searchWord;
   @override
   bool get doSearch;
+  @override
+
+  ///
+  dynamic get selectYear;
   @override
   @JsonKey(ignore: true)
   _$$TempleStateImplCopyWith<_$TempleStateImpl> get copyWith =>

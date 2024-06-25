@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -168,6 +169,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  ///
   List<Widget> _getTabs() {
     final list = <Widget>[];
 
@@ -175,6 +177,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       list.add(
         TextButton(
           onPressed: () {
+            ref
+                .read(templeProvider.notifier)
+                .setSelectYear(year: yearList[i].toString());
+
             scrollToIndex(i);
           },
           child: Text(yearList[i].toString()),
@@ -188,6 +194,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ///
   Widget displayTempleList() {
     final list = <Widget>[];
+
+    final selectYear =
+        ref.watch(templeProvider.select((value) => value.selectYear));
 
     final templeState = ref.watch(templeProvider);
 
@@ -233,6 +242,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Card(
             color: Colors.black.withOpacity(0.3),
             child: ListTile(
+              leading: SizedBox(
+                width: 40,
+                child: (element.date.year.toString() == selectYear)
+                    ? CachedNetworkImage(
+                        imageUrl: element.thumbnail,
+                        placeholder: (context, url) =>
+                            Image.asset('assets/images/no_image.png'),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      )
+                    : Container(
+                        decoration:
+                            BoxDecoration(color: Colors.grey.withOpacity(0.3)),
+                      ),
+              ),
               title: DefaultTextStyle(
                 style: const TextStyle(fontSize: 12),
                 child: ConstrainedBox(

@@ -20,6 +20,9 @@ class TempleState with _$TempleState {
     ///
     @Default('') String searchWord,
     @Default(false) bool doSearch,
+
+    ///
+    @Default('') selectYear,
   }) = _TempleState;
 }
 
@@ -63,4 +66,8 @@ class Temple extends _$Temple {
   ///
   Future<void> clearSearch() async =>
       state = state.copyWith(searchWord: '', doSearch: false);
+
+  ///
+  Future<void> setSelectYear({required String year}) async =>
+      state = state.copyWith(selectYear: year);
 }
