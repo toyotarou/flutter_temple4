@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../extensions/extensions.dart';
 import '../state/temple/temple.dart';
 import '../utility/utility.dart';
 import '_components/_temple_dialog.dart';
+import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
 import '_components/temple_train_station_list_alert.dart';
 
@@ -69,68 +71,79 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           backgroundColor: Colors.black.withOpacity(0.7),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            leading: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    TempleDialog(
-                      context: context,
-                      widget: const TempleTrainStationListAlert(),
-                    );
-                  },
-                  icon: const Icon(Icons.train),
-                ),
-              ],
-            ),
             actions: [
-              SizedBox(
-                width: 240,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        controller: searchWordEditingController,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 4),
-                          filled: true,
-                          fillColor: Colors.white.withOpacity(0.2),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      TempleDialog(
+                        context: context,
+                        widget: const TempleTrainStationListAlert(),
+                      );
+                    },
+                    icon: const Icon(Icons.train),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      TempleDialog(
+                        context: context,
+                        widget: const NotReachTempleMapAlert(),
+                      );
+                    },
+                    icon: const Icon(FontAwesomeIcons.toriiGate),
+                  ),
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    width: 240,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            controller: searchWordEditingController,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 4),
+                              filled: true,
+                              fillColor: Colors.white.withOpacity(0.2),
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                            onTapOutside: (event) =>
+                                FocusManager.instance.primaryFocus?.unfocus(),
+                            onChanged: (value) {},
                           ),
                         ),
-                        onTapOutside: (event) =>
-                            FocusManager.instance.primaryFocus?.unfocus(),
-                        onChanged: (value) {},
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        ref.read(templeProvider.notifier).doSearch(
-                            searchWord: searchWordEditingController.text);
-                      },
-                      child: const Icon(Icons.search),
-                    ),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        searchWordEditingController.text = '';
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            ref.read(templeProvider.notifier).doSearch(
+                                searchWord: searchWordEditingController.text);
+                          },
+                          child: const Icon(Icons.search),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            searchWordEditingController.text = '';
 
-                        ref.read(templeProvider.notifier).clearSearch();
-                      },
-                      child: const Icon(Icons.close),
+                            ref.read(templeProvider.notifier).clearSearch();
+                          },
+                          child: const Icon(Icons.close),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
             bottom: (templeState.doSearch)

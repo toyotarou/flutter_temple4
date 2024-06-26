@@ -19,6 +19,9 @@ class LatLngTempleState with _$LatLngTempleState {
 
     ///
     @Default(false) bool listSorting,
+
+    ///
+    @Default(false) bool orangeDisplay,
   }) = _LatLngTempleState;
 }
 
@@ -71,5 +74,11 @@ class LatLngTemple extends _$LatLngTemple {
   Future<void> toggleListSorting() async {
     final listSorting = state.listSorting;
     state = state.copyWith(listSorting: !listSorting);
+  }
+
+  ///
+  Future<void> setOrangeDisplay() async {
+    final orangeDisplay = state.orangeDisplay;
+    state = state.copyWith(orangeDisplay: !orangeDisplay);
   }
 }

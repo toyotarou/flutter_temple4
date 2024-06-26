@@ -37,13 +37,29 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(),
-                  IconButton(
-                    onPressed: () {
-                      ref
-                          .read(latLngTempleProvider.notifier)
-                          .toggleListSorting();
-                    },
-                    icon: const Icon(Icons.sort),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(latLngTempleProvider.notifier)
+                              .setOrangeDisplay();
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.orangeAccent.withOpacity(0.6),
+                          radius: 10,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        onPressed: () {
+                          ref
+                              .read(latLngTempleProvider.notifier)
+                              .toggleListSorting();
+                        },
+                        icon: const Icon(Icons.sort),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -66,10 +82,9 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
     final listSorting =
         ref.watch(latLngTempleProvider.select((value) => value.listSorting));
 
-    final latLngTempleList = ref
-        .watch(latLngTempleProvider.select((value) => value.latLngTempleList));
+    final latLngTempleState = ref.watch(latLngTempleProvider);
 
-    final roopList = List.from(latLngTempleList);
+    final roopList = List.from(latLngTempleState.latLngTempleList);
 
     if (listSorting) {
       roopList.sort((a, b) {
@@ -78,7 +93,13 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
       });
     }
 
-    roopList.forEach((element) {
+    for (var i = 0; i < roopList.length; i++) {
+      if (latLngTempleState.orangeDisplay) {
+        if (roopList[i].cnt > 0) {
+          continue;
+        }
+      }
+
       list.add(Column(
         children: [
           Row(
@@ -87,16 +108,16 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
               CircleAvatar(
                 backgroundColor: getCircleAvatarBgColor(
                   element: TempleData(
-                    name: element.name,
-                    address: element.address,
-                    latitude: element.latitude,
-                    longitude: element.longitude,
-                    mark: element.id.toString(),
-                    cnt: element.cnt,
+                    name: roopList[i].name,
+                    address: roopList[i].address,
+                    latitude: roopList[i].latitude,
+                    longitude: roopList[i].longitude,
+                    mark: roopList[i].id.toString(),
+                    cnt: roopList[i].cnt,
                   ),
                 ),
                 child: Text(
-                  element.id.toString().padLeft(3, '0'),
+                  roopList[i].id.toString().padLeft(3, '0'),
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -109,13 +130,13 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(element.name),
-                    Text(element.address),
+                    Text(roopList[i].name),
+                    Text(roopList[i].address),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(),
-                        Text(element.dist),
+                        Text(roopList[i].dist),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -129,7 +150,7 @@ class _LatLngTempleListAlertState extends ConsumerState<LatLngTempleListAlert> {
           const Divider(color: Colors.white),
         ],
       ));
-    });
+    }
 
     return SingleChildScrollView(child: Column(children: list));
   }

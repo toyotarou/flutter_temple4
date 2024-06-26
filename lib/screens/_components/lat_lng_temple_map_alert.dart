@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/state/lat_lng_temple/lat_lng_temple.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -81,19 +82,41 @@ class _LatLngTempleDisplayAlertState
             children: [
               if (widget.station != null) ...[
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        TempleDialog(
-                          context: context,
-                          widget: const LatLngTempleListAlert(),
-                          paddingLeft: context.screenSize.width * 0.2,
-                          clearBarrierColor: true,
-                        );
-                      },
-                      icon: const Icon(Icons.list),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            TempleDialog(
+                              context: context,
+                              widget: const LatLngTempleListAlert(),
+                              paddingLeft: context.screenSize.width * 0.2,
+                              clearBarrierColor: true,
+                            );
+                          },
+                          icon: const Icon(Icons.list),
+                        ),
+                        Text(widget.station!.stationName),
+                      ],
                     ),
-                    Text(widget.station!.stationName),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(latLngTempleProvider.notifier)
+                                .setOrangeDisplay();
+                          },
+                          child: CircleAvatar(
+                            backgroundColor:
+                                Colors.orangeAccent.withOpacity(0.6),
+                            radius: 10,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -130,7 +153,16 @@ class _LatLngTempleDisplayAlertState
   void makeMarker() {
     markerList = [];
 
+    final orangeDisplay =
+        ref.watch(latLngTempleProvider.select((value) => value.orangeDisplay));
+
     for (var i = 0; i < templeDataList.length; i++) {
+      if (orangeDisplay) {
+        if (templeDataList[i].cnt > 0) {
+          continue;
+        }
+      }
+
       markerList.add(
         Marker(
           point: LatLng(

@@ -24,6 +24,9 @@ mixin _$LatLngTempleState {
   ///
   bool get listSorting => throw _privateConstructorUsedError;
 
+  ///
+  bool get orangeDisplay => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $LatLngTempleStateCopyWith<LatLngTempleState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -38,7 +41,8 @@ abstract class $LatLngTempleStateCopyWith<$Res> {
   $Res call(
       {List<LatLngTempleModel> latLngTempleList,
       Map<String, LatLngTempleModel> latLngTempleMap,
-      bool listSorting});
+      bool listSorting,
+      bool orangeDisplay});
 }
 
 /// @nodoc
@@ -57,6 +61,7 @@ class _$LatLngTempleStateCopyWithImpl<$Res, $Val extends LatLngTempleState>
     Object? latLngTempleList = null,
     Object? latLngTempleMap = null,
     Object? listSorting = null,
+    Object? orangeDisplay = null,
   }) {
     return _then(_value.copyWith(
       latLngTempleList: null == latLngTempleList
@@ -70,6 +75,10 @@ class _$LatLngTempleStateCopyWithImpl<$Res, $Val extends LatLngTempleState>
       listSorting: null == listSorting
           ? _value.listSorting
           : listSorting // ignore: cast_nullable_to_non_nullable
+              as bool,
+      orangeDisplay: null == orangeDisplay
+          ? _value.orangeDisplay
+          : orangeDisplay // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -86,7 +95,8 @@ abstract class _$$LatLngTempleStateImplCopyWith<$Res>
   $Res call(
       {List<LatLngTempleModel> latLngTempleList,
       Map<String, LatLngTempleModel> latLngTempleMap,
-      bool listSorting});
+      bool listSorting,
+      bool orangeDisplay});
 }
 
 /// @nodoc
@@ -103,6 +113,7 @@ class __$$LatLngTempleStateImplCopyWithImpl<$Res>
     Object? latLngTempleList = null,
     Object? latLngTempleMap = null,
     Object? listSorting = null,
+    Object? orangeDisplay = null,
   }) {
     return _then(_$LatLngTempleStateImpl(
       latLngTempleList: null == latLngTempleList
@@ -117,6 +128,10 @@ class __$$LatLngTempleStateImplCopyWithImpl<$Res>
           ? _value.listSorting
           : listSorting // ignore: cast_nullable_to_non_nullable
               as bool,
+      orangeDisplay: null == orangeDisplay
+          ? _value.orangeDisplay
+          : orangeDisplay // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -127,7 +142,8 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
   const _$LatLngTempleStateImpl(
       {final List<LatLngTempleModel> latLngTempleList = const [],
       final Map<String, LatLngTempleModel> latLngTempleMap = const {},
-      this.listSorting = false})
+      this.listSorting = false,
+      this.orangeDisplay = false})
       : _latLngTempleList = latLngTempleList,
         _latLngTempleMap = latLngTempleMap;
 
@@ -155,9 +171,14 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
   @JsonKey()
   final bool listSorting;
 
+  ///
+  @override
+  @JsonKey()
+  final bool orangeDisplay;
+
   @override
   String toString() {
-    return 'LatLngTempleState(latLngTempleList: $latLngTempleList, latLngTempleMap: $latLngTempleMap, listSorting: $listSorting)';
+    return 'LatLngTempleState(latLngTempleList: $latLngTempleList, latLngTempleMap: $latLngTempleMap, listSorting: $listSorting, orangeDisplay: $orangeDisplay)';
   }
 
   @override
@@ -170,7 +191,9 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
             const DeepCollectionEquality()
                 .equals(other._latLngTempleMap, _latLngTempleMap) &&
             (identical(other.listSorting, listSorting) ||
-                other.listSorting == listSorting));
+                other.listSorting == listSorting) &&
+            (identical(other.orangeDisplay, orangeDisplay) ||
+                other.orangeDisplay == orangeDisplay));
   }
 
   @override
@@ -178,7 +201,8 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
       runtimeType,
       const DeepCollectionEquality().hash(_latLngTempleList),
       const DeepCollectionEquality().hash(_latLngTempleMap),
-      listSorting);
+      listSorting,
+      orangeDisplay);
 
   @JsonKey(ignore: true)
   @override
@@ -192,7 +216,8 @@ abstract class _LatLngTempleState implements LatLngTempleState {
   const factory _LatLngTempleState(
       {final List<LatLngTempleModel> latLngTempleList,
       final Map<String, LatLngTempleModel> latLngTempleMap,
-      final bool listSorting}) = _$LatLngTempleStateImpl;
+      final bool listSorting,
+      final bool orangeDisplay}) = _$LatLngTempleStateImpl;
 
   @override
   List<LatLngTempleModel> get latLngTempleList;
@@ -202,6 +227,10 @@ abstract class _LatLngTempleState implements LatLngTempleState {
 
   ///
   bool get listSorting;
+  @override
+
+  ///
+  bool get orangeDisplay;
   @override
   @JsonKey(ignore: true)
   _$$LatLngTempleStateImplCopyWith<_$LatLngTempleStateImpl> get copyWith =>

@@ -23,6 +23,7 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.4.0
+  font_awesome_flutter: ^10.7.0
 
   # 旧バージョンのflutter_mapを使うための設定
   flutter_map: ^3.1.0

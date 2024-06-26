@@ -19,6 +19,8 @@ class TempleTrainStationListAlert extends ConsumerStatefulWidget {
 
 class _TempleTrainListAlertState
     extends ConsumerState<TempleTrainStationListAlert> {
+  int reachTempleNum = 0;
+
   ///
   @override
   void initState() {
@@ -42,6 +44,8 @@ class _TempleTrainListAlertState
     final latLngTempleList = ref
         .watch(latLngTempleProvider.select((value) => value.latLngTempleList));
 
+    getReachTempleNum();
+
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -63,7 +67,31 @@ class _TempleTrainListAlertState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _displayStationTempleCount(),
+                      Text(
+                        (tokyoTrainState.tokyoStationMap[searchStationId] !=
+                                null)
+                            ? tokyoTrainState
+                                .tokyoStationMap[searchStationId]!.stationName
+                            : '-----',
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(latLngTempleList.length.toString()),
+                          Text(reachTempleNum.toString()),
+                          Text(
+                            (latLngTempleList.length - reachTempleNum)
+                                .toString(),
+                            style: const TextStyle(color: Colors.orangeAccent),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(),
                       Row(
                         children: [
                           IconButton(
@@ -109,19 +137,6 @@ class _TempleTrainListAlertState
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        (tokyoTrainState.tokyoStationMap[searchStationId] !=
-                                null)
-                            ? tokyoTrainState
-                                .tokyoStationMap[searchStationId]!.stationName
-                            : '-----',
-                      ),
-                      Text(latLngTempleList.length.toString()),
                     ],
                   ),
                 ],
@@ -197,35 +212,15 @@ class _TempleTrainListAlertState
   }
 
   ///
-  Widget _displayStationTempleCount() {
-    final templeListState = ref.watch(templeListProvider);
+  void getReachTempleNum() {
+    reachTempleNum = 0;
 
-    final templeNotReachStationMap = ref.watch(
-        templeNotReachListProvider.select((value) => value.templeStationMap));
-
-    if (templeListState.searchStationId == '') {
-      return Text(templeListState.templeListList.length.toString());
-    }
-
-    var totalNum = 0;
-    var notReachNum = 0;
-    if (templeListState.templeStationMap[templeListState.searchStationId] !=
-        null) {
-      totalNum = templeListState
-          .templeStationMap[templeListState.searchStationId]!.length;
-
-      if (templeNotReachStationMap[templeListState.searchStationId] != null) {
-        notReachNum =
-            templeNotReachStationMap[templeListState.searchStationId]!.length;
+    ref
+        .watch(latLngTempleProvider.select((value) => value.latLngTempleList))
+        .forEach((element) {
+      if (element.cnt > 0) {
+        reachTempleNum++;
       }
-    }
-
-    return Row(
-      children: [
-        Text('Total : $totalNum'),
-        const SizedBox(width: 20),
-        Text('Not Reach : $notReachNum'),
-      ],
-    );
+    });
   }
 }
