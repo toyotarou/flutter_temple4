@@ -22,6 +22,7 @@ class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
 
 class _TempleInfoDisplayAlertState
     extends ConsumerState<TempleInfoDisplayAlert> {
+  ///
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -43,14 +44,8 @@ class _TempleInfoDisplayAlertState
                 children: [
                   CircleAvatar(
                     backgroundColor: getCircleAvatarBgColor(
-                      element: TempleData(
-                        name: widget.temple.name,
-                        address: widget.temple.address,
-                        latitude: widget.temple.latitude,
-                        longitude: widget.temple.longitude,
-                        mark: widget.temple.mark,
-                        cnt: widget.temple.cnt,
-                      ),
+                      element: widget.temple,
+                      ref: ref,
                     ),
                     child: Text(
                       widget.temple.mark.padLeft(2, '0'),
@@ -73,34 +68,20 @@ class _TempleInfoDisplayAlertState
                 ],
               ),
               if (widget.from == 'LatLngTempleMapAlert') ...[
-                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(),
-                    GestureDetector(
-                      onTap: () {
+                    ElevatedButton(
+                      onPressed: () {
                         ref.read(routingProvider.notifier).setRouting(
-                              templeData: TempleData(
-                                name: widget.temple.name,
-                                address: widget.temple.address,
-                                latitude: widget.temple.latitude,
-                                longitude: widget.temple.longitude,
-                                mark: widget.temple.mark,
-                                cnt: widget.temple.cnt,
-                              ),
+                              templeData: widget.temple,
                               station: widget.station,
                             );
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 3, horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Text('add routing'),
-                      ),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.indigo.withOpacity(0.2)),
+                      child: const Text('add routing'),
                     ),
                   ],
                 ),

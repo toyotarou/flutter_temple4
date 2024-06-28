@@ -167,8 +167,10 @@ class _NotReachTempleMapAlertState
                 );
               },
               child: CircleAvatar(
-                backgroundColor:
-                    getCircleAvatarBgColor(element: templeDataList[i]),
+                backgroundColor: getCircleAvatarBgColor(
+                  element: templeDataList[i],
+                  ref: ref,
+                ),
                 child: Text(
                   (templeDataList[i].mark == '0')
                       ? 'STA'

@@ -76,6 +76,9 @@ class _LatLngTempleDisplayAlertState
 
     makeMarker();
 
+    final routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
+
     return (boundsLatLngMap.isNotEmpty)
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,6 +146,20 @@ class _LatLngTempleDisplayAlertState
                       urlTemplate:
                           'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     ),
+                    PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: routingTempleDataList.map((e) {
+                            return LatLng(
+                              e.latitude.toDouble(),
+                              e.longitude.toDouble(),
+                            );
+                          }).toList(),
+                          color: Colors.redAccent,
+                          strokeWidth: 5,
+                        ),
+                      ],
+                    ),
                     MarkerLayer(markers: markerList),
                   ],
                 ),
@@ -188,8 +205,10 @@ class _LatLngTempleDisplayAlertState
                       );
                     },
               child: CircleAvatar(
-                backgroundColor:
-                    getCircleAvatarBgColor(element: templeDataList[i]),
+                backgroundColor: getCircleAvatarBgColor(
+                  element: templeDataList[i],
+                  ref: ref,
+                ),
                 child: Text(
                   (templeDataList[i].mark == '0')
                       ? 'STA'
@@ -215,20 +234,44 @@ class _LatLngTempleDisplayAlertState
         .watch(routingProvider.select((value) => value.routingTempleDataList));
 
     for (var i = 1; i < routingTempleDataList.length; i++) {
+      final distance = calcDistance(
+        originLat: routingTempleDataList[i - 1].latitude.toDouble(),
+        originLng: routingTempleDataList[i - 1].longitude.toDouble(),
+        destLat: routingTempleDataList[i].latitude.toDouble(),
+        destLng: routingTempleDataList[i].longitude.toDouble(),
+      );
+
       list.add(
-        Container(
-          margin: const EdgeInsets.all(3),
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 15),
-          decoration: BoxDecoration(
-            color: (routingTempleDataList[i].cnt > 0)
-                ? Colors.pinkAccent.withOpacity(0.4)
-                : Colors.orangeAccent.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            routingTempleDataList[i].mark,
-            style: const TextStyle(fontSize: 10),
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 5),
+              width: 40,
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.white)),
+              ),
+              alignment: Alignment.topRight,
+              child: Text(
+                distance,
+                style: const TextStyle(fontSize: 10),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(3),
+              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+              decoration: BoxDecoration(
+                color: (routingTempleDataList[i].cnt > 0)
+                    ? Colors.pinkAccent.withOpacity(0.5)
+                    : Colors.orangeAccent.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                routingTempleDataList[i].mark,
+                style: const TextStyle(fontSize: 10),
+              ),
+            ),
+          ],
         ),
       );
     }

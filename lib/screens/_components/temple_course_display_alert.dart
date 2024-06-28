@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../function.dart';
 
-class TempleCourseDisplayAlert extends StatefulWidget {
+class TempleCourseDisplayAlert extends ConsumerStatefulWidget {
   const TempleCourseDisplayAlert({super.key, required this.data});
 
   final List<TempleData> data;
 
   @override
-  State<TempleCourseDisplayAlert> createState() =>
+  ConsumerState<TempleCourseDisplayAlert> createState() =>
       _TempleCourseDisplayAlertState();
 }
 
-class _TempleCourseDisplayAlertState extends State<TempleCourseDisplayAlert> {
+class _TempleCourseDisplayAlertState
+    extends ConsumerState<TempleCourseDisplayAlert> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -42,8 +44,10 @@ class _TempleCourseDisplayAlertState extends State<TempleCourseDisplayAlert> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CircleAvatar(
-                              backgroundColor:
-                                  getCircleAvatarBgColor(element: e),
+                              backgroundColor: getCircleAvatarBgColor(
+                                element: e,
+                                ref: ref,
+                              ),
                               child: Text(
                                 e.mark,
                                 style: const TextStyle(

@@ -363,8 +363,10 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
           ),
           builder: (context) {
             return CircleAvatar(
-              backgroundColor:
-                  getCircleAvatarBgColor(element: templeDataList[i]),
+              backgroundColor: getCircleAvatarBgColor(
+                element: templeDataList[i],
+                ref: ref,
+              ),
               child: Text(
                 templeDataList[i].mark,
                 style: const TextStyle(

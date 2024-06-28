@@ -1,27 +1,48 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_temple4/extensions/extensions.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../extensions/extensions.dart';
 import '../models/common/temple_data.dart';
+import '../state/routing/routing.dart';
 
 ///
-Color? getCircleAvatarBgColor({required TempleData element}) {
+Color? getCircleAvatarBgColor(
+    {required TempleData element, required WidgetRef ref}) {
+  Color? color;
+
   switch (element.mark) {
     case 'S':
     case 'E':
     case 'S/E':
     case '0':
-      return Colors.green[900]?.withOpacity(0.5);
+      color = Colors.green[900]?.withOpacity(0.5);
+      break;
     case '01':
-      return Colors.redAccent.withOpacity(0.5);
+      color = Colors.redAccent.withOpacity(0.5);
+      break;
     default:
       if (element.cnt > 0) {
-        return Colors.pinkAccent.withOpacity(0.5);
+        color = Colors.pinkAccent.withOpacity(0.5);
+      } else {
+        color = Colors.orangeAccent.withOpacity(0.5);
       }
 
-      return Colors.orangeAccent.withOpacity(0.5);
+      break;
   }
+
+  final routingTempleDataList =
+      ref.watch(routingProvider.select((value) => value.routingTempleDataList));
+
+  final pos = routingTempleDataList
+      .indexWhere((element2) => element2.mark == element.mark);
+
+  if (pos != -1) {
+    color = Colors.indigo.withOpacity(0.5);
+  }
+
+  return color;
 }
 
 ///
@@ -55,4 +76,27 @@ Map<String, dynamic> makeBounds({required List<TempleData> data}) {
   }
 
   return {};
+}
+
+///
+String calcDistance({
+  required double originLat,
+  required double originLng,
+  required double destLat,
+  required double destLng,
+}) {
+  final distanceKm = 6371 *
+      acos(
+        cos(originLat / 180 * pi) *
+                cos((destLng - originLng) / 180 * pi) *
+                cos(destLat / 180 * pi) +
+            sin(originLat / 180 * pi) * sin(destLat / 180 * pi),
+      );
+
+  final exDistance = distanceKm.toString().split('.');
+
+  final seisuu = exDistance[0];
+  final shousuu = exDistance[1].substring(0, 2);
+
+  return '$seisuu.$shousuu';
 }
