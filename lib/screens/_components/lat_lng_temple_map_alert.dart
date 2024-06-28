@@ -86,10 +86,16 @@ class _LatLngTempleDisplayAlertState
               if (widget.station != null) ...[
                 Column(
                   children: [
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.station!.stationName),
+                        Row(
+                          children: [
+                            const SizedBox(width: 20),
+                            Text(widget.station!.stationName),
+                          ],
+                        ),
                         Row(
                           children: [
                             GestureDetector(
@@ -109,6 +115,7 @@ class _LatLngTempleDisplayAlertState
                         ),
                       ],
                     ),
+                    const SizedBox(height: 5),
                     Container(
                       width: context.screenSize.width,
                       margin: const EdgeInsets.all(5),
