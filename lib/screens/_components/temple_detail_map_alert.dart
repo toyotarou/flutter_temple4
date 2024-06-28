@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/common/temple_data.dart';
 import '../../models/temple_model.dart';
 import '../../state/station/station.dart';
 import '../../state/temple/temple.dart';
@@ -396,22 +397,4 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
 
     setState(() {});
   }
-}
-
-class TempleData {
-  TempleData({
-    required this.name,
-    required this.address,
-    required this.latitude,
-    required this.longitude,
-    required this.mark,
-    required this.cnt,
-  });
-
-  String name;
-  String address;
-  String latitude;
-  String longitude;
-  String mark;
-  int cnt;
 }

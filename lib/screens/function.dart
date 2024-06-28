@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_temple4/extensions/extensions.dart';
 
+import '../models/common/temple_data.dart';
 import '_components/temple_detail_map_alert.dart';
 
 ///

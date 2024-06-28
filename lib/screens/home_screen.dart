@@ -257,7 +257,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: ListTile(
               leading: SizedBox(
                 width: 40,
-                child: (element.date.year.toString() == selectYear)
+                child: (element.date.year.toString() == selectYear ||
+                        templeState.searchWord != '')
                     ? CachedNetworkImage(
                         imageUrl: element.thumbnail,
                         placeholder: (context, url) =>

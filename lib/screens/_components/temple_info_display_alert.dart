@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_temple4/screens/_components/temple_detail_map_alert.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/common/temple_data.dart';
+import '../../models/tokyo_station_model.dart';
+import '../../state/routing/routing.dart';
+import '../function.dart';
 
-class TempleInfoDisplayAlert extends StatefulWidget {
-  const TempleInfoDisplayAlert({super.key, required this.temple});
+class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
+  const TempleInfoDisplayAlert(
+      {super.key, required this.temple, required this.from, this.station});
 
   final TempleData temple;
+  final String from;
+  final TokyoStationModel? station;
 
   @override
-  State<TempleInfoDisplayAlert> createState() => _TempleInfoDisplayAlertState();
+  ConsumerState<TempleInfoDisplayAlert> createState() =>
+      _TempleInfoDisplayAlertState();
 }
 
-class _TempleInfoDisplayAlertState extends State<TempleInfoDisplayAlert> {
+class _TempleInfoDisplayAlertState
+    extends ConsumerState<TempleInfoDisplayAlert> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -27,15 +36,75 @@ class _TempleInfoDisplayAlertState extends State<TempleInfoDisplayAlert> {
         child: DefaultTextStyle(
           style: const TextStyle(fontSize: 12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              Container(width: context.screenSize.width),
-              Text(widget.temple.mark.padLeft(2, '0')),
-              Text(widget.temple.name),
-              Text(widget.temple.address),
-              Text(widget.temple.latitude),
-              Text(widget.temple.longitude),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: getCircleAvatarBgColor(
+                      element: TempleData(
+                        name: widget.temple.name,
+                        address: widget.temple.address,
+                        latitude: widget.temple.latitude,
+                        longitude: widget.temple.longitude,
+                        mark: widget.temple.mark,
+                        cnt: widget.temple.cnt,
+                      ),
+                    ),
+                    child: Text(
+                      widget.temple.mark.padLeft(2, '0'),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(width: context.screenSize.width),
+                        Text(widget.temple.name),
+                        Text(widget.temple.address),
+                        Text(widget.temple.latitude),
+                        Text(widget.temple.longitude),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (widget.from == 'LatLngTempleMapAlert') ...[
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(),
+                    GestureDetector(
+                      onTap: () {
+                        ref.read(routingProvider.notifier).setRouting(
+                              templeData: TempleData(
+                                name: widget.temple.name,
+                                address: widget.temple.address,
+                                latitude: widget.temple.latitude,
+                                longitude: widget.temple.longitude,
+                                mark: widget.temple.mark,
+                                cnt: widget.temple.cnt,
+                              ),
+                              station: widget.station,
+                            );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3, horizontal: 15),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text('add routing'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/state/lat_lng_temple/lat_lng_temple.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/common/temple_data.dart';
 import '../../models/lat_lng_temple_model.dart';
 import '../../models/tokyo_station_model.dart';
+import '../../state/lat_lng_temple/lat_lng_temple.dart';
+import '../../state/routing/routing.dart';
 import '../function.dart';
 import '_temple_dialog.dart';
-import 'lat_lng_temple_list_alert.dart';
-import 'temple_detail_map_alert.dart';
 import 'temple_info_display_alert.dart';
 
 class LatLngTempleMapAlert extends ConsumerStatefulWidget {
@@ -81,41 +81,43 @@ class _LatLngTempleDisplayAlertState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.station != null) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            TempleDialog(
-                              context: context,
-                              widget: const LatLngTempleListAlert(),
-                              paddingLeft: context.screenSize.width * 0.2,
-                              clearBarrierColor: true,
-                            );
-                          },
-                          icon: const Icon(Icons.list),
-                        ),
                         Text(widget.station!.stationName),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                ref
+                                    .read(latLngTempleProvider.notifier)
+                                    .setOrangeDisplay();
+                              },
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Colors.orangeAccent.withOpacity(0.6),
+                                radius: 10,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            ref
-                                .read(latLngTempleProvider.notifier)
-                                .setOrangeDisplay();
-                          },
-                          child: CircleAvatar(
-                            backgroundColor:
-                                Colors.orangeAccent.withOpacity(0.6),
-                            radius: 10,
-                          ),
+                    Container(
+                      width: context.screenSize.width,
+                      margin: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
+                      decoration:
+                          BoxDecoration(color: Colors.white.withOpacity(0.2)),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: context.screenSize.height / 15,
                         ),
-                        const SizedBox(width: 20),
-                      ],
+                        child: displaySelectedRoutingTemple(),
+                      ),
                     ),
                   ],
                 ),
@@ -176,8 +178,11 @@ class _LatLngTempleDisplayAlertState
                   : () {
                       TempleDialog(
                         context: context,
-                        widget:
-                            TempleInfoDisplayAlert(temple: templeDataList[i]),
+                        widget: TempleInfoDisplayAlert(
+                          temple: templeDataList[i],
+                          from: 'LatLngTempleMapAlert',
+                          station: widget.station,
+                        ),
                         paddingTop: context.screenSize.height * 0.7,
                         clearBarrierColor: true,
                       );
@@ -201,5 +206,38 @@ class _LatLngTempleDisplayAlertState
         ),
       );
     }
+  }
+
+  Widget displaySelectedRoutingTemple() {
+    final list = <Widget>[];
+
+    var routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
+
+    for (var i = 1; i < routingTempleDataList.length; i++) {
+      list.add(
+        Container(
+          margin: const EdgeInsets.all(3),
+          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+          decoration: BoxDecoration(
+            color: (routingTempleDataList[i].cnt > 0)
+                ? Colors.pinkAccent.withOpacity(0.4)
+                : Colors.orangeAccent.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            routingTempleDataList[i].mark,
+            style: const TextStyle(fontSize: 10),
+          ),
+        ),
+      );
+    }
+
+    return (list.isNotEmpty)
+        ? Wrap(children: list)
+        : Text(
+            'No Routing',
+            style: TextStyle(color: Colors.white.withOpacity(0.6)),
+          );
   }
 }

@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/common/temple_data.dart';
 import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../../state/temple_list/temple_list.dart';
 import '../function.dart';
@@ -158,7 +159,10 @@ class _NotReachTempleMapAlertState
               onTap: () {
                 TempleDialog(
                   context: context,
-                  widget: TempleInfoDisplayAlert(temple: templeDataList[i]),
+                  widget: TempleInfoDisplayAlert(
+                    temple: templeDataList[i],
+                    from: 'NotReachTempleMapAlert',
+                  ),
                   paddingTop: context.screenSize.height * 0.7,
                   clearBarrierColor: true,
                 );
