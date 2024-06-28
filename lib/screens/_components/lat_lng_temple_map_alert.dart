@@ -10,8 +10,11 @@ import '../../models/lat_lng_temple_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../state/lat_lng_temple/lat_lng_temple.dart';
 import '../../state/routing/routing.dart';
+import '../../state/tokyo_train/tokyo_train.dart';
+import '../_parts/_caution_dialog.dart';
+import '../_parts/_temple_dialog.dart';
 import '../function.dart';
-import '_temple_dialog.dart';
+import 'goal_station_setting_alert.dart';
 import 'temple_info_display_alert.dart';
 
 class LatLngTempleMapAlert extends ConsumerStatefulWidget {
@@ -40,7 +43,25 @@ class _LatLngTempleDisplayAlertState
 
   ///
   @override
+  void initState() {
+    super.initState();
+
+    ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
+  }
+
+  ///
+  @override
   Widget build(BuildContext context) {
+    final routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
+
+    //------------------// goal
+    final tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+    final goalStationId =
+        ref.watch(routingProvider.select((value) => value.goalStationId));
+    //------------------// goal
+
     templeDataList = [];
 
     widget.templeList.forEach((element) {
@@ -67,6 +88,21 @@ class _LatLngTempleDisplayAlertState
       ));
     }
 
+    if (tokyoTrainState.tokyoStationMap[goalStationId] != null) {
+      final goal = tokyoTrainState.tokyoStationMap[goalStationId];
+
+      templeDataList.add(
+        TempleData(
+          name: goal!.stationName,
+          address: goal.address,
+          latitude: goal.lat,
+          longitude: goal.lng,
+          mark: goal.id,
+          cnt: 0,
+        ),
+      );
+    }
+
     final boundsData = makeBounds(data: templeDataList);
 
     if (boundsData.isNotEmpty) {
@@ -76,9 +112,6 @@ class _LatLngTempleDisplayAlertState
 
     makeMarker();
 
-    final routingTempleDataList = ref
-        .watch(routingProvider.select((value) => value.routingTempleDataList));
-
     return (boundsLatLngMap.isNotEmpty)
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,36 +119,93 @@ class _LatLngTempleDisplayAlertState
               if (widget.station != null) ...[
                 Column(
                   children: [
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const SizedBox(width: 20),
-                            Text(widget.station!.stationName),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                ref
-                                    .read(latLngTempleProvider.notifier)
-                                    .setOrangeDisplay();
-                              },
-                              child: CircleAvatar(
-                                backgroundColor:
-                                    Colors.orangeAccent.withOpacity(0.6),
-                                radius: 10,
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 3),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Colors.green[900]!.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Text('Start'),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Text(widget.station!.stationName),
+                                ],
                               ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (routingTempleDataList.length < 2) {
+                                    caution_dialog(
+                                      context: context,
+                                      content: 'cant setting goal',
+                                    );
+
+                                    return;
+                                  }
+
+                                  TempleDialog(
+                                    context: context,
+                                    widget: const GoalStationSettingAlert(),
+                                    paddingLeft: context.screenSize.width * 0.3,
+                                    clearBarrierColor: true,
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 60,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Colors.purpleAccent
+                                            .withOpacity(0.3),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Text('Goal'),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Text((tokyoTrainState.tokyoStationMap[
+                                                goalStationId] !=
+                                            null)
+                                        ? tokyoTrainState
+                                            .tokyoStationMap[goalStationId]!
+                                            .stationName
+                                        : '-----'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              ref
+                                  .read(latLngTempleProvider.notifier)
+                                  .setOrangeDisplay();
+                            },
+                            child: CircleAvatar(
+                              backgroundColor:
+                                  Colors.orangeAccent.withOpacity(0.6),
+                              radius: 10,
                             ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 5),
                     Container(
                       width: context.screenSize.width,
                       margin: const EdgeInsets.all(5),
@@ -176,6 +266,7 @@ class _LatLngTempleDisplayAlertState
         : Container();
   }
 
+  ///
   void makeMarker() {
     markerList = [];
 
@@ -216,16 +307,7 @@ class _LatLngTempleDisplayAlertState
                   element: templeDataList[i],
                   ref: ref,
                 ),
-                child: Text(
-                  (templeDataList[i].mark == '0')
-                      ? 'STA'
-                      : templeDataList[i].mark.padLeft(3, '0'),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
+                child: getCircleAvatarText(element: templeDataList[i]),
               ),
             );
           },
@@ -234,6 +316,35 @@ class _LatLngTempleDisplayAlertState
     }
   }
 
+  ///
+  Widget getCircleAvatarText({required TempleData element}) {
+    final routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
+
+    var str = '';
+    if (element.mark == '0') {
+      str = 'S';
+    } else if (element.mark.split('-').length == 2) {
+      if (routingTempleDataList[0].name == element.name) {
+        str = 'S';
+      } else {
+        str = 'G';
+      }
+    } else {
+      str = element.mark.padLeft(3, '0');
+    }
+
+    return Text(
+      str,
+      style: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 12,
+      ),
+    );
+  }
+
+  ///
   Widget displaySelectedRoutingTemple() {
     final list = <Widget>[];
 
@@ -267,16 +378,20 @@ class _LatLngTempleDisplayAlertState
             Container(
               margin: const EdgeInsets.all(3),
               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 15),
-              decoration: BoxDecoration(
-                color: (routingTempleDataList[i].cnt > 0)
-                    ? Colors.pinkAccent.withOpacity(0.5)
-                    : Colors.orangeAccent.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                routingTempleDataList[i].mark,
-                style: const TextStyle(fontSize: 10),
-              ),
+              decoration: (routingTempleDataList[i].mark.split('-').length != 2)
+                  ? BoxDecoration(
+                      color: (routingTempleDataList[i].cnt > 0)
+                          ? Colors.pinkAccent.withOpacity(0.5)
+                          : Colors.orangeAccent.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(10),
+                    )
+                  : null,
+              child: (routingTempleDataList[i].mark.split('-').length != 2)
+                  ? Text(
+                      routingTempleDataList[i].mark,
+                      style: const TextStyle(fontSize: 10),
+                    )
+                  : const Text(''),
             ),
           ],
         ),

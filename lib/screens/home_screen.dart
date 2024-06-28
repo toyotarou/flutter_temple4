@@ -6,10 +6,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../extensions/extensions.dart';
 import '../state/temple/temple.dart';
 import '../utility/utility.dart';
-import '_components/_temple_dialog.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
 import '_components/temple_train_station_list_alert.dart';
+import '_parts/_temple_dialog.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

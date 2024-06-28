@@ -11,8 +11,8 @@ import '../../state/station/station.dart';
 import '../../state/temple/temple.dart';
 import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../../utility/utility.dart';
+import '../_parts/_temple_dialog.dart';
 import '../function.dart';
-import '_temple_dialog.dart';
 import 'temple_course_display_alert.dart';
 import 'temple_photo_gallery_alert.dart';
 
@@ -381,6 +381,7 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
     }
   }
 
+  ///
   void makeStartEnd() {
     if (templeDataList.isNotEmpty) {
       final sWhere = templeDataList

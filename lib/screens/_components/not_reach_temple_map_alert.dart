@@ -8,8 +8,8 @@ import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../../state/temple_list/temple_list.dart';
+import '../_parts/_temple_dialog.dart';
 import '../function.dart';
-import '_temple_dialog.dart';
 import 'temple_info_display_alert.dart';
 
 class NotReachTempleMapAlert extends ConsumerStatefulWidget {
@@ -91,6 +91,7 @@ class _NotReachTempleMapAlertState
         : Container();
   }
 
+  ///
   void getNotReachTemple() {
     templeDataList = [];
 
@@ -143,6 +144,7 @@ class _NotReachTempleMapAlertState
     }
   }
 
+  ///
   void makeMarker() {
     markerList = [];
 

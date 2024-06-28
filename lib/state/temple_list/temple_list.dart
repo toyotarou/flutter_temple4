@@ -17,9 +17,6 @@ class TempleListState with _$TempleListState {
     @Default([]) List<TempleListModel> templeListList,
     @Default({}) Map<String, TempleListModel> templeListMap,
     @Default({}) Map<String, List<TempleListModel>> templeStationMap,
-
-    ///
-    @Default('') String searchStationId,
   }) = _TempleListState;
 }
 
@@ -76,10 +73,6 @@ class TempleList extends _$TempleList {
       utility.showError('予期せぬエラーが発生しました');
     });
   }
-
-  ///
-  Future<void> setSearchStationId({required String id}) async =>
-      state = state.copyWith(searchStationId: id);
 }
 
 @riverpod

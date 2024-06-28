@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/extensions.dart';
 import '../../state/lat_lng_temple/lat_lng_temple.dart';
-import '../../state/temple_list/temple_list.dart';
+import '../../state/routing/routing.dart';
 import '../../state/tokyo_train/tokyo_train.dart';
-import '_temple_dialog.dart';
+import '../_parts/_caution_dialog.dart';
+import '../_parts/_temple_dialog.dart';
 import 'lat_lng_temple_map_alert.dart';
-import 'temple_not_reach_station_list_alert.dart';
+import 'not_reach_temple_station_list_alert.dart';
 
 class TempleTrainStationListAlert extends ConsumerStatefulWidget {
   const TempleTrainStationListAlert({super.key});
@@ -27,10 +28,6 @@ class _TempleTrainListAlertState
     super.initState();
 
     ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
-
-    ref.read(templeListProvider.notifier).getAllTempleListTemple();
-
-    ref.read(templeNotReachListProvider.notifier).getAllNotReachTemple();
   }
 
   ///
@@ -38,8 +35,8 @@ class _TempleTrainListAlertState
   Widget build(BuildContext context) {
     final tokyoTrainState = ref.watch(tokyoTrainProvider);
 
-    final searchStationId =
-        ref.watch(templeListProvider.select((value) => value.searchStationId));
+    final startStationId =
+        ref.watch(routingProvider.select((value) => value.startStationId));
 
     final latLngTempleList = ref
         .watch(latLngTempleProvider.select((value) => value.latLngTempleList));
@@ -68,10 +65,10 @@ class _TempleTrainListAlertState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        (tokyoTrainState.tokyoStationMap[searchStationId] !=
+                        (tokyoTrainState.tokyoStationMap[startStationId] !=
                                 null)
                             ? tokyoTrainState
-                                .tokyoStationMap[searchStationId]!.stationName
+                                .tokyoStationMap[startStationId]!.stationName
                             : '-----',
                       ),
                       Column(
@@ -98,7 +95,7 @@ class _TempleTrainListAlertState
                             onPressed: () {
                               TempleDialog(
                                 context: context,
-                                widget: const TempleNotReachStationListAlert(),
+                                widget: const NotReachTempleStationListAlert(),
                                 paddingLeft: context.screenSize.width * 0.2,
                               );
                             },
@@ -108,13 +105,13 @@ class _TempleTrainListAlertState
                             ),
                           ),
                           IconButton(
-                            onPressed: (searchStationId == '')
+                            onPressed: (startStationId == '')
                                 ? null
                                 : () {
                                     if (latLngTempleList.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text('no hit')));
+                                      caution_dialog(
+                                          context: context, content: 'no hit');
+
                                       return;
                                     }
 
@@ -123,13 +120,13 @@ class _TempleTrainListAlertState
                                       widget: LatLngTempleMapAlert(
                                         templeList: latLngTempleList,
                                         station: tokyoTrainState
-                                            .tokyoStationMap[searchStationId],
+                                            .tokyoStationMap[startStationId],
                                       ),
                                     );
                                   },
                             icon: Icon(
                               Icons.map,
-                              color: (searchStationId != '' &&
+                              color: (startStationId != '' &&
                                       latLngTempleList.isNotEmpty)
                                   ? Colors.yellowAccent.withOpacity(0.4)
                                   : Colors.white.withOpacity(0.4),
@@ -166,7 +163,7 @@ class _TempleTrainListAlertState
                           ),
                           child: DefaultTextStyle(
                             style: TextStyle(
-                              color: (e2.id == searchStationId)
+                              color: (e2.id == startStationId)
                                   ? Colors.yellowAccent
                                   : Colors.white,
                               fontSize: 12,
@@ -185,12 +182,12 @@ class _TempleTrainListAlertState
                                     });
 
                                     ref
-                                        .read(templeListProvider.notifier)
-                                        .setSearchStationId(id: e2.id);
+                                        .read(routingProvider.notifier)
+                                        .setStartStationId(id: e2.id);
                                   },
                                   child: Icon(
                                     Icons.location_on,
-                                    color: (e2.id == searchStationId)
+                                    color: (e2.id == startStationId)
                                         ? Colors.yellowAccent.withOpacity(0.4)
                                         : Colors.white.withOpacity(0.4),
                                   ),

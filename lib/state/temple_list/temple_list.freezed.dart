@@ -23,9 +23,6 @@ mixin _$TempleListState {
   Map<String, List<TempleListModel>> get templeStationMap =>
       throw _privateConstructorUsedError;
 
-  ///
-  String get searchStationId => throw _privateConstructorUsedError;
-
   @JsonKey(ignore: true)
   $TempleListStateCopyWith<TempleListState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -40,8 +37,7 @@ abstract class $TempleListStateCopyWith<$Res> {
   $Res call(
       {List<TempleListModel> templeListList,
       Map<String, TempleListModel> templeListMap,
-      Map<String, List<TempleListModel>> templeStationMap,
-      String searchStationId});
+      Map<String, List<TempleListModel>> templeStationMap});
 }
 
 /// @nodoc
@@ -60,7 +56,6 @@ class _$TempleListStateCopyWithImpl<$Res, $Val extends TempleListState>
     Object? templeListList = null,
     Object? templeListMap = null,
     Object? templeStationMap = null,
-    Object? searchStationId = null,
   }) {
     return _then(_value.copyWith(
       templeListList: null == templeListList
@@ -75,10 +70,6 @@ class _$TempleListStateCopyWithImpl<$Res, $Val extends TempleListState>
           ? _value.templeStationMap
           : templeStationMap // ignore: cast_nullable_to_non_nullable
               as Map<String, List<TempleListModel>>,
-      searchStationId: null == searchStationId
-          ? _value.searchStationId
-          : searchStationId // ignore: cast_nullable_to_non_nullable
-              as String,
     ) as $Val);
   }
 }
@@ -94,8 +85,7 @@ abstract class _$$TempleListStateImplCopyWith<$Res>
   $Res call(
       {List<TempleListModel> templeListList,
       Map<String, TempleListModel> templeListMap,
-      Map<String, List<TempleListModel>> templeStationMap,
-      String searchStationId});
+      Map<String, List<TempleListModel>> templeStationMap});
 }
 
 /// @nodoc
@@ -112,7 +102,6 @@ class __$$TempleListStateImplCopyWithImpl<$Res>
     Object? templeListList = null,
     Object? templeListMap = null,
     Object? templeStationMap = null,
-    Object? searchStationId = null,
   }) {
     return _then(_$TempleListStateImpl(
       templeListList: null == templeListList
@@ -127,10 +116,6 @@ class __$$TempleListStateImplCopyWithImpl<$Res>
           ? _value._templeStationMap
           : templeStationMap // ignore: cast_nullable_to_non_nullable
               as Map<String, List<TempleListModel>>,
-      searchStationId: null == searchStationId
-          ? _value.searchStationId
-          : searchStationId // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -141,8 +126,7 @@ class _$TempleListStateImpl implements _TempleListState {
   const _$TempleListStateImpl(
       {final List<TempleListModel> templeListList = const [],
       final Map<String, TempleListModel> templeListMap = const {},
-      final Map<String, List<TempleListModel>> templeStationMap = const {},
-      this.searchStationId = ''})
+      final Map<String, List<TempleListModel>> templeStationMap = const {}})
       : _templeListList = templeListList,
         _templeListMap = templeListMap,
         _templeStationMap = templeStationMap;
@@ -174,14 +158,9 @@ class _$TempleListStateImpl implements _TempleListState {
     return EqualUnmodifiableMapView(_templeStationMap);
   }
 
-  ///
-  @override
-  @JsonKey()
-  final String searchStationId;
-
   @override
   String toString() {
-    return 'TempleListState(templeListList: $templeListList, templeListMap: $templeListMap, templeStationMap: $templeStationMap, searchStationId: $searchStationId)';
+    return 'TempleListState(templeListList: $templeListList, templeListMap: $templeListMap, templeStationMap: $templeStationMap)';
   }
 
   @override
@@ -194,9 +173,7 @@ class _$TempleListStateImpl implements _TempleListState {
             const DeepCollectionEquality()
                 .equals(other._templeListMap, _templeListMap) &&
             const DeepCollectionEquality()
-                .equals(other._templeStationMap, _templeStationMap) &&
-            (identical(other.searchStationId, searchStationId) ||
-                other.searchStationId == searchStationId));
+                .equals(other._templeStationMap, _templeStationMap));
   }
 
   @override
@@ -204,8 +181,7 @@ class _$TempleListStateImpl implements _TempleListState {
       runtimeType,
       const DeepCollectionEquality().hash(_templeListList),
       const DeepCollectionEquality().hash(_templeListMap),
-      const DeepCollectionEquality().hash(_templeStationMap),
-      searchStationId);
+      const DeepCollectionEquality().hash(_templeStationMap));
 
   @JsonKey(ignore: true)
   @override
@@ -217,10 +193,10 @@ class _$TempleListStateImpl implements _TempleListState {
 
 abstract class _TempleListState implements TempleListState {
   const factory _TempleListState(
-      {final List<TempleListModel> templeListList,
-      final Map<String, TempleListModel> templeListMap,
-      final Map<String, List<TempleListModel>> templeStationMap,
-      final String searchStationId}) = _$TempleListStateImpl;
+          {final List<TempleListModel> templeListList,
+          final Map<String, TempleListModel> templeListMap,
+          final Map<String, List<TempleListModel>> templeStationMap}) =
+      _$TempleListStateImpl;
 
   @override
   List<TempleListModel> get templeListList;
@@ -228,10 +204,6 @@ abstract class _TempleListState implements TempleListState {
   Map<String, TempleListModel> get templeListMap;
   @override
   Map<String, List<TempleListModel>> get templeStationMap;
-  @override
-
-  ///
-  String get searchStationId;
   @override
   @JsonKey(ignore: true)
   _$$TempleListStateImplCopyWith<_$TempleListStateImpl> get copyWith =>

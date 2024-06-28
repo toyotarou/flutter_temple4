@@ -5,16 +5,16 @@ import '../../extensions/extensions.dart';
 import '../../state/temple_list/temple_list.dart';
 import '../../state/tokyo_train/tokyo_train.dart';
 
-class TempleNotReachStationListAlert extends ConsumerStatefulWidget {
-  const TempleNotReachStationListAlert({super.key});
+class NotReachTempleStationListAlert extends ConsumerStatefulWidget {
+  const NotReachTempleStationListAlert({super.key});
 
   @override
-  ConsumerState<TempleNotReachStationListAlert> createState() =>
+  ConsumerState<NotReachTempleStationListAlert> createState() =>
       _TempleNotReachStationListAlertState();
 }
 
 class _TempleNotReachStationListAlertState
-    extends ConsumerState<TempleNotReachStationListAlert> {
+    extends ConsumerState<NotReachTempleStationListAlert> {
   List<String> notReachTrainIds = [];
   List<String> notReachStationIds = [];
 
@@ -104,6 +104,7 @@ class _TempleNotReachStationListAlertState
     );
   }
 
+  ///
   void makeNotReachTempleIds() {
     ref
         .watch(templeNotReachListProvider

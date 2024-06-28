@@ -32,14 +32,18 @@ Color? getCircleAvatarBgColor(
       break;
   }
 
-  final routingTempleDataList =
-      ref.watch(routingProvider.select((value) => value.routingTempleDataList));
+  if (element.mark.split('-').length == 2) {
+    color = Colors.purpleAccent.withOpacity(0.5);
+  } else {
+    final routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
 
-  final pos = routingTempleDataList
-      .indexWhere((element2) => element2.mark == element.mark);
+    final pos = routingTempleDataList
+        .indexWhere((element2) => element2.mark == element.mark);
 
-  if (pos != -1) {
-    color = Colors.indigo.withOpacity(0.5);
+    if (pos != -1) {
+      color = Colors.indigo.withOpacity(0.5);
+    }
   }
 
   return color;

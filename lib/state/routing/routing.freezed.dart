@@ -21,6 +21,10 @@ mixin _$RoutingState {
   Map<String, TempleData> get routingTempleDataMap =>
       throw _privateConstructorUsedError;
 
+  ///
+  String get startStationId => throw _privateConstructorUsedError;
+  String get goalStationId => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $RoutingStateCopyWith<RoutingState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -34,7 +38,9 @@ abstract class $RoutingStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<TempleData> routingTempleDataList,
-      Map<String, TempleData> routingTempleDataMap});
+      Map<String, TempleData> routingTempleDataMap,
+      String startStationId,
+      String goalStationId});
 }
 
 /// @nodoc
@@ -52,6 +58,8 @@ class _$RoutingStateCopyWithImpl<$Res, $Val extends RoutingState>
   $Res call({
     Object? routingTempleDataList = null,
     Object? routingTempleDataMap = null,
+    Object? startStationId = null,
+    Object? goalStationId = null,
   }) {
     return _then(_value.copyWith(
       routingTempleDataList: null == routingTempleDataList
@@ -62,6 +70,14 @@ class _$RoutingStateCopyWithImpl<$Res, $Val extends RoutingState>
           ? _value.routingTempleDataMap
           : routingTempleDataMap // ignore: cast_nullable_to_non_nullable
               as Map<String, TempleData>,
+      startStationId: null == startStationId
+          ? _value.startStationId
+          : startStationId // ignore: cast_nullable_to_non_nullable
+              as String,
+      goalStationId: null == goalStationId
+          ? _value.goalStationId
+          : goalStationId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -76,7 +92,9 @@ abstract class _$$RoutingStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<TempleData> routingTempleDataList,
-      Map<String, TempleData> routingTempleDataMap});
+      Map<String, TempleData> routingTempleDataMap,
+      String startStationId,
+      String goalStationId});
 }
 
 /// @nodoc
@@ -92,6 +110,8 @@ class __$$RoutingStateImplCopyWithImpl<$Res>
   $Res call({
     Object? routingTempleDataList = null,
     Object? routingTempleDataMap = null,
+    Object? startStationId = null,
+    Object? goalStationId = null,
   }) {
     return _then(_$RoutingStateImpl(
       routingTempleDataList: null == routingTempleDataList
@@ -102,6 +122,14 @@ class __$$RoutingStateImplCopyWithImpl<$Res>
           ? _value._routingTempleDataMap
           : routingTempleDataMap // ignore: cast_nullable_to_non_nullable
               as Map<String, TempleData>,
+      startStationId: null == startStationId
+          ? _value.startStationId
+          : startStationId // ignore: cast_nullable_to_non_nullable
+              as String,
+      goalStationId: null == goalStationId
+          ? _value.goalStationId
+          : goalStationId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -111,7 +139,9 @@ class __$$RoutingStateImplCopyWithImpl<$Res>
 class _$RoutingStateImpl implements _RoutingState {
   const _$RoutingStateImpl(
       {final List<TempleData> routingTempleDataList = const [],
-      final Map<String, TempleData> routingTempleDataMap = const {}})
+      final Map<String, TempleData> routingTempleDataMap = const {},
+      this.startStationId = '',
+      this.goalStationId = ''})
       : _routingTempleDataList = routingTempleDataList,
         _routingTempleDataMap = routingTempleDataMap;
 
@@ -135,9 +165,17 @@ class _$RoutingStateImpl implements _RoutingState {
     return EqualUnmodifiableMapView(_routingTempleDataMap);
   }
 
+  ///
+  @override
+  @JsonKey()
+  final String startStationId;
+  @override
+  @JsonKey()
+  final String goalStationId;
+
   @override
   String toString() {
-    return 'RoutingState(routingTempleDataList: $routingTempleDataList, routingTempleDataMap: $routingTempleDataMap)';
+    return 'RoutingState(routingTempleDataList: $routingTempleDataList, routingTempleDataMap: $routingTempleDataMap, startStationId: $startStationId, goalStationId: $goalStationId)';
   }
 
   @override
@@ -148,14 +186,20 @@ class _$RoutingStateImpl implements _RoutingState {
             const DeepCollectionEquality()
                 .equals(other._routingTempleDataList, _routingTempleDataList) &&
             const DeepCollectionEquality()
-                .equals(other._routingTempleDataMap, _routingTempleDataMap));
+                .equals(other._routingTempleDataMap, _routingTempleDataMap) &&
+            (identical(other.startStationId, startStationId) ||
+                other.startStationId == startStationId) &&
+            (identical(other.goalStationId, goalStationId) ||
+                other.goalStationId == goalStationId));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_routingTempleDataList),
-      const DeepCollectionEquality().hash(_routingTempleDataMap));
+      const DeepCollectionEquality().hash(_routingTempleDataMap),
+      startStationId,
+      goalStationId);
 
   @JsonKey(ignore: true)
   @override
@@ -167,12 +211,20 @@ class _$RoutingStateImpl implements _RoutingState {
 abstract class _RoutingState implements RoutingState {
   const factory _RoutingState(
       {final List<TempleData> routingTempleDataList,
-      final Map<String, TempleData> routingTempleDataMap}) = _$RoutingStateImpl;
+      final Map<String, TempleData> routingTempleDataMap,
+      final String startStationId,
+      final String goalStationId}) = _$RoutingStateImpl;
 
   @override
   List<TempleData> get routingTempleDataList;
   @override
   Map<String, TempleData> get routingTempleDataMap;
+  @override
+
+  ///
+  String get startStationId;
+  @override
+  String get goalStationId;
   @override
   @JsonKey(ignore: true)
   _$$RoutingStateImplCopyWith<_$RoutingStateImpl> get copyWith =>

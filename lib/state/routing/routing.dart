@@ -14,6 +14,10 @@ class RoutingState with _$RoutingState {
   const factory RoutingState({
     @Default([]) List<TempleData> routingTempleDataList,
     @Default({}) Map<String, TempleData> routingTempleDataMap,
+
+    ///
+    @Default('') String startStationId,
+    @Default('') String goalStationId,
   }) = _RoutingState;
 }
 
@@ -45,19 +49,37 @@ class Routing extends _$Routing {
       }
     }
 
-    final markList = <String>[];
-    list.forEach((element) {
-      markList.add(element.mark);
-    });
-
-    final pos = markList.indexWhere((element) => element == templeData.mark);
-
-    if (pos != -1) {
-      list.removeAt(pos);
+    if (station?.stationName == templeData.name) {
+      if (list.last.mark.split('-').length == 2) {
+        list.removeAt(list.length - 1);
+      }
     } else {
-      list.add(templeData);
+      final markList = <String>[];
+      list.forEach((element) => markList.add(element.mark));
+
+      final pos = markList.indexWhere((element) => element == templeData.mark);
+
+      if (pos != -1) {
+        list.removeAt(pos);
+      } else {
+        list.add(templeData);
+      }
+    }
+
+    if (station?.stationName != templeData.name) {
+      if (templeData.mark.split('-').length == 2) {
+        list[list.length - 1] = templeData;
+      }
     }
 
     state = state.copyWith(routingTempleDataList: list);
   }
+
+  ///
+  Future<void> setStartStationId({required String id}) async =>
+      state = state.copyWith(startStationId: id);
+
+  ///
+  Future<void> setGoalStationId({required String id}) async =>
+      state = state.copyWith(goalStationId: id);
 }
