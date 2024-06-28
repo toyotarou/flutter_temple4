@@ -22,6 +22,11 @@ class _TempleTrainListAlertState
     extends ConsumerState<TempleTrainStationListAlert> {
   int reachTempleNum = 0;
 
+
+
+
+
+
   ///
   @override
   void initState() {

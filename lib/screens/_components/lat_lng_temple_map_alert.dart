@@ -41,12 +41,18 @@ class _LatLngTempleDisplayAlertState
 
   List<int> reachedTempleIds = [];
 
+  MapController mapController = MapController();
+  late LatLng currentCenter;
+
   ///
   @override
   void initState() {
     super.initState();
 
     ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
+
+    currentCenter =
+        LatLng(widget.station!.lat.toDouble(), widget.station!.lng.toDouble());
   }
 
   ///
@@ -224,6 +230,7 @@ class _LatLngTempleDisplayAlertState
               ],
               Expanded(
                 child: FlutterMap(
+                  mapController: mapController,
                   options: MapOptions(
                     bounds: LatLngBounds(
                       LatLng(
@@ -260,6 +267,18 @@ class _LatLngTempleDisplayAlertState
                     MarkerLayer(markers: markerList),
                   ],
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(),
+                  IconButton(
+                    onPressed: () {
+                      mapController.move(currentCenter, 13);
+                    },
+                    icon: const Icon(Icons.center_focus_strong),
+                  ),
+                ],
               ),
             ],
           )
