@@ -10,7 +10,6 @@ import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../../state/temple_list/temple_list.dart';
 import '../function.dart';
 import '_temple_dialog.dart';
-import 'temple_detail_map_alert.dart';
 import 'temple_info_display_alert.dart';
 
 class NotReachTempleMapAlert extends ConsumerStatefulWidget {

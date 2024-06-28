@@ -211,7 +211,7 @@ class _LatLngTempleDisplayAlertState
   Widget displaySelectedRoutingTemple() {
     final list = <Widget>[];
 
-    var routingTempleDataList = ref
+    final routingTempleDataList = ref
         .watch(routingProvider.select((value) => value.routingTempleDataList));
 
     for (var i = 1; i < routingTempleDataList.length; i++) {
