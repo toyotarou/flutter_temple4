@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../extensions/extensions.dart';
 import '../models/common/temple_data.dart';
 import '../state/routing/routing.dart';
+import '../state/temple/temple.dart';
 
 ///
 Color? getCircleAvatarBgColor(
@@ -104,4 +106,19 @@ String calcDistance({
   final shousuu = exDistance[1].substring(0, 2);
 
   return '$seisuu.$shousuu';
+}
+
+///
+List<int> makeTempleVisitYearList({required WidgetRef ref}) {
+  final list = <int>[];
+
+  ref
+      .watch(templeProvider.select((value) => value.templeList))
+      .forEach((element) {
+    if (!list.contains(element.date.year)) {
+      list.add(element.date.year);
+    }
+  });
+
+  return list;
 }

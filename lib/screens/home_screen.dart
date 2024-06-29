@@ -12,6 +12,7 @@ import '_components/temple_detail_map_alert.dart';
 import '_components/temple_train_station_list_alert.dart';
 import '_components/visited_temple_map_alert.dart';
 import '_parts/_temple_dialog.dart';
+import 'function.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -53,7 +54,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (yearList.isEmpty) {
-      makeHomeYearList();
+      yearList = makeTempleVisitYearList(ref: ref);
     }
 
     return DefaultTabController(
@@ -245,19 +246,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ],
     );
-  }
-
-  ///
-  void makeHomeYearList() {
-    yearList = [];
-
-    ref
-        .watch(templeProvider.select((value) => value.templeList))
-        .forEach((element) {
-      if (!yearList.contains(element.date.year)) {
-        yearList.add(element.date.year);
-      }
-    });
   }
 
   ///
