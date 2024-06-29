@@ -115,6 +115,14 @@ class _TempleTrainListAlertState
                                       return;
                                     }
 
+                                    ref
+                                        .read(routingProvider.notifier)
+                                        .clearRoutingTempleDataList();
+
+                                    ref
+                                        .read(routingProvider.notifier)
+                                        .setGoalStationId(id: '');
+
                                     TempleDialog(
                                       context: context,
                                       widget: LatLngTempleMapAlert(

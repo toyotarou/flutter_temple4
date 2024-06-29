@@ -17,6 +17,7 @@ Color? getCircleAvatarBgColor(
     case 'E':
     case 'S/E':
     case '0':
+    case 'STA':
       color = Colors.green[900]?.withOpacity(0.5);
       break;
     case '01':

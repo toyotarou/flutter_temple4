@@ -75,6 +75,11 @@ class Routing extends _$Routing {
   }
 
   ///
+  Future<void> clearRoutingTempleDataList() async {
+    state = state.copyWith(routingTempleDataList: []);
+  }
+
+  ///
   Future<void> setStartStationId({required String id}) async =>
       state = state.copyWith(startStationId: id);
 

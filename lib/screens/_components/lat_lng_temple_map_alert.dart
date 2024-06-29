@@ -89,6 +89,7 @@ class _LatLngTempleDisplayAlertState
         address: widget.station!.address,
         latitude: widget.station!.lat,
         longitude: widget.station!.lng,
+        mark: 'STA',
       ));
     }
 
@@ -163,7 +164,7 @@ class _LatLngTempleDisplayAlertState
                                   TempleDialog(
                                     context: context,
                                     widget: const GoalStationSettingAlert(),
-                                    paddingLeft: context.screenSize.width * 0.3,
+                                    paddingLeft: context.screenSize.width * 0.2,
                                     clearBarrierColor: true,
                                   );
                                 },
@@ -341,7 +342,8 @@ class _LatLngTempleDisplayAlertState
     if (element.mark == '0') {
       str = 'S';
     } else if (element.mark.split('-').length == 2) {
-      if (routingTempleDataList[0].name == element.name) {
+      if (routingTempleDataList.isNotEmpty &&
+          routingTempleDataList[0].name == element.name) {
         str = 'S';
       } else {
         str = 'G';
