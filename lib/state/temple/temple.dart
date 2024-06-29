@@ -30,6 +30,9 @@ class TempleState with _$TempleState {
     @Default('') selectTempleName,
     @Default('') selectTempleLat,
     @Default('') selectTempleLng,
+
+    //
+    @Default({}) Map<String, List<String>> templeVisitDateMap,
   }) = _TempleState;
 }
 
@@ -50,6 +53,9 @@ class Temple extends _$Temple {
       final map = <String, TempleModel>{};
       final map2 = <String, TempleModel>{};
 
+      final map3 = <String, List<String>>{};
+      final templeNameList = <String>[];
+
       // ignore: avoid_dynamic_calls
       for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
         final val = TempleModel.fromJson(
@@ -61,12 +67,42 @@ class Temple extends _$Temple {
         map[val.date.yyyymmdd] = val;
 
         map2['${val.lat}|${val.lng}'] = val;
+
+        map3[val.temple] = [];
+        templeNameList.add(val.temple);
+      }
+
+      // ignore: avoid_dynamic_calls
+      for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
+        final val = TempleModel.fromJson(
+          // ignore: avoid_dynamic_calls
+          value['list'][i] as Map<String, dynamic>,
+        );
+
+        val.memo.split('、').forEach((element) {
+          map3[element] = [];
+        });
+      }
+
+      // ignore: avoid_dynamic_calls
+      for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
+        final val = TempleModel.fromJson(
+          // ignore: avoid_dynamic_calls
+          value['list'][i] as Map<String, dynamic>,
+        );
+
+        map3[val.temple]?.add(val.date.yyyymmdd);
+
+        val.memo.split('、').forEach((element) {
+          map3[element]?.add(val.date.yyyymmdd);
+        });
       }
 
       state = state.copyWith(
         templeList: list,
         dateTempleMap: map,
         latLngTempleMap: map2,
+        templeVisitDateMap: map3,
       );
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');

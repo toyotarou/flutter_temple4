@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/state/temple/temple.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
@@ -24,7 +25,18 @@ class _TempleInfoDisplayAlertState
     extends ConsumerState<TempleInfoDisplayAlert> {
   ///
   @override
+  void initState() {
+    super.initState();
+
+    ref.read(templeProvider.notifier).getAllTemple();
+  }
+
+  ///
+  @override
   Widget build(BuildContext context) {
+    final templeVisitDateMap =
+        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
+
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -42,17 +54,19 @@ class _TempleInfoDisplayAlertState
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: getCircleAvatarBgColor(
-                      element: widget.temple,
-                      ref: ref,
+                  if (widget.from != 'VisitedTempleMapAlert') ...[
+                    CircleAvatar(
+                      backgroundColor: getCircleAvatarBgColor(
+                        element: widget.temple,
+                        ref: ref,
+                      ),
+                      child: Text(
+                        widget.temple.mark.padLeft(2, '0'),
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
-                    child: Text(
-                      widget.temple.mark.padLeft(2, '0'),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
+                    const SizedBox(width: 20),
+                  ],
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,6 +76,30 @@ class _TempleInfoDisplayAlertState
                         Text(widget.temple.address),
                         Text(widget.temple.latitude),
                         Text(widget.temple.longitude),
+                        if (widget.from == 'VisitedTempleMapAlert') ...[
+                          (templeVisitDateMap[widget.temple.name] != null)
+                              ? Wrap(
+                                  children:
+                                      templeVisitDateMap[widget.temple.name]!
+                                          .map((e) {
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3, horizontal: 5),
+                                      margin: const EdgeInsets.all(1),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.2),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        e,
+                                        style: const TextStyle(fontSize: 8),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : Container(),
+                        ],
                       ],
                     ),
                   ),

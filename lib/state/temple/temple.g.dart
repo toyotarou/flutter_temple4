@@ -6,7 +6,7 @@ part of 'temple.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$templeHash() => r'a4d2e7ea98f16b8b33100c0d9d20a137308a4cbc';
+String _$templeHash() => r'fbeabe76b8902ab6f58487eb2892a8945ea27a70';
 
 /// See also [Temple].
 @ProviderFor(Temple)
