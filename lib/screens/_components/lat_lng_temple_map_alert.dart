@@ -423,10 +423,8 @@ class _LatLngTempleDisplayAlertState
                     )
                   : null,
               child: (routingTempleDataList[i].mark.split('-').length != 2)
-                  ? Text(
-                      routingTempleDataList[i].mark,
-                      style: const TextStyle(fontSize: 10),
-                    )
+                  ? Text(routingTempleDataList[i].mark,
+                      style: const TextStyle(fontSize: 10))
                   : const Text(''),
             ),
           ],

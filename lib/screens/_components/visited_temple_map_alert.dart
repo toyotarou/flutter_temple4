@@ -78,11 +78,9 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                     if (templeState.selectTempleName != '') ...[
                       IconButton(
                         onPressed: () {
-                          ref.read(templeProvider.notifier).setSelectTemple(
-                                name: '',
-                                lat: '',
-                                lng: '',
-                              );
+                          ref
+                              .read(templeProvider.notifier)
+                              .setSelectTemple(name: '', lat: '', lng: '');
 
                           Navigator.pop(context);
 

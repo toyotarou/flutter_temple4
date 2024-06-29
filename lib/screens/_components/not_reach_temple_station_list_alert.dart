@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/tokyo_station_model.dart';
 import '../../state/temple_list/temple_list.dart';
 import '../../state/tokyo_train/tokyo_train.dart';
 
@@ -31,12 +32,6 @@ class _TempleNotReachStationListAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    final tokyoTrainList =
-        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
-
-    final templeStationMap = ref.watch(
-        templeNotReachListProvider.select((value) => value.templeStationMap));
-
     makeNotReachTempleIds();
 
     return AlertDialog(
@@ -53,53 +48,64 @@ class _TempleNotReachStationListAlertState
           children: [
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: tokyoTrainList.map((e) {
-                    if (notReachTrainIds.contains(e.trainNumber.toString())) {
-                      return ExpansionTile(
-                        title: Text(e.trainName),
-                        children: e.station.map((e2) {
-                          if (notReachStationIds.contains(e2.id)) {
-                            return Container(
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    color: Colors.white.withOpacity(0.3),
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(e2.stationName),
-                                  Text((templeStationMap[e2.id] != null)
-                                      ? templeStationMap[e2.id]!
-                                          .length
-                                          .toString()
-                                      : '0'),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }).toList(),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }).toList(),
-                ),
-              ),
-            ),
+            Expanded(child: displayNotReachTrain()),
           ],
         ),
+      ),
+    );
+  }
+
+  ///
+  Widget displayNotReachTrain() {
+    final tokyoTrainList =
+        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: tokyoTrainList.map((e) {
+          if (notReachTrainIds.contains(e.trainNumber.toString())) {
+            return ExpansionTile(
+              title: Text(e.trainName),
+              children: e.station.map((e2) {
+                if (notReachStationIds.contains(e2.id)) {
+                  return displayNotReachStation(data: e2);
+                } else {
+                  return Container();
+                }
+              }).toList(),
+            );
+          } else {
+            return Container();
+          }
+        }).toList(),
+      ),
+    );
+  }
+
+  ///
+  Widget displayNotReachStation({required TokyoStationModel data}) {
+    final templeStationMap = ref.watch(
+        templeNotReachListProvider.select((value) => value.templeStationMap));
+
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Colors.white.withOpacity(0.3)),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(data.stationName),
+          Text(
+            (templeStationMap[data.id] != null)
+                ? templeStationMap[data.id]!.length.toString()
+                : '0',
+          ),
+        ],
       ),
     );
   }

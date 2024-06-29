@@ -34,15 +34,6 @@ class _TempleInfoDisplayAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    final templeVisitDateMap =
-        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
-
-    final routingTempleDataList = ref
-        .watch(routingProvider.select((value) => value.routingTempleDataList));
-
-    final pos = routingTempleDataList
-        .indexWhere((element) => element.mark == widget.temple.mark);
-
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -57,86 +48,113 @@ class _TempleInfoDisplayAlertState
           child: Column(
             children: [
               const SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.from != 'VisitedTempleMapAlert') ...[
-                    CircleAvatar(
-                      backgroundColor: getCircleAvatarBgColor(
-                        element: widget.temple,
-                        ref: ref,
-                      ),
-                      child: Text(
-                        widget.temple.mark.padLeft(2, '0'),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                  ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(width: context.screenSize.width),
-                        Text(widget.temple.name),
-                        Text(widget.temple.address),
-                        Text(widget.temple.latitude),
-                        Text(widget.temple.longitude),
-                        if (widget.from == 'VisitedTempleMapAlert') ...[
-                          (templeVisitDateMap[widget.temple.name] != null)
-                              ? Wrap(
-                                  children:
-                                      templeVisitDateMap[widget.temple.name]!
-                                          .map((e) {
-                                    return Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 3, horizontal: 5),
-                                      margin: const EdgeInsets.all(1),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.2),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        e,
-                                        style: const TextStyle(fontSize: 8),
-                                      ),
-                                    );
-                                  }).toList(),
-                                )
-                              : Container(),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              if (widget.from == 'LatLngTempleMapAlert') ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(),
-                    ElevatedButton(
-                      onPressed: () {
-                        ref.read(routingProvider.notifier).setRouting(
-                              templeData: widget.temple,
-                              station: widget.station,
-                            );
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: (pos != -1)
-                              ? Colors.white.withOpacity(0.2)
-                              : Colors.indigo.withOpacity(0.2)),
-                      child:
-                          Text((pos != -1) ? 'remove routing' : 'add routing'),
-                    ),
-                  ],
-                ),
-              ],
+              displayTempleInfo(),
+              displayAddRemoveRoutingButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  ///
+  Widget displayAddRemoveRoutingButton() {
+    if (widget.from != 'LatLngTempleMapAlert') {
+      return Container();
+    }
+
+    final routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
+
+    final pos = routingTempleDataList
+        .indexWhere((element) => element.mark == widget.temple.mark);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(),
+        ElevatedButton(
+          onPressed: () {
+            ref
+                .read(routingProvider.notifier)
+                .setRouting(templeData: widget.temple, station: widget.station);
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: (pos != -1)
+                  ? Colors.white.withOpacity(0.2)
+                  : Colors.indigo.withOpacity(0.2)),
+          child: Text((pos != -1) ? 'remove routing' : 'add routing'),
+        ),
+      ],
+    );
+  }
+
+  ///
+  Widget displayTempleInfo() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        displayTempleInfoCircleAvatar(),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(width: context.screenSize.width),
+              Text(widget.temple.name),
+              Text(widget.temple.address),
+              Text(widget.temple.latitude),
+              Text(widget.temple.longitude),
+              displayTempleVisitDate(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  ///
+  Widget displayTempleInfoCircleAvatar() {
+    if (widget.from == 'VisitedTempleMapAlert') {
+      return Row(
+        children: [Container(), const SizedBox(width: 20)],
+      );
+    }
+
+    return Row(
+      children: [
+        CircleAvatar(
+          backgroundColor:
+              getCircleAvatarBgColor(element: widget.temple, ref: ref),
+          child: Text(
+            widget.temple.mark.padLeft(2, '0'),
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        const SizedBox(width: 20),
+      ],
+    );
+  }
+
+  ///
+  Widget displayTempleVisitDate() {
+    final templeVisitDateMap =
+        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
+
+    if (widget.from != 'VisitedTempleMapAlert') {
+      return Container();
+    }
+
+    return Wrap(
+      children: templeVisitDateMap[widget.temple.name]!.map((e) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+          margin: const EdgeInsets.all(1),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white.withOpacity(0.2)),
+          ),
+          child: Text(e, style: const TextStyle(fontSize: 8)),
+        );
+      }).toList(),
     );
   }
 }

@@ -38,47 +38,49 @@ class _TempleCourseDisplayAlertState
                 const SizedBox(height: 20),
                 Container(width: context.screenSize.width),
                 Column(
-                  children: widget.data.map((e) {
-                    return Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: getCircleAvatarBgColor(
-                                element: e,
-                                ref: ref,
-                              ),
-                              child: Text(
-                                e.mark,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(e.name),
-                                Text(e.address),
-                                const SizedBox(height: 10),
-                              ],
-                            )),
-                          ],
-                        ),
-                        const Divider(color: Colors.white),
-                      ],
-                    );
-                  }).toList(),
+                  children: widget.data
+                      .map((e) => displayCourseData(data: e))
+                      .toList(),
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  ///
+  Widget displayCourseData({required TempleData data}) {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundColor: getCircleAvatarBgColor(element: data, ref: ref),
+              child: Text(
+                data.mark,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(data.name),
+                Text(data.address),
+                const SizedBox(height: 10),
+              ],
+            )),
+          ],
+        ),
+        const Divider(color: Colors.white),
+      ],
     );
   }
 }
