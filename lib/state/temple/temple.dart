@@ -15,7 +15,9 @@ part 'temple.g.dart';
 class TempleState with _$TempleState {
   const factory TempleState({
     @Default([]) List<TempleModel> templeList,
-    @Default({}) Map<String, TempleModel> templeMap,
+    @Default({}) Map<String, TempleModel> dateTempleMap,
+    @Default({}) Map<String, TempleModel> latLngTempleMap,
+    @Default({}) Map<String, TempleModel> nameTempleMap,
 
     ///
     @Default('') String searchWord,
@@ -23,6 +25,11 @@ class TempleState with _$TempleState {
 
     ///
     @Default('') selectYear,
+
+    //
+    @Default('') selectTempleName,
+    @Default('') selectTempleLat,
+    @Default('') selectTempleLng,
   }) = _TempleState;
 }
 
@@ -41,6 +48,7 @@ class Temple extends _$Temple {
     await client.post(path: APIPath.getAllTemple).then((value) {
       final list = <TempleModel>[];
       final map = <String, TempleModel>{};
+      final map2 = <String, TempleModel>{};
 
       // ignore: avoid_dynamic_calls
       for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
@@ -51,9 +59,15 @@ class Temple extends _$Temple {
 
         list.add(val);
         map[val.date.yyyymmdd] = val;
+
+        map2['${val.lat}|${val.lng}'] = val;
       }
 
-      state = state.copyWith(templeList: list, templeMap: map);
+      state = state.copyWith(
+        templeList: list,
+        dateTempleMap: map,
+        latLngTempleMap: map2,
+      );
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
@@ -70,4 +84,16 @@ class Temple extends _$Temple {
   ///
   Future<void> setSelectYear({required String year}) async =>
       state = state.copyWith(selectYear: year);
+
+  ///
+  Future<void> setSelectTemple({
+    required String name,
+    required String lat,
+    required String lng,
+  }) async =>
+      state = state.copyWith(
+        selectTempleName: name,
+        selectTempleLat: lat,
+        selectTempleLng: lng,
+      );
 }

@@ -9,6 +9,7 @@ import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
 import '_components/temple_train_station_list_alert.dart';
+import '_components/visited_temple_map_alert.dart';
 import '_parts/_temple_dialog.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -71,90 +72,131 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           backgroundColor: Colors.black.withOpacity(0.7),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            actions: [
-              Row(
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(100),
+              child: Column(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      TempleDialog(
-                        context: context,
-                        widget: const TempleTrainStationListAlert(),
-                      );
-                    },
-                    icon: const Icon(Icons.train),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      TempleDialog(
-                        context: context,
-                        widget: const NotReachTempleMapAlert(),
-                      );
-                    },
-                    icon: const Icon(FontAwesomeIcons.toriiGate),
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    width: 240,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            controller: searchWordEditingController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 4),
-                              filled: true,
-                              fillColor: Colors.white.withOpacity(0.2),
-                              border: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                            ),
-                            onTapOutside: (event) =>
-                                FocusManager.instance.primaryFocus?.unfocus(),
-                            onChanged: (value) {},
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-                          onTap: () {
-                            ref.read(templeProvider.notifier).doSearch(
-                                searchWord: searchWordEditingController.text);
-                          },
-                          child: const Icon(Icons.search),
-                        ),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-                          onTap: () {
-                            searchWordEditingController.text = '';
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              ref.read(templeProvider.notifier).setSelectTemple(
+                                    name: '',
+                                    lat: '',
+                                    lng: '',
+                                  );
 
-                            ref.read(templeProvider.notifier).clearSearch();
-                          },
-                          child: const Icon(Icons.close),
+                              TempleDialog(
+                                context: context,
+                                widget: const VisitedTempleMapAlert(),
+                                clearBarrierColor: true,
+                              );
+                            },
+                            icon: const Icon(Icons.map),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.orangeAccent.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ],
-                    ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                TempleDialog(
+                                  context: context,
+                                  widget: const TempleTrainStationListAlert(),
+                                );
+                              },
+                              icon: const Icon(Icons.train),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                TempleDialog(
+                                  context: context,
+                                  widget: const NotReachTempleMapAlert(),
+                                );
+                              },
+                              icon: const Icon(FontAwesomeIcons.toriiGate),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          searchWordEditingController.text = '';
+
+                          ref.read(templeProvider.notifier).clearSearch();
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: searchWordEditingController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 4),
+                            filled: true,
+                            fillColor: Colors.white.withOpacity(0.2),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                          onTapOutside: (event) =>
+                              FocusManager.instance.primaryFocus?.unfocus(),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          ref.read(templeProvider.notifier).doSearch(
+                              searchWord: searchWordEditingController.text);
+                        },
+                        icon: const Icon(Icons.search),
+                      ),
+                    ],
+                  ),
+                  if (templeState.doSearch == true) ...[
+                    Container(
+                      height: 40,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 3, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                      ),
+                    )
+                  ],
+                  if (templeState.doSearch == false) ...[
+                    TabBar(
+                      isScrollable: true,
+                      padding: EdgeInsets.zero,
+                      indicatorColor: Colors.transparent,
+                      indicatorWeight: 0.1,
+                      tabs: _getTabs(),
+                    ),
+                  ],
                 ],
               ),
-            ],
-            bottom: (templeState.doSearch)
-                ? null
-                : TabBar(
-                    isScrollable: true,
-                    padding: EdgeInsets.zero,
-                    indicatorColor: Colors.transparent,
-                    indicatorWeight: 0.1,
-                    tabs: _getTabs(),
-                  ),
+            ),
           ),
           body: SafeArea(
             child: Column(

@@ -42,7 +42,6 @@ class Routing extends _$Routing {
           latitude: station.lat,
           longitude: station.lng,
           mark: station.id,
-          cnt: 0,
         );
 
         list.add(stationTempleData);

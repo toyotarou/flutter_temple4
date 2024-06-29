@@ -116,10 +116,10 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
 
   ///
   Widget displayInfoPlate() {
-    final templeMap =
-        ref.watch(templeProvider.select((value) => value.templeMap));
+    final dateTempleMap =
+        ref.watch(templeProvider.select((value) => value.dateTempleMap));
 
-    final temple = templeMap[widget.date.yyyymmdd];
+    final temple = dateTempleMap[widget.date.yyyymmdd];
 
     return Container(
       width: double.infinity,
@@ -178,10 +178,10 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
 
   ///
   Widget displayThumbNailPhoto() {
-    final templeMap =
-        ref.watch(templeProvider.select((value) => value.templeMap));
+    final dateTempleMap =
+        ref.watch(templeProvider.select((value) => value.dateTempleMap));
 
-    final temple = templeMap[widget.date.yyyymmdd];
+    final temple = dateTempleMap[widget.date.yyyymmdd];
 
     final list = <Widget>[];
 
@@ -226,13 +226,13 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
   void makeTempleDataList() {
     templeDataList = [];
 
-    final templeMap =
-        ref.watch(templeProvider.select((value) => value.templeMap));
+    final dateTempleMap =
+        ref.watch(templeProvider.select((value) => value.dateTempleMap));
 
     final templeLatLngMap = ref
         .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
 
-    final temple = templeMap[widget.date.yyyymmdd];
+    final temple = dateTempleMap[widget.date.yyyymmdd];
 
     if (temple != null) {
       getStartEndPointInfo(temple: temple, flag: 'start');
@@ -245,7 +245,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
             latitude: templeLatLngMap[temple.temple]!.lat,
             longitude: templeLatLngMap[temple.temple]!.lng,
             mark: '01',
-            cnt: 0,
           ),
         );
       }
@@ -263,7 +262,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
                 latitude: latlng.lat,
                 longitude: latlng.lng,
                 mark: i.toString().padLeft(2, '0'),
-                cnt: 0,
               ),
             );
           }
@@ -306,7 +304,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
               : (temple.startPoint == temple.endPoint)
                   ? 'S/E'
                   : 'S',
-          cnt: 0,
         ),
       );
     } else {
@@ -325,7 +322,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
                   : (temple.startPoint == temple.endPoint)
                       ? 'S/E'
                       : 'S',
-              cnt: 0,
             ),
           );
 
@@ -343,7 +339,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
                   : (temple.startPoint == temple.endPoint)
                       ? 'S/E'
                       : 'S',
-              cnt: 0,
             ),
           );
       }

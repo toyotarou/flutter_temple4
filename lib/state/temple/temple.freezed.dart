@@ -17,14 +17,22 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$TempleState {
   List<TempleModel> get templeList => throw _privateConstructorUsedError;
-  Map<String, TempleModel> get templeMap => throw _privateConstructorUsedError;
+  Map<String, TempleModel> get dateTempleMap =>
+      throw _privateConstructorUsedError;
+  Map<String, TempleModel> get latLngTempleMap =>
+      throw _privateConstructorUsedError;
+  Map<String, TempleModel> get nameTempleMap =>
+      throw _privateConstructorUsedError;
 
   ///
   String get searchWord => throw _privateConstructorUsedError;
   bool get doSearch => throw _privateConstructorUsedError;
 
   ///
-  dynamic get selectYear => throw _privateConstructorUsedError;
+  dynamic get selectYear => throw _privateConstructorUsedError; //
+  dynamic get selectTempleName => throw _privateConstructorUsedError;
+  dynamic get selectTempleLat => throw _privateConstructorUsedError;
+  dynamic get selectTempleLng => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TempleStateCopyWith<TempleState> get copyWith =>
@@ -39,10 +47,15 @@ abstract class $TempleStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<TempleModel> templeList,
-      Map<String, TempleModel> templeMap,
+      Map<String, TempleModel> dateTempleMap,
+      Map<String, TempleModel> latLngTempleMap,
+      Map<String, TempleModel> nameTempleMap,
       String searchWord,
       bool doSearch,
-      dynamic selectYear});
+      dynamic selectYear,
+      dynamic selectTempleName,
+      dynamic selectTempleLat,
+      dynamic selectTempleLng});
 }
 
 /// @nodoc
@@ -59,19 +72,32 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
   @override
   $Res call({
     Object? templeList = null,
-    Object? templeMap = null,
+    Object? dateTempleMap = null,
+    Object? latLngTempleMap = null,
+    Object? nameTempleMap = null,
     Object? searchWord = null,
     Object? doSearch = null,
     Object? selectYear = freezed,
+    Object? selectTempleName = freezed,
+    Object? selectTempleLat = freezed,
+    Object? selectTempleLng = freezed,
   }) {
     return _then(_value.copyWith(
       templeList: null == templeList
           ? _value.templeList
           : templeList // ignore: cast_nullable_to_non_nullable
               as List<TempleModel>,
-      templeMap: null == templeMap
-          ? _value.templeMap
-          : templeMap // ignore: cast_nullable_to_non_nullable
+      dateTempleMap: null == dateTempleMap
+          ? _value.dateTempleMap
+          : dateTempleMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, TempleModel>,
+      latLngTempleMap: null == latLngTempleMap
+          ? _value.latLngTempleMap
+          : latLngTempleMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, TempleModel>,
+      nameTempleMap: null == nameTempleMap
+          ? _value.nameTempleMap
+          : nameTempleMap // ignore: cast_nullable_to_non_nullable
               as Map<String, TempleModel>,
       searchWord: null == searchWord
           ? _value.searchWord
@@ -84,6 +110,18 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
       selectYear: freezed == selectYear
           ? _value.selectYear
           : selectYear // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      selectTempleName: freezed == selectTempleName
+          ? _value.selectTempleName
+          : selectTempleName // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      selectTempleLat: freezed == selectTempleLat
+          ? _value.selectTempleLat
+          : selectTempleLat // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      selectTempleLng: freezed == selectTempleLng
+          ? _value.selectTempleLng
+          : selectTempleLng // ignore: cast_nullable_to_non_nullable
               as dynamic,
     ) as $Val);
   }
@@ -99,10 +137,15 @@ abstract class _$$TempleStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<TempleModel> templeList,
-      Map<String, TempleModel> templeMap,
+      Map<String, TempleModel> dateTempleMap,
+      Map<String, TempleModel> latLngTempleMap,
+      Map<String, TempleModel> nameTempleMap,
       String searchWord,
       bool doSearch,
-      dynamic selectYear});
+      dynamic selectYear,
+      dynamic selectTempleName,
+      dynamic selectTempleLat,
+      dynamic selectTempleLng});
 }
 
 /// @nodoc
@@ -117,19 +160,32 @@ class __$$TempleStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? templeList = null,
-    Object? templeMap = null,
+    Object? dateTempleMap = null,
+    Object? latLngTempleMap = null,
+    Object? nameTempleMap = null,
     Object? searchWord = null,
     Object? doSearch = null,
     Object? selectYear = freezed,
+    Object? selectTempleName = freezed,
+    Object? selectTempleLat = freezed,
+    Object? selectTempleLng = freezed,
   }) {
     return _then(_$TempleStateImpl(
       templeList: null == templeList
           ? _value._templeList
           : templeList // ignore: cast_nullable_to_non_nullable
               as List<TempleModel>,
-      templeMap: null == templeMap
-          ? _value._templeMap
-          : templeMap // ignore: cast_nullable_to_non_nullable
+      dateTempleMap: null == dateTempleMap
+          ? _value._dateTempleMap
+          : dateTempleMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, TempleModel>,
+      latLngTempleMap: null == latLngTempleMap
+          ? _value._latLngTempleMap
+          : latLngTempleMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, TempleModel>,
+      nameTempleMap: null == nameTempleMap
+          ? _value._nameTempleMap
+          : nameTempleMap // ignore: cast_nullable_to_non_nullable
               as Map<String, TempleModel>,
       searchWord: null == searchWord
           ? _value.searchWord
@@ -140,6 +196,15 @@ class __$$TempleStateImplCopyWithImpl<$Res>
           : doSearch // ignore: cast_nullable_to_non_nullable
               as bool,
       selectYear: freezed == selectYear ? _value.selectYear! : selectYear,
+      selectTempleName: freezed == selectTempleName
+          ? _value.selectTempleName!
+          : selectTempleName,
+      selectTempleLat: freezed == selectTempleLat
+          ? _value.selectTempleLat!
+          : selectTempleLat,
+      selectTempleLng: freezed == selectTempleLng
+          ? _value.selectTempleLng!
+          : selectTempleLng,
     ));
   }
 }
@@ -149,12 +214,19 @@ class __$$TempleStateImplCopyWithImpl<$Res>
 class _$TempleStateImpl implements _TempleState {
   const _$TempleStateImpl(
       {final List<TempleModel> templeList = const [],
-      final Map<String, TempleModel> templeMap = const {},
+      final Map<String, TempleModel> dateTempleMap = const {},
+      final Map<String, TempleModel> latLngTempleMap = const {},
+      final Map<String, TempleModel> nameTempleMap = const {},
       this.searchWord = '',
       this.doSearch = false,
-      this.selectYear = ''})
+      this.selectYear = '',
+      this.selectTempleName = '',
+      this.selectTempleLat = '',
+      this.selectTempleLng = ''})
       : _templeList = templeList,
-        _templeMap = templeMap;
+        _dateTempleMap = dateTempleMap,
+        _latLngTempleMap = latLngTempleMap,
+        _nameTempleMap = nameTempleMap;
 
   final List<TempleModel> _templeList;
   @override
@@ -165,13 +237,31 @@ class _$TempleStateImpl implements _TempleState {
     return EqualUnmodifiableListView(_templeList);
   }
 
-  final Map<String, TempleModel> _templeMap;
+  final Map<String, TempleModel> _dateTempleMap;
   @override
   @JsonKey()
-  Map<String, TempleModel> get templeMap {
-    if (_templeMap is EqualUnmodifiableMapView) return _templeMap;
+  Map<String, TempleModel> get dateTempleMap {
+    if (_dateTempleMap is EqualUnmodifiableMapView) return _dateTempleMap;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_templeMap);
+    return EqualUnmodifiableMapView(_dateTempleMap);
+  }
+
+  final Map<String, TempleModel> _latLngTempleMap;
+  @override
+  @JsonKey()
+  Map<String, TempleModel> get latLngTempleMap {
+    if (_latLngTempleMap is EqualUnmodifiableMapView) return _latLngTempleMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_latLngTempleMap);
+  }
+
+  final Map<String, TempleModel> _nameTempleMap;
+  @override
+  @JsonKey()
+  Map<String, TempleModel> get nameTempleMap {
+    if (_nameTempleMap is EqualUnmodifiableMapView) return _nameTempleMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_nameTempleMap);
   }
 
   ///
@@ -186,10 +276,20 @@ class _$TempleStateImpl implements _TempleState {
   @override
   @JsonKey()
   final dynamic selectYear;
+//
+  @override
+  @JsonKey()
+  final dynamic selectTempleName;
+  @override
+  @JsonKey()
+  final dynamic selectTempleLat;
+  @override
+  @JsonKey()
+  final dynamic selectTempleLng;
 
   @override
   String toString() {
-    return 'TempleState(templeList: $templeList, templeMap: $templeMap, searchWord: $searchWord, doSearch: $doSearch, selectYear: $selectYear)';
+    return 'TempleState(templeList: $templeList, dateTempleMap: $dateTempleMap, latLngTempleMap: $latLngTempleMap, nameTempleMap: $nameTempleMap, searchWord: $searchWord, doSearch: $doSearch, selectYear: $selectYear, selectTempleName: $selectTempleName, selectTempleLat: $selectTempleLat, selectTempleLng: $selectTempleLng)';
   }
 
   @override
@@ -200,23 +300,38 @@ class _$TempleStateImpl implements _TempleState {
             const DeepCollectionEquality()
                 .equals(other._templeList, _templeList) &&
             const DeepCollectionEquality()
-                .equals(other._templeMap, _templeMap) &&
+                .equals(other._dateTempleMap, _dateTempleMap) &&
+            const DeepCollectionEquality()
+                .equals(other._latLngTempleMap, _latLngTempleMap) &&
+            const DeepCollectionEquality()
+                .equals(other._nameTempleMap, _nameTempleMap) &&
             (identical(other.searchWord, searchWord) ||
                 other.searchWord == searchWord) &&
             (identical(other.doSearch, doSearch) ||
                 other.doSearch == doSearch) &&
             const DeepCollectionEquality()
-                .equals(other.selectYear, selectYear));
+                .equals(other.selectYear, selectYear) &&
+            const DeepCollectionEquality()
+                .equals(other.selectTempleName, selectTempleName) &&
+            const DeepCollectionEquality()
+                .equals(other.selectTempleLat, selectTempleLat) &&
+            const DeepCollectionEquality()
+                .equals(other.selectTempleLng, selectTempleLng));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_templeList),
-      const DeepCollectionEquality().hash(_templeMap),
+      const DeepCollectionEquality().hash(_dateTempleMap),
+      const DeepCollectionEquality().hash(_latLngTempleMap),
+      const DeepCollectionEquality().hash(_nameTempleMap),
       searchWord,
       doSearch,
-      const DeepCollectionEquality().hash(selectYear));
+      const DeepCollectionEquality().hash(selectYear),
+      const DeepCollectionEquality().hash(selectTempleName),
+      const DeepCollectionEquality().hash(selectTempleLat),
+      const DeepCollectionEquality().hash(selectTempleLng));
 
   @JsonKey(ignore: true)
   @override
@@ -228,15 +343,24 @@ class _$TempleStateImpl implements _TempleState {
 abstract class _TempleState implements TempleState {
   const factory _TempleState(
       {final List<TempleModel> templeList,
-      final Map<String, TempleModel> templeMap,
+      final Map<String, TempleModel> dateTempleMap,
+      final Map<String, TempleModel> latLngTempleMap,
+      final Map<String, TempleModel> nameTempleMap,
       final String searchWord,
       final bool doSearch,
-      final dynamic selectYear}) = _$TempleStateImpl;
+      final dynamic selectYear,
+      final dynamic selectTempleName,
+      final dynamic selectTempleLat,
+      final dynamic selectTempleLng}) = _$TempleStateImpl;
 
   @override
   List<TempleModel> get templeList;
   @override
-  Map<String, TempleModel> get templeMap;
+  Map<String, TempleModel> get dateTempleMap;
+  @override
+  Map<String, TempleModel> get latLngTempleMap;
+  @override
+  Map<String, TempleModel> get nameTempleMap;
   @override
 
   ///
@@ -247,6 +371,12 @@ abstract class _TempleState implements TempleState {
 
   ///
   dynamic get selectYear;
+  @override //
+  dynamic get selectTempleName;
+  @override
+  dynamic get selectTempleLat;
+  @override
+  dynamic get selectTempleLng;
   @override
   @JsonKey(ignore: true)
   _$$TempleStateImplCopyWith<_$TempleStateImpl> get copyWith =>

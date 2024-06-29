@@ -89,8 +89,6 @@ class _LatLngTempleDisplayAlertState
         address: widget.station!.address,
         latitude: widget.station!.lat,
         longitude: widget.station!.lng,
-        mark: '0',
-        cnt: 0,
       ));
     }
 
@@ -104,7 +102,6 @@ class _LatLngTempleDisplayAlertState
           latitude: goal.lat,
           longitude: goal.lng,
           mark: goal.id,
-          cnt: 0,
         ),
       );
     }

@@ -4,8 +4,8 @@ class TempleData {
     required this.address,
     required this.latitude,
     required this.longitude,
-    required this.mark,
-    required this.cnt,
+    this.mark = '',
+    this.cnt = 0,
   });
 
   String name;

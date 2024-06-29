@@ -109,13 +109,12 @@ class _GoalStationSettingAlertState
                                             mark: (station != null)
                                                 ? station.id
                                                 : '',
-                                            cnt: 0,
                                           ),
                                           station: tokyoTrainState
                                               .tokyoStationMap[startStationId],
                                         );
 
-//                                    Navigator.pop(context);
+                                    Navigator.pop(context);
                                   },
                                   child: Icon(
                                     Icons.location_on,

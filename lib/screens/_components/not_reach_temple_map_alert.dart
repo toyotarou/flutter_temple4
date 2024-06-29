@@ -138,7 +138,6 @@ class _NotReachTempleMapAlertState
           latitude: templeListList[i].lat,
           longitude: templeListList[i].lng,
           mark: templeListList[i].id.toString(),
-          cnt: 0,
         ),
       );
     }
