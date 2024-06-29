@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../extensions/extensions.dart';
+import '../models/temple_model.dart';
 import '../state/temple/temple.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
@@ -52,10 +53,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (yearList.isEmpty) {
-      makeYearList();
+      makeHomeYearList();
     }
-
-    final templeState = ref.watch(templeProvider);
 
     return DefaultTabController(
       length: yearList.length,
@@ -72,139 +71,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           backgroundColor: Colors.black.withOpacity(0.7),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(100),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              ref.read(templeProvider.notifier).setSelectTemple(
-                                    name: '',
-                                    lat: '',
-                                    lng: '',
-                                  );
-
-                              TempleDialog(
-                                context: context,
-                                widget: const VisitedTempleMapAlert(),
-                                clearBarrierColor: true,
-                              );
-                            },
-                            icon: const Icon(Icons.map),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.orangeAccent.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                TempleDialog(
-                                  context: context,
-                                  widget: const TempleTrainStationListAlert(),
-                                );
-                              },
-                              icon: const Icon(Icons.train),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                TempleDialog(
-                                  context: context,
-                                  widget: const NotReachTempleMapAlert(),
-                                );
-                              },
-                              icon: const Icon(FontAwesomeIcons.toriiGate),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          searchWordEditingController.text = '';
-
-                          ref.read(templeProvider.notifier).clearSearch();
-                        },
-                        icon: const Icon(Icons.close),
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          controller: searchWordEditingController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 4),
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.2),
-                            border: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                          onTapOutside: (event) =>
-                              FocusManager.instance.primaryFocus?.unfocus(),
-                          onChanged: (value) {},
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          ref.read(templeProvider.notifier).doSearch(
-                              searchWord: searchWordEditingController.text);
-                        },
-                        icon: const Icon(Icons.search),
-                      ),
-                    ],
-                  ),
-                  if (templeState.doSearch == true) ...[
-                    Container(
-                      height: 40,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 3, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                      ),
-                    )
-                  ],
-                  if (templeState.doSearch == false) ...[
-                    TabBar(
-                      isScrollable: true,
-                      padding: EdgeInsets.zero,
-                      indicatorColor: Colors.transparent,
-                      indicatorWeight: 0.1,
-                      tabs: _getTabs(),
-                    ),
-                  ],
-                ],
-              ),
-            ),
+            bottom: displayHomeAppBar(),
           ),
-          body: SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Expanded(child: displayTempleList()),
-              ],
-            ),
+          body: Column(
+            children: [
+              const SizedBox(height: 10),
+              Expanded(child: displayTempleList()),
+            ],
           ),
         ),
       ),
@@ -212,16 +85,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   ///
-  void makeYearList() {
-    yearList = [];
+  PreferredSize displayHomeAppBar() {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(100),
+      child: Column(
+        children: [
+          displayHomeButton(),
+          displaySearchForm(),
+          displayHomeTabBar(),
+        ],
+      ),
+    );
+  }
 
-    ref
-        .watch(templeProvider.select((value) => value.templeList))
-        .forEach((element) {
-      if (!yearList.contains(element.date.year)) {
-        yearList.add(element.date.year);
-      }
-    });
+  ///
+  Widget displayHomeTabBar() {
+    final templeState = ref.watch(templeProvider);
+
+    if (templeState.doSearch == true) {
+      return Container(
+        height: 40,
+        margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+        decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)),
+      );
+    }
+
+    return TabBar(
+      isScrollable: true,
+      padding: EdgeInsets.zero,
+      indicatorColor: Colors.transparent,
+      indicatorWeight: 0.1,
+      tabs: _getTabs(),
+    );
   }
 
   ///
@@ -244,6 +139,125 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     return list;
+  }
+
+  ///
+  Widget displayHomeButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                ref
+                    .read(templeProvider.notifier)
+                    .setSelectTemple(name: '', lat: '', lng: '');
+
+                TempleDialog(
+                  context: context,
+                  widget: const VisitedTempleMapAlert(),
+                  clearBarrierColor: true,
+                );
+              },
+              icon: const Icon(Icons.map),
+            ),
+          ],
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            color: Colors.orangeAccent.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  TempleDialog(
+                    context: context,
+                    widget: const TempleTrainStationListAlert(),
+                  );
+                },
+                icon: const Icon(Icons.train),
+              ),
+              IconButton(
+                onPressed: () {
+                  TempleDialog(
+                    context: context,
+                    widget: const NotReachTempleMapAlert(),
+                  );
+                },
+                icon: const Icon(FontAwesomeIcons.toriiGate),
+              ),
+              const SizedBox(width: 20),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  ///
+  Widget displaySearchForm() {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {
+            searchWordEditingController.text = '';
+
+            ref.read(templeProvider.notifier).clearSearch();
+          },
+          icon: const Icon(Icons.close),
+        ),
+        Expanded(
+          child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: searchWordEditingController,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              filled: true,
+              fillColor: Colors.white.withOpacity(0.2),
+              border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+            ),
+            onTapOutside: (event) =>
+                FocusManager.instance.primaryFocus?.unfocus(),
+            onChanged: (value) {},
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            ref
+                .read(templeProvider.notifier)
+                .doSearch(searchWord: searchWordEditingController.text);
+          },
+          icon: const Icon(Icons.search),
+        ),
+      ],
+    );
+  }
+
+  ///
+  void makeHomeYearList() {
+    yearList = [];
+
+    ref
+        .watch(templeProvider.select((value) => value.templeList))
+        .forEach((element) {
+      if (!yearList.contains(element.date.year)) {
+        yearList.add(element.date.year);
+      }
+    });
   }
 
   ///
@@ -293,89 +307,89 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
 
       if (dispFlag) {
-        list.add(
-          Card(
-            color: Colors.black.withOpacity(0.3),
-            child: ListTile(
-              leading: SizedBox(
-                width: 40,
-                child: (element.date.year.toString() == selectYear ||
-                        templeState.searchWord != '')
-                    ? CachedNetworkImage(
-                        imageUrl: element.thumbnail,
-                        placeholder: (context, url) =>
-                            Image.asset('assets/images/no_image.png'),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      )
-                    : Container(
-                        decoration:
-                            BoxDecoration(color: Colors.grey.withOpacity(0.3)),
-                      ),
-              ),
-              title: DefaultTextStyle(
-                style: const TextStyle(fontSize: 12),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: context.screenSize.height / 8,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(),
-                          Text(element.date.yyyymmdd),
-                        ],
-                      ),
-                      Text(element.temple),
-                      const SizedBox(height: 5),
-                      Text(element.address),
-                      const SizedBox(height: 5),
-                      Text(
-                        element.memo,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              trailing: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      TempleDialog(
-                        context: context,
-                        widget: TempleDetailMapAlert(
-                          date: element.date,
-                        ),
-                      );
-                    },
-                    child: const Icon(Icons.call_made),
-                  ),
-                  CircleAvatar(
-                    radius: 15,
-                    backgroundColor: utility.getLeadingBgColor(
-                      month: element.date.yyyymmdd.split('-')[1],
-                    ),
-                    child: Text(
-                      element.date.yyyymmdd.split('-')[1],
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+        list.add(displayHomeCard(data: element, selectYear: selectYear));
       }
 
       year = element.date.year;
     });
 
     return SingleChildScrollView(child: Column(children: list));
+  }
+
+  ///
+  Widget displayHomeCard(
+      {required TempleModel data, required String selectYear}) {
+    final templeState = ref.watch(templeProvider);
+
+    return Card(
+      color: Colors.black.withOpacity(0.3),
+      child: ListTile(
+        leading: SizedBox(
+          width: 40,
+          child: (data.date.year.toString() == selectYear ||
+                  templeState.searchWord != '')
+              ? CachedNetworkImage(
+                  imageUrl: data.thumbnail,
+                  placeholder: (context, url) =>
+                      Image.asset('assets/images/no_image.png'),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                )
+              : Container(
+                  decoration:
+                      BoxDecoration(color: Colors.grey.withOpacity(0.3)),
+                ),
+        ),
+        title: DefaultTextStyle(
+          style: const TextStyle(fontSize: 12),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: context.screenSize.height / 8,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Container(), Text(data.date.yyyymmdd)],
+                ),
+                Text(data.temple),
+                const SizedBox(height: 5),
+                Text(data.address),
+                const SizedBox(height: 5),
+                Text(
+                  data.memo,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+        ),
+        trailing: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                TempleDialog(
+                  context: context,
+                  widget: TempleDetailMapAlert(date: data.date),
+                );
+              },
+              child: const Icon(Icons.call_made),
+            ),
+            CircleAvatar(
+              radius: 15,
+              backgroundColor: utility.getLeadingBgColor(
+                month: data.date.yyyymmdd.split('-')[1],
+              ),
+              child: Text(
+                data.date.yyyymmdd.split('-')[1],
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
