@@ -124,92 +124,7 @@ class _LatLngTempleDisplayAlertState
                 Column(
                   children: [
                     const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 3),
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Colors.green[900]!.withOpacity(0.3),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Text('Start'),
-                                  ),
-                                  const SizedBox(width: 20),
-                                  Text(widget.station!.stationName),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  if (routingTempleDataList.length < 2) {
-                                    caution_dialog(
-                                      context: context,
-                                      content: 'cant setting goal',
-                                    );
-
-                                    return;
-                                  }
-
-                                  TempleDialog(
-                                    context: context,
-                                    widget: const GoalStationSettingAlert(),
-                                    paddingLeft: context.screenSize.width * 0.2,
-                                    clearBarrierColor: true,
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 60,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 3),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Colors.purpleAccent
-                                            .withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: const Text('Goal'),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    Text((tokyoTrainState.tokyoStationMap[
-                                                goalStationId] !=
-                                            null)
-                                        ? tokyoTrainState
-                                            .tokyoStationMap[goalStationId]!
-                                            .stationName
-                                        : '-----'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              ref
-                                  .read(latLngTempleProvider.notifier)
-                                  .setOrangeDisplay();
-                            },
-                            child: CircleAvatar(
-                              backgroundColor:
-                                  Colors.orangeAccent.withOpacity(0.6),
-                              radius: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    displayLatLngTempleMapButtonWidget(),
                     Container(
                       width: context.screenSize.width,
                       margin: const EdgeInsets.all(5),
@@ -284,6 +199,108 @@ class _LatLngTempleDisplayAlertState
   }
 
   ///
+  Widget displayLatLngTempleMapButtonWidget() {
+    final routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
+
+    //------------------// goal
+    final tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+    final goalStationId =
+        ref.watch(routingProvider.select((value) => value.goalStationId));
+    //------------------// goal
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.green[900]!.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text('Start'),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(child: Text(widget.station!.stationName)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (routingTempleDataList.length < 2) {
+                          caution_dialog(
+                            context: context,
+                            content: 'cant setting goal',
+                          );
+
+                          return;
+                        }
+
+                        TempleDialog(
+                          context: context,
+                          widget: const GoalStationSettingAlert(),
+                          paddingLeft: context.screenSize.width * 0.2,
+                          clearBarrierColor: true,
+                        );
+                      },
+                      child: Container(
+                        width: 60,
+                        padding: const EdgeInsets.symmetric(vertical: 3),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.purpleAccent.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text('Goal'),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Text(
+                        (tokyoTrainState.tokyoStationMap[goalStationId] != null)
+                            ? tokyoTrainState
+                                .tokyoStationMap[goalStationId]!.stationName
+                            : '-----',
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        ref.read(routingProvider.notifier).removeGoalStation();
+                      },
+                      child:
+                          const Icon(Icons.close, color: Colors.purpleAccent),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 20),
+          GestureDetector(
+            onTap: () {
+              ref.read(latLngTempleProvider.notifier).setOrangeDisplay();
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.orangeAccent.withOpacity(0.6),
+              radius: 10,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///
   void makeMarker() {
     markerList = [];
 
@@ -308,16 +325,23 @@ class _LatLngTempleDisplayAlertState
               onTap: (templeDataList[i].mark == '0')
                   ? null
                   : () {
-                      TempleDialog(
-                        context: context,
-                        widget: TempleInfoDisplayAlert(
-                          temple: templeDataList[i],
-                          from: 'LatLngTempleMapAlert',
-                          station: widget.station,
-                        ),
-                        paddingTop: context.screenSize.height * 0.7,
-                        clearBarrierColor: true,
-                      );
+                      final exMarkLength =
+                          templeDataList[i].mark.split('-').length;
+
+                      if (exMarkLength == 2) {
+                        return;
+                      } else {
+                        TempleDialog(
+                          context: context,
+                          widget: TempleInfoDisplayAlert(
+                            temple: templeDataList[i],
+                            from: 'LatLngTempleMapAlert',
+                            station: widget.station,
+                          ),
+                          paddingTop: context.screenSize.height * 0.7,
+                          clearBarrierColor: true,
+                        );
+                      }
                     },
               child: CircleAvatar(
                 backgroundColor: getCircleAvatarBgColor(
@@ -355,10 +379,7 @@ class _LatLngTempleDisplayAlertState
     return Text(
       str,
       style: const TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 12,
-      ),
+          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
     );
   }
 
@@ -388,10 +409,7 @@ class _LatLngTempleDisplayAlertState
                 border: Border(top: BorderSide(color: Colors.white)),
               ),
               alignment: Alignment.topRight,
-              child: Text(
-                distance,
-                style: const TextStyle(fontSize: 10),
-              ),
+              child: Text(distance, style: const TextStyle(fontSize: 10)),
             ),
             Container(
               margin: const EdgeInsets.all(3),

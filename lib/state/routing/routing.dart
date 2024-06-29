@@ -75,6 +75,24 @@ class Routing extends _$Routing {
   }
 
   ///
+  Future<void> removeGoalStation() async {
+    final list = [...state.routingTempleDataList];
+
+    var pos = 0;
+    for (var i = 1; i < list.length; i++) {
+      final exMarkLength = list[i].mark.split('-').length;
+
+      if (exMarkLength == 2) {
+        pos = i;
+      }
+    }
+
+    list.removeAt(pos);
+
+    state = state.copyWith(routingTempleDataList: list, goalStationId: '');
+  }
+
+  ///
   Future<void> clearRoutingTempleDataList() async {
     state = state.copyWith(routingTempleDataList: []);
   }

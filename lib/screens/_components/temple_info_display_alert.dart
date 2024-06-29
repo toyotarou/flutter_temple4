@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/state/temple/temple.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../state/routing/routing.dart';
+import '../../state/temple/temple.dart';
 import '../function.dart';
 
 class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
@@ -36,6 +36,12 @@ class _TempleInfoDisplayAlertState
   Widget build(BuildContext context) {
     final templeVisitDateMap =
         ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
+
+    final routingTempleDataList = ref
+        .watch(routingProvider.select((value) => value.routingTempleDataList));
+
+    final pos = routingTempleDataList
+        .indexWhere((element) => element.mark == widget.temple.mark);
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -118,8 +124,11 @@ class _TempleInfoDisplayAlertState
                             );
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.indigo.withOpacity(0.2)),
-                      child: const Text('add routing'),
+                          backgroundColor: (pos != -1)
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.indigo.withOpacity(0.2)),
+                      child:
+                          Text((pos != -1) ? 'remove routing' : 'add routing'),
                     ),
                   ],
                 ),
