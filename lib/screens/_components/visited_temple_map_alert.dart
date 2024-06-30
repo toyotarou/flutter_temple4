@@ -73,7 +73,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                           paddingLeft: context.screenSize.width * 0.1,
                         );
                       },
-                      icon: const Icon(Icons.list),
+                      icon: const Icon(Icons.list, color: Colors.white),
                     ),
                     if (templeState.selectTempleName != '') ...[
                       IconButton(
@@ -90,7 +90,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                             clearBarrierColor: true,
                           );
                         },
-                        icon: const Icon(Icons.map),
+                        icon: const Icon(Icons.map, color: Colors.white),
                       ),
                     ],
                     if (templeState.selectTempleName == '') ...[Container()],

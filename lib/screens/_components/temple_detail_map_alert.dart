@@ -149,27 +149,30 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
           ),
           (temple == null)
               ? Container()
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(widget.date.yyyymmdd),
-                    Text(temple.temple),
-                    const SizedBox(height: 10),
-                    Text(start),
-                    Text(end),
-                    if (temple.memo != '') ...[
+              : DefaultTextStyle(
+                  style: const TextStyle(color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(widget.date.yyyymmdd),
+                      Text(temple.temple),
                       const SizedBox(height: 10),
-                      Flexible(
-                        child: SizedBox(
-                          width: context.screenSize.width * 0.6,
-                          child: Text(temple.memo),
+                      Text(start),
+                      Text(end),
+                      if (temple.memo != '') ...[
+                        const SizedBox(height: 10),
+                        Flexible(
+                          child: SizedBox(
+                            width: context.screenSize.width * 0.6,
+                            child: Text(temple.memo),
+                          ),
                         ),
-                      ),
+                      ],
+                      const SizedBox(height: 10),
+                      displayThumbNailPhoto(),
                     ],
-                    const SizedBox(height: 10),
-                    displayThumbNailPhoto(),
-                  ],
+                  ),
                 ),
         ],
       ),

@@ -58,7 +58,9 @@ class _GoalStationSettingAlertState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: tokyoTrainState.tokyoTrainList.map((e) {
           return ExpansionTile(
-            title: Text(e.trainName, style: const TextStyle(fontSize: 12)),
+            collapsedIconColor: Colors.white,
+            title: Text(e.trainName,
+                style: const TextStyle(fontSize: 12, color: Colors.white)),
             children:
                 e.station.map((e2) => displayGoalStation(data: e2)).toList(),
           );

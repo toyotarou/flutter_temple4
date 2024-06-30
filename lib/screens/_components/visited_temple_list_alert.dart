@@ -42,6 +42,15 @@ class _VisitedTempleListAlertState
       yearList = makeTempleVisitYearList(ref: ref);
     }
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final selectVisitedTempleListKey = ref.watch(
+          templeProvider.select((value) => value.selectVisitedTempleListKey));
+
+      if (selectVisitedTempleListKey != -1) {
+        scrollToIndex(selectVisitedTempleListKey);
+      }
+    });
+
     return DefaultTabController(
       length: yearList.length,
       child: Scaffold(
@@ -99,13 +108,28 @@ class _VisitedTempleListAlertState
   List<Widget> _getTabs() {
     final list = <Widget>[];
 
+    final selectVisitedTempleListKey = ref.watch(
+        templeProvider.select((value) => value.selectVisitedTempleListKey));
+
     for (var i = 0; i < yearList.length; i++) {
       list.add(
         GestureDetector(
           onTap: () {
+            ref
+                .read(templeProvider.notifier)
+                .setSelectVisitedTempleListKey(key: i);
+
             scrollToIndex(i);
           },
-          child: Text(yearList[i].toString()),
+          child: Text(
+            yearList[i].toString(),
+            style: TextStyle(
+                color: (selectVisitedTempleListKey == -1)
+                    ? Colors.white
+                    : (yearList[selectVisitedTempleListKey] == yearList[i])
+                        ? Colors.yellowAccent
+                        : Colors.white),
+          ),
         ),
       );
     }

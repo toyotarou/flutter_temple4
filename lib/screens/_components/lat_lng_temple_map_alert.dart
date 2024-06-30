@@ -189,7 +189,10 @@ class _LatLngTempleDisplayAlertState
                     onPressed: () {
                       mapController.move(currentCenter, 13);
                     },
-                    icon: const Icon(Icons.center_focus_strong),
+                    icon: const Icon(
+                      Icons.center_focus_strong,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -227,10 +230,17 @@ class _LatLngTempleDisplayAlertState
                         color: Colors.green[900]!.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text('Start'),
+                      child: const Text(
+                        'Start',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     const SizedBox(width: 20),
-                    Expanded(child: Text(widget.station!.stationName)),
+                    Expanded(
+                        child: Text(
+                      widget.station!.stationName,
+                      style: const TextStyle(color: Colors.white),
+                    )),
                   ],
                 ),
                 Row(
@@ -261,7 +271,10 @@ class _LatLngTempleDisplayAlertState
                           color: Colors.purpleAccent.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Text('Goal'),
+                        child: const Text(
+                          'Goal',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -271,6 +284,7 @@ class _LatLngTempleDisplayAlertState
                             ? tokyoTrainState
                                 .tokyoStationMap[goalStationId]!.stationName
                             : '-----',
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                     GestureDetector(
@@ -409,7 +423,8 @@ class _LatLngTempleDisplayAlertState
                 border: Border(top: BorderSide(color: Colors.white)),
               ),
               alignment: Alignment.topRight,
-              child: Text(distance, style: const TextStyle(fontSize: 10)),
+              child: Text(distance,
+                  style: const TextStyle(fontSize: 10, color: Colors.white)),
             ),
             Container(
               margin: const EdgeInsets.all(3),
@@ -424,7 +439,7 @@ class _LatLngTempleDisplayAlertState
                   : null,
               child: (routingTempleDataList[i].mark.split('-').length != 2)
                   ? Text(routingTempleDataList[i].mark,
-                      style: const TextStyle(fontSize: 10))
+                      style: const TextStyle(fontSize: 10, color: Colors.white))
                   : const Text(''),
             ),
           ],

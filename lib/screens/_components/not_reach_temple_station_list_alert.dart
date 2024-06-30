@@ -66,7 +66,11 @@ class _TempleNotReachStationListAlertState
         children: tokyoTrainList.map((e) {
           if (notReachTrainIds.contains(e.trainNumber.toString())) {
             return ExpansionTile(
-              title: Text(e.trainName),
+              collapsedIconColor: Colors.white,
+              title: Text(
+                e.trainName,
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+              ),
               children: e.station.map((e2) {
                 if (notReachStationIds.contains(e2.id)) {
                   return displayNotReachStation(data: e2);
@@ -99,11 +103,15 @@ class _TempleNotReachStationListAlertState
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(data.stationName),
+          Text(
+            data.stationName,
+            style: const TextStyle(color: Colors.white, fontSize: 12),
+          ),
           Text(
             (templeStationMap[data.id] != null)
                 ? templeStationMap[data.id]!.length.toString()
                 : '0',
+            style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ],
       ),

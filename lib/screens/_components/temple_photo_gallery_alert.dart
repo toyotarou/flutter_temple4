@@ -32,7 +32,7 @@ class _TemplePhotoGalleryAlertState
     });
 
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.8),
+      backgroundColor: Colors.black.withOpacity(0.6),
       body: SafeArea(
         child: Column(
           children: [
@@ -61,7 +61,7 @@ class _TemplePhotoGalleryAlertState
                       const SizedBox(height: 20),
                       Text(
                         dispTime,
-                        style: const TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20,color: Colors.white),
                       ),
                     ],
                   );

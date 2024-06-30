@@ -32,7 +32,13 @@ class TempleState with _$TempleState {
     @Default('') selectTempleLng,
 
     //
+    @Default(-1) int selectVisitedTempleListKey,
+
+    //
     @Default({}) Map<String, List<String>> templeVisitDateMap,
+
+    //
+    @Default({}) Map<String, List<String>> templeCountMap,
   }) = _TempleState;
 }
 
@@ -56,6 +62,8 @@ class Temple extends _$Temple {
       final map3 = <String, List<String>>{};
       final templeNameList = <String>[];
 
+      final map4 = <String, List<String>>{};
+
       // ignore: avoid_dynamic_calls
       for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
         final val = TempleModel.fromJson(
@@ -70,6 +78,8 @@ class Temple extends _$Temple {
 
         map3[val.temple] = [];
         templeNameList.add(val.temple);
+
+        map4[val.date.yyyy] = [];
       }
 
       // ignore: avoid_dynamic_calls
@@ -93,8 +103,14 @@ class Temple extends _$Temple {
 
         map3[val.temple]?.add(val.date.yyyymmdd);
 
+        map4[val.date.yyyy]?.add(val.temple);
+
         val.memo.split('、').forEach((element) {
-          map3[element]?.add(val.date.yyyymmdd);
+          if (element != '') {
+            map3[element]?.add(val.date.yyyymmdd);
+
+            map4[val.date.yyyy]?.add(element);
+          }
         });
       }
 
@@ -103,6 +119,7 @@ class Temple extends _$Temple {
         dateTempleMap: map,
         latLngTempleMap: map2,
         templeVisitDateMap: map3,
+        templeCountMap: map4,
       );
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
@@ -132,4 +149,8 @@ class Temple extends _$Temple {
         selectTempleLat: lat,
         selectTempleLng: lng,
       );
+
+  ///
+  Future<void> setSelectVisitedTempleListKey({required int key}) async =>
+      state = state.copyWith(selectVisitedTempleListKey: key);
 }

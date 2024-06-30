@@ -144,17 +144,26 @@ class _TempleInfoDisplayAlertState
       return Container();
     }
 
-    return Wrap(
-      children: templeVisitDateMap[widget.temple.name]!.map((e) {
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-          margin: const EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+    return SizedBox(
+      height: 60,
+      width: double.infinity,
+      child: Scrollbar(
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          child: Wrap(
+            children: templeVisitDateMap[widget.temple.name]!.map((e) {
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                margin: const EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                ),
+                child: Text(e, style: const TextStyle(fontSize: 12)),
+              );
+            }).toList(),
           ),
-          child: Text(e, style: const TextStyle(fontSize: 8)),
-        );
-      }).toList(),
+        ),
+      ),
     );
   }
 }

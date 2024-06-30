@@ -181,9 +181,10 @@ class _TempleTrainListAlertState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: tokyoTrainState.tokyoTrainList.map((e) {
             return ExpansionTile(
+              collapsedIconColor: Colors.white,
               title: Text(
                 e.trainName,
-                style: const TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12, color: Colors.white),
               ),
               children: e.station.map((e2) {
                 return Container(

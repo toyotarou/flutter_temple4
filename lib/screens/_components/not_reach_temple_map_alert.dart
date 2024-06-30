@@ -59,7 +59,20 @@ class _NotReachTempleMapAlertState
     return (boundsLatLngMap.isNotEmpty)
         ? Column(
             children: [
-              Text(templeDataList.length.toString()),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      templeDataList.length.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    Container(),
+                  ],
+                ),
+              ),
               const Divider(color: Colors.white),
               Expanded(
                 child: FlutterMap(

@@ -15,7 +15,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Temple List',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(useMaterial3: false),
+      theme: ThemeData(
+        scrollbarTheme: const ScrollbarThemeData().copyWith(
+            thumbColor:
+                MaterialStateProperty.all(Colors.greenAccent.withOpacity(0.4))),
+        useMaterial3: false,
+      ),
+      themeMode: ThemeMode.dark,
       home: const HomeScreen(),
     );
   }
