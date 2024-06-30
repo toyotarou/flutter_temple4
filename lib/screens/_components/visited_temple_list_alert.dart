@@ -6,6 +6,7 @@ import '../../models/temple_model.dart';
 import '../../state/temple/temple.dart';
 import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../_parts/_temple_dialog.dart';
+import '../function.dart';
 import 'visited_temple_map_alert.dart';
 
 class VisitedTempleListAlert extends ConsumerStatefulWidget {
@@ -18,6 +19,10 @@ class VisitedTempleListAlert extends ConsumerStatefulWidget {
 
 class _VisitedTempleListAlertState
     extends ConsumerState<VisitedTempleListAlert> {
+  List<int> yearList = [];
+
+  List<GlobalKey> globalKeyList2 = [];
+
   ///
   @override
   void initState() {
@@ -26,21 +31,36 @@ class _VisitedTempleListAlertState
     ref.read(templeProvider.notifier).getAllTemple();
 
     ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
+
+    globalKeyList2 = List.generate(100, (index) => GlobalKey());
   }
 
   ///
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
+    if (yearList.isEmpty) {
+      yearList = makeTempleVisitYearList(ref: ref);
+    }
+
+    return DefaultTabController(
+      length: yearList.length,
+      child: Scaffold(
+        backgroundColor: Colors.black.withOpacity(0.2),
+        appBar: AppBar(
+          title: Text(
+            'Visited Temple',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.4),
+              fontSize: 12,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          leading: const Icon(Icons.check_box_outline_blank,
+              color: Colors.transparent),
+          bottom: displayVisitedTempleListAppBar(),
+        ),
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
@@ -53,6 +73,57 @@ class _VisitedTempleListAlertState
   }
 
   ///
+  PreferredSize displayVisitedTempleListAppBar() {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(20),
+      child: Column(
+        children: [
+          displayVisitedTempleListTabBar(),
+        ],
+      ),
+    );
+  }
+
+  ///
+  Widget displayVisitedTempleListTabBar() {
+    return TabBar(
+      isScrollable: true,
+      padding: EdgeInsets.zero,
+      indicatorColor: Colors.transparent,
+      indicatorWeight: 0.1,
+      tabs: _getTabs(),
+    );
+  }
+
+  ///
+  List<Widget> _getTabs() {
+    final list = <Widget>[];
+
+    for (var i = 0; i < yearList.length; i++) {
+      list.add(
+        GestureDetector(
+          onTap: () {
+            scrollToIndex(i);
+          },
+          child: Text(yearList[i].toString()),
+        ),
+      );
+    }
+
+    return list;
+  }
+
+  ///
+  Future<void> scrollToIndex(int index) async {
+    final target = globalKeyList2[index].currentContext!;
+
+    await Scrollable.ensureVisible(
+      target,
+      duration: const Duration(milliseconds: 1000),
+    );
+  }
+
+  ///
   Widget displayTempleList() {
     final list = <Widget>[];
 
@@ -60,8 +131,28 @@ class _VisitedTempleListAlertState
 
     final roopList = List<TempleModel>.from(templeState.templeList);
 
+    var keepY = '';
     var keepYm = '';
     roopList.forEach((element) {
+      if (keepY != element.date.yyyy) {
+        final pos =
+            yearList.indexWhere((element2) => element2 == element.date.year);
+
+        list.add(
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+            decoration: BoxDecoration(color: Colors.white.withOpacity(0.2)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(key: globalKeyList2[pos], element.date.yyyy),
+                Container(),
+              ],
+            ),
+          ),
+        );
+      }
+
       if (keepYm != element.date.yyyymm) {
         list.add(
           Container(
@@ -87,6 +178,7 @@ class _VisitedTempleListAlertState
       }
 
       keepYm = element.date.yyyymm;
+      keepY = element.date.yyyy;
     });
 
     return SingleChildScrollView(

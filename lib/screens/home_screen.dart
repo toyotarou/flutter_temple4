@@ -40,15 +40,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     globalKeyList = List.generate(100, (index) => GlobalKey());
   }
 
-  ///
-  Future<void> scrollToIndex(int index) async {
-    final target = globalKeyList[index].currentContext!;
-
-    await Scrollable.ensureVisible(
-      target,
-      duration: const Duration(milliseconds: 1000),
-    );
-  }
 
   ///
   @override
@@ -141,6 +132,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return list;
   }
+
+
+
+
+
+
+  ///
+  Future<void> scrollToIndex(int index) async {
+    final target = globalKeyList[index].currentContext!;
+
+    await Scrollable.ensureVisible(
+      target,
+      duration: const Duration(milliseconds: 1000),
+    );
+  }
+
+
+
 
   ///
   Widget displayHomeButton() {
