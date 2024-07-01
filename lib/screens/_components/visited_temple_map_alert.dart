@@ -205,7 +205,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                           temple: templeDataList[i],
                           from: 'VisitedTempleMapAlert',
                         ),
-                        paddingTop: context.screenSize.height * 0.7,
+                        paddingTop: context.screenSize.height * 0.6,
                         clearBarrierColor: true,
                       );
                     },

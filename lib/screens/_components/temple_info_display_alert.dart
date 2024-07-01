@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/screens/_components/visited_temple_photo_alert.dart';
+import 'package:flutter_temple4/screens/_parts/_temple_dialog.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
@@ -104,11 +106,40 @@ class _TempleInfoDisplayAlertState
               Text(widget.temple.address),
               Text(widget.temple.latitude),
               Text(widget.temple.longitude),
+              const SizedBox(height: 10),
               displayTempleVisitDate(),
             ],
           ),
         ),
+        displayVisitedTemplePhoto(),
       ],
+    );
+  }
+
+  ///
+  Widget displayVisitedTemplePhoto() {
+    if (widget.from != 'VisitedTempleMapAlert') {
+      return Row(
+        children: [Container(), const SizedBox(width: 20)],
+      );
+    }
+
+    final templeVisitDateMap =
+        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
+
+    return GestureDetector(
+      onTap: () {
+        TempleDialog(
+          context: context,
+          widget: VisitedTemplePhotoAlert(
+            templeVisitDateMap: templeVisitDateMap,
+            temple: widget.temple,
+          ),
+          paddingTop: context.screenSize.height * 0.1,
+          paddingLeft: context.screenSize.width * 0.2,
+        );
+      },
+      child: const Icon(Icons.photo, color: Colors.white),
     );
   }
 
@@ -145,7 +176,7 @@ class _TempleInfoDisplayAlertState
     }
 
     return SizedBox(
-      height: 60,
+      height: 80,
       width: double.infinity,
       child: Scrollbar(
         thumbVisibility: true,
@@ -153,8 +184,10 @@ class _TempleInfoDisplayAlertState
           child: Wrap(
             children: templeVisitDateMap[widget.temple.name]!.map((e) {
               return Container(
+                width: context.screenSize.width / 5,
                 padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
                 margin: const EdgeInsets.all(1),
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white.withOpacity(0.2)),
                 ),
