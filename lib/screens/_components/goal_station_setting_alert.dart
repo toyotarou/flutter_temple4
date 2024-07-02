@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/models/tokyo_train_model.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/tokyo_station_model.dart';
-import '../../models/tokyo_train_model.dart';
 import '../../state/routing/routing.dart';
+//import '../../state/tokyo_train/tokyo_train.dart';
 
 class GoalStationSettingAlert extends ConsumerStatefulWidget {
   const GoalStationSettingAlert(

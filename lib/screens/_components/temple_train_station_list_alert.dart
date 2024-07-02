@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/models/temple_model.dart';
 
 import '../../extensions/extensions.dart';
-import '../../models/temple_list_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
 import '../../state/lat_lng_temple/lat_lng_temple.dart';
@@ -15,18 +13,10 @@ import 'not_reach_temple_station_list_alert.dart';
 
 class TempleTrainStationListAlert extends ConsumerStatefulWidget {
   const TempleTrainStationListAlert(
-      {super.key,
-      required this.tokyoStationMap,
-      required this.tokyoTrainList,
-      required this.templeStationMap,
-      required this.templeVisitDateMap,
-      required this.dateTempleMap});
+      {super.key, required this.tokyoStationMap, required this.tokyoTrainList});
 
   final Map<String, TokyoStationModel> tokyoStationMap;
   final List<TokyoTrainModel> tokyoTrainList;
-  final Map<String, List<TempleListModel>> templeStationMap;
-  final Map<String, List<String>> templeVisitDateMap;
-  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<TempleTrainStationListAlert> createState() =>
@@ -89,10 +79,7 @@ class _TempleTrainListAlertState
               onPressed: () {
                 TempleDialog(
                   context: context,
-                  widget: NotReachTempleStationListAlert(
-                    tokyoTrainList: widget.tokyoTrainList,
-                    templeStationMap: widget.templeStationMap,
-                  ),
+                  widget: const NotReachTempleStationListAlert(),
                   paddingLeft: context.screenSize.width * 0.2,
                 );
               },
@@ -126,8 +113,6 @@ class _TempleTrainListAlertState
                           station: widget.tokyoStationMap[startStationId],
                           tokyoStationMap: widget.tokyoStationMap,
                           tokyoTrainList: widget.tokyoTrainList,
-                          templeVisitDateMap: widget.templeVisitDateMap,
-                          dateTempleMap: widget.dateTempleMap,
                         ),
                       );
                     },
