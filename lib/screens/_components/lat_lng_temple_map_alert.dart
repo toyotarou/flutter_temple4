@@ -30,6 +30,12 @@ class LatLngTempleMapAlert extends ConsumerStatefulWidget {
       _LatLngTempleDisplayAlertState();
 }
 
+
+
+
+
+
+
 class _LatLngTempleDisplayAlertState
     extends ConsumerState<LatLngTempleMapAlert> {
   List<TempleData> templeDataList = [];
