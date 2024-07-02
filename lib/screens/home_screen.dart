@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/state/tokyo_train/tokyo_train.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../extensions/extensions.dart';
@@ -169,14 +170,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final templeLatLngMap = ref
         .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
 
-
-
-
     final templeList =
-    ref.watch(templeProvider.select((value) => value.templeList));
+        ref.watch(templeProvider.select((value) => value.templeList));
 
+    var tokyoStationMap =
+        ref.watch(tokyoTrainProvider.select((value) => value.tokyoStationMap));
 
-
+    var tokyoTrainList =
+        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,14 +198,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   context: context,
                   widget: VisitedTempleMapAlert(
                     templeLatLngMap: templeLatLngMap,
-                      templeList:templeList,
-
-
-
-
-
-
-
+                    templeList: templeList,
                   ),
                   clearBarrierColor: true,
                 );
@@ -224,7 +218,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               IconButton(
                 onPressed: () => TempleDialog(
                   context: context,
-                  widget: const TempleTrainStationListAlert(),
+                  widget: TempleTrainStationListAlert(
+                    tokyoStationMap: tokyoStationMap,
+                    tokyoTrainList: tokyoTrainList,
+                  ),
                 ),
                 icon: const Icon(Icons.train, color: Colors.white),
               ),
