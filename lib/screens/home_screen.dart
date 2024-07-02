@@ -1,15 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/state/station/station.dart';
-import 'package:flutter_temple4/state/tokyo_train/tokyo_train.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../extensions/extensions.dart';
 import '../models/temple_model.dart';
+import '../state/station/station.dart';
 import '../state/temple/temple.dart';
 import '../state/temple_lat_lng/temple_lat_lng.dart';
 import '../state/temple_list/temple_list.dart';
+import '../state/tokyo_train/tokyo_train.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
@@ -169,7 +169,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayHomeButton() {
-    var templeLatLngList = ref
+    final templeLatLngList = ref
         .watch(templeLatLngProvider.select((value) => value.templeLatLngList));
 
     final templeLatLngMap = ref
@@ -178,17 +178,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final templeList =
         ref.watch(templeProvider.select((value) => value.templeList));
 
-    var tokyoStationMap =
+    final tokyoStationMap =
         ref.watch(tokyoTrainProvider.select((value) => value.tokyoStationMap));
 
-    var tokyoTrainList =
+    final tokyoTrainList =
         ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
 
     final templeListList =
         ref.watch(templeListProvider.select((value) => value.templeListList));
 
-    var tokyoTrainIdMap =
+    final tokyoTrainIdMap =
         ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainIdMap));
+
+    final templeStationMap = ref.watch(
+        templeNotReachListProvider.select((value) => value.templeStationMap));
+
+    final templeVisitDateMap =
+        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
+
+    final dateTempleMap =
+        ref.watch(templeProvider.select((value) => value.dateTempleMap));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -210,6 +219,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   widget: VisitedTempleMapAlert(
                     templeLatLngMap: templeLatLngMap,
                     templeList: templeList,
+                    templeVisitDateMap: templeVisitDateMap,
+
+
+                      dateTempleMap:dateTempleMap,
+
+
+
+
+
                   ),
                   clearBarrierColor: true,
                 );
@@ -232,6 +250,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   widget: TempleTrainStationListAlert(
                     tokyoStationMap: tokyoStationMap,
                     tokyoTrainList: tokyoTrainList,
+                    templeStationMap: templeStationMap,
+                    templeVisitDateMap: templeVisitDateMap,
+                    dateTempleMap: dateTempleMap,
                   ),
                 ),
                 icon: const Icon(Icons.train, color: Colors.white),
@@ -243,6 +264,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     templeLatLngList: templeLatLngList,
                     tokyoTrainIdMap: tokyoTrainIdMap,
                     templeListList: templeListList,
+                    tokyoTrainList: tokyoTrainList,
+                    templeVisitDateMap: templeVisitDateMap,
+                    dateTempleMap: dateTempleMap,
                   ),
                 ),
                 icon:
@@ -369,10 +393,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       {required TempleModel data, required String selectYear}) {
     final templeState = ref.watch(templeProvider);
 
-    var templeLatLngMap = ref
+    final templeLatLngMap = ref
         .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
 
-    var stationMap =
+    final stationMap =
         ref.watch(stationProvider.select((value) => value.stationMap));
 
     return Card(

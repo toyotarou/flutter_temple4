@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/screens/_components/visited_temple_photo_alert.dart';
-import 'package:flutter_temple4/screens/_parts/_temple_dialog.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
+import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../state/routing/routing.dart';
-import '../../state/temple/temple.dart';
+import '../_parts/_temple_dialog.dart';
 import '../function.dart';
+import 'visited_temple_photo_alert.dart';
 
 class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
   const TempleInfoDisplayAlert(
-      {super.key, required this.temple, required this.from, this.station});
+      {super.key,
+      required this.temple,
+      required this.from,
+      this.station,
+      required this.templeVisitDateMap,
+      required this.dateTempleMap});
 
   final TempleData temple;
   final String from;
   final TokyoStationModel? station;
+  final Map<String, List<String>> templeVisitDateMap;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<TempleInfoDisplayAlert> createState() =>
@@ -25,14 +32,6 @@ class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
 
 class _TempleInfoDisplayAlertState
     extends ConsumerState<TempleInfoDisplayAlert> {
-  ///
-  @override
-  void initState() {
-    super.initState();
-
-    ref.read(templeProvider.notifier).getAllTemple();
-  }
-
   ///
   @override
   Widget build(BuildContext context) {
@@ -124,16 +123,14 @@ class _TempleInfoDisplayAlertState
       );
     }
 
-    final templeVisitDateMap =
-        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
-
     return GestureDetector(
       onTap: () {
         TempleDialog(
           context: context,
           widget: VisitedTemplePhotoAlert(
-            templeVisitDateMap: templeVisitDateMap,
+            templeVisitDateMap: widget.templeVisitDateMap,
             temple: widget.temple,
+            dateTempleMap: widget.dateTempleMap,
           ),
           paddingTop: context.screenSize.height * 0.1,
           paddingLeft: context.screenSize.width * 0.2,
@@ -168,9 +165,6 @@ class _TempleInfoDisplayAlertState
 
   ///
   Widget displayTempleVisitDate() {
-    final templeVisitDateMap =
-        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
-
     if (widget.from != 'VisitedTempleMapAlert') {
       return Container();
     }
@@ -182,7 +176,7 @@ class _TempleInfoDisplayAlertState
         thumbVisibility: true,
         child: SingleChildScrollView(
           child: Wrap(
-            children: templeVisitDateMap[widget.temple.name]!.map((e) {
+            children: widget.templeVisitDateMap[widget.temple.name]!.map((e) {
               return Container(
                 width: context.screenSize.width / 5,
                 padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),

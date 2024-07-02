@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/models/temple_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -21,11 +22,17 @@ class NotReachTempleMapAlert extends ConsumerStatefulWidget {
       {super.key,
       required this.templeLatLngList,
       required this.tokyoTrainIdMap,
-      required this.templeListList});
+      required this.templeListList,
+      required this.tokyoTrainList,
+      required this.templeVisitDateMap,
+      required this.dateTempleMap});
 
   final List<TempleLatLngModel> templeLatLngList;
   final Map<int, TokyoTrainModel> tokyoTrainIdMap;
   final List<TempleListModel> templeListList;
+  final List<TokyoTrainModel> tokyoTrainList;
+  final Map<String, List<String>> templeVisitDateMap;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<NotReachTempleMapAlert> createState() =>
@@ -94,7 +101,9 @@ class _NotReachTempleMapAlertState
 
                         TempleDialog(
                           context: context,
-                          widget: const NotReachTempleTrainSelectAlert(),
+                          widget: NotReachTempleTrainSelectAlert(
+                            tokyoTrainList: widget.tokyoTrainList,
+                          ),
                           paddingRight: context.screenSize.width * 0.2,
                           clearBarrierColor: true,
                         );
@@ -204,6 +213,8 @@ class _NotReachTempleMapAlertState
                   widget: TempleInfoDisplayAlert(
                     temple: templeDataList[i],
                     from: 'NotReachTempleMapAlert',
+                    templeVisitDateMap: widget.templeVisitDateMap,
+                    dateTempleMap: widget.dateTempleMap,
                   ),
                   paddingTop: context.screenSize.height * 0.7,
                   clearBarrierColor: true,

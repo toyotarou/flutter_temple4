@@ -12,10 +12,16 @@ import 'visited_temple_map_alert.dart';
 
 class VisitedTempleListAlert extends ConsumerStatefulWidget {
   const VisitedTempleListAlert(
-      {super.key, required this.templeLatLngMap, required this.templeList});
+      {super.key,
+      required this.templeLatLngMap,
+      required this.templeList,
+      required this.templeVisitDateMap,
+      required this.dateTempleMap});
 
   final Map<String, TempleLatLngModel> templeLatLngMap;
   final List<TempleModel> templeList;
+  final Map<String, List<String>> templeVisitDateMap;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<VisitedTempleListAlert> createState() =>
@@ -279,6 +285,8 @@ class _VisitedTempleListAlertState
                 widget: VisitedTempleMapAlert(
                   templeLatLngMap: widget.templeLatLngMap,
                   templeList: widget.templeList,
+                  templeVisitDateMap: widget.templeVisitDateMap,
+                  dateTempleMap: widget.dateTempleMap,
                 ),
                 clearBarrierColor: true,
               );
@@ -353,6 +361,8 @@ class _VisitedTempleListAlertState
                 widget: VisitedTempleMapAlert(
                   templeLatLngMap: widget.templeLatLngMap,
                   templeList: widget.templeList,
+                  templeVisitDateMap: widget.templeVisitDateMap,
+                  dateTempleMap: widget.dateTempleMap,
                 ),
                 clearBarrierColor: true,
               );
