@@ -8,6 +8,7 @@ import '../extensions/extensions.dart';
 import '../models/temple_model.dart';
 import '../state/temple/temple.dart';
 import '../state/temple_lat_lng/temple_lat_lng.dart';
+import '../state/temple_list/temple_list.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
@@ -167,6 +168,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayHomeButton() {
+    var templeLatLngList = ref
+        .watch(templeLatLngProvider.select((value) => value.templeLatLngList));
+
     final templeLatLngMap = ref
         .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
 
@@ -178,6 +182,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     var tokyoTrainList =
         ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
+
+    final templeListList =
+        ref.watch(templeListProvider.select((value) => value.templeListList));
+
+    var tokyoTrainIdMap =
+        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainIdMap));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -228,7 +238,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               IconButton(
                 onPressed: () => TempleDialog(
                   context: context,
-                  widget: const NotReachTempleMapAlert(),
+                  widget: NotReachTempleMapAlert(
+                    templeLatLngList: templeLatLngList,
+                    tokyoTrainIdMap: tokyoTrainIdMap,
+                    templeListList: templeListList,
+                  ),
                 ),
                 icon:
                     const Icon(FontAwesomeIcons.toriiGate, color: Colors.white),
