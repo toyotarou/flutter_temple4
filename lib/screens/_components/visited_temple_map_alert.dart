@@ -16,16 +16,10 @@ import 'visited_temple_list_alert.dart';
 
 class VisitedTempleMapAlert extends ConsumerStatefulWidget {
   const VisitedTempleMapAlert(
-      {super.key,
-      required this.templeLatLngMap,
-      required this.templeList,
-      required this.templeVisitDateMap,
-      required this.dateTempleMap});
+      {super.key, required this.templeLatLngMap, required this.templeList});
 
   final Map<String, TempleLatLngModel> templeLatLngMap;
   final List<TempleModel> templeList;
-  final Map<String, List<String>> templeVisitDateMap;
-  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<VisitedTempleMapAlert> createState() =>
@@ -81,16 +75,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                           widget: VisitedTempleListAlert(
                             templeLatLngMap: widget.templeLatLngMap,
                             templeList: widget.templeList,
-                            templeVisitDateMap: widget.templeVisitDateMap,
-
-
-
-
-                              dateTempleMap:widget.dateTempleMap,
-
-
-
-
                           ),
                           paddingLeft: context.screenSize.width * 0.1,
                         );
@@ -111,8 +95,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                             widget: VisitedTempleMapAlert(
                               templeLatLngMap: widget.templeLatLngMap,
                               templeList: widget.templeList,
-                              templeVisitDateMap: widget.templeVisitDateMap,
-                              dateTempleMap: widget.dateTempleMap,
                             ),
                             clearBarrierColor: true,
                           );
@@ -225,8 +207,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                         widget: TempleInfoDisplayAlert(
                           temple: templeDataList[i],
                           from: 'VisitedTempleMapAlert',
-                          templeVisitDateMap: widget.templeVisitDateMap,
-                          dateTempleMap: widget.dateTempleMap,
                         ),
                         paddingTop: context.screenSize.height * 0.6,
                         clearBarrierColor: true,
