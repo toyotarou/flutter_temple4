@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../extensions/extensions.dart';
 import '../models/temple_model.dart';
 import '../state/temple/temple.dart';
+import '../state/temple_lat_lng/temple_lat_lng.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
@@ -34,6 +35,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    ref.read(templeProvider.notifier).getAllTemple();
+
+    ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
 
     ref.read(templeProvider.notifier).getAllTemple();
 
@@ -161,6 +166,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayHomeButton() {
+    final templeLatLngMap = ref
+        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+
+
+
+
+    final templeList =
+    ref.watch(templeProvider.select((value) => value.templeList));
+
+
+
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -178,7 +195,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 TempleDialog(
                   context: context,
-                  widget: const VisitedTempleMapAlert(),
+                  widget: VisitedTempleMapAlert(
+                    templeLatLngMap: templeLatLngMap,
+                      templeList:templeList,
+
+
+
+
+
+
+
+                  ),
                   clearBarrierColor: true,
                 );
               },
