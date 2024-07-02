@@ -6,15 +6,26 @@ import 'package:latlong2/latlong.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
+import '../../models/temple_lat_lng_model.dart';
+import '../../models/temple_model.dart';
 import '../../state/temple/temple.dart';
-import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
 import 'temple_info_display_alert.dart';
 import 'visited_temple_list_alert.dart';
 
 class VisitedTempleMapAlert extends ConsumerStatefulWidget {
-  const VisitedTempleMapAlert({super.key});
+  const VisitedTempleMapAlert(
+      {super.key,
+      required this.templeLatLngMap,
+      required this.templeList,
+      required this.templeVisitDateMap,
+      required this.dateTempleMap});
+
+  final Map<String, TempleLatLngModel> templeLatLngMap;
+  final List<TempleModel> templeList;
+  final Map<String, List<String>> templeVisitDateMap;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<VisitedTempleMapAlert> createState() =>
@@ -36,8 +47,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
     super.initState();
 
     ref.read(templeProvider.notifier).getAllTemple();
-
-    ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
   }
 
   ///
@@ -69,7 +78,20 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                       onPressed: () {
                         TempleDialog(
                           context: context,
-                          widget: const VisitedTempleListAlert(),
+                          widget: VisitedTempleListAlert(
+                            templeLatLngMap: widget.templeLatLngMap,
+                            templeList: widget.templeList,
+                            templeVisitDateMap: widget.templeVisitDateMap,
+
+
+
+
+                              dateTempleMap:widget.dateTempleMap,
+
+
+
+
+                          ),
                           paddingLeft: context.screenSize.width * 0.1,
                         );
                       },
@@ -86,7 +108,12 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
 
                           TempleDialog(
                             context: context,
-                            widget: const VisitedTempleMapAlert(),
+                            widget: VisitedTempleMapAlert(
+                              templeLatLngMap: widget.templeLatLngMap,
+                              templeList: widget.templeList,
+                              templeVisitDateMap: widget.templeVisitDateMap,
+                              dateTempleMap: widget.dateTempleMap,
+                            ),
                             clearBarrierColor: true,
                           );
                         },
@@ -139,12 +166,9 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
   void makeTempleDataList() {
     templeDataList = [];
 
-    final templeList =
-        ref.watch(templeProvider.select((value) => value.templeList));
-
     final templeNamesList = <String>[];
 
-    templeList
+    widget.templeList
       ..forEach((element) {
         templeNamesList.add(element.temple);
       })
@@ -158,11 +182,8 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
         }
       });
 
-    final templeLatLngMap = ref
-        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
-
     templeNamesList.forEach((element) {
-      final temple = templeLatLngMap[element];
+      final temple = widget.templeLatLngMap[element];
 
       if (temple != null) {
         templeDataList.add(
@@ -204,6 +225,8 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                         widget: TempleInfoDisplayAlert(
                           temple: templeDataList[i],
                           from: 'VisitedTempleMapAlert',
+                          templeVisitDateMap: widget.templeVisitDateMap,
+                          dateTempleMap: widget.dateTempleMap,
                         ),
                         paddingTop: context.screenSize.height * 0.6,
                         clearBarrierColor: true,

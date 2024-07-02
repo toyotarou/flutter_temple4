@@ -4,14 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
-import '../../state/temple/temple.dart';
+import '../../models/temple_model.dart';
 
 class VisitedTemplePhotoAlert extends ConsumerStatefulWidget {
   const VisitedTemplePhotoAlert(
-      {super.key, required this.templeVisitDateMap, required this.temple});
+      {super.key,
+      required this.templeVisitDateMap,
+      required this.temple,
+      required this.dateTempleMap});
 
   final Map<String, List<String>> templeVisitDateMap;
   final TempleData temple;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<VisitedTemplePhotoAlert> createState() =>
@@ -25,7 +29,7 @@ class _VisitedTemplePhotoAlertState
   void initState() {
     super.initState();
 
-    ref.read(templeProvider.notifier).getAllTemple();
+//    ref.read(templeProvider.notifier).getAllTemple();
   }
 
   ///
@@ -62,9 +66,6 @@ class _VisitedTemplePhotoAlertState
   Widget displayVisitedTemplePhoto() {
     final list = <Widget>[];
 
-    final dateTempleMap =
-        ref.watch(templeProvider.select((value) => value.dateTempleMap));
-
     widget.templeVisitDateMap[widget.temple.name]?.forEach((element) {
       list.add(
         Container(
@@ -82,7 +83,7 @@ class _VisitedTemplePhotoAlertState
 
       final list2 = <Widget>[];
 
-      dateTempleMap[element]?.photo.forEach((element2) {
+      widget.dateTempleMap[element]?.photo.forEach((element2) {
         list2.add(
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),

@@ -7,10 +7,11 @@ import 'package:latlong2/latlong.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/lat_lng_temple_model.dart';
+import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
+import '../../models/tokyo_train_model.dart';
 import '../../state/lat_lng_temple/lat_lng_temple.dart';
 import '../../state/routing/routing.dart';
-import '../../state/tokyo_train/tokyo_train.dart';
 import '../_parts/_caution_dialog.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
@@ -20,10 +21,20 @@ import 'temple_info_display_alert.dart';
 
 class LatLngTempleMapAlert extends ConsumerStatefulWidget {
   const LatLngTempleMapAlert(
-      {super.key, required this.templeList, this.station});
+      {super.key,
+      required this.templeList,
+      this.station,
+      required this.tokyoStationMap,
+      required this.tokyoTrainList,
+      required this.templeVisitDateMap,
+      required this.dateTempleMap});
 
   final List<LatLngTempleModel> templeList;
   final TokyoStationModel? station;
+  final Map<String, TokyoStationModel> tokyoStationMap;
+  final List<TokyoTrainModel> tokyoTrainList;
+  final Map<String, List<String>> templeVisitDateMap;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<LatLngTempleMapAlert> createState() =>
@@ -56,8 +67,6 @@ class _LatLngTempleDisplayAlertState
   void initState() {
     super.initState();
 
-    ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
-
     currentCenter =
         LatLng(widget.station!.lat.toDouble(), widget.station!.lng.toDouble());
   }
@@ -69,8 +78,6 @@ class _LatLngTempleDisplayAlertState
         .watch(routingProvider.select((value) => value.routingTempleDataList));
 
     //------------------// goal
-    final tokyoTrainState = ref.watch(tokyoTrainProvider);
-
     final goalStationId =
         ref.watch(routingProvider.select((value) => value.goalStationId));
     //------------------// goal
@@ -100,8 +107,8 @@ class _LatLngTempleDisplayAlertState
       ));
     }
 
-    if (tokyoTrainState.tokyoStationMap[goalStationId] != null) {
-      final goal = tokyoTrainState.tokyoStationMap[goalStationId];
+    if (widget.tokyoStationMap[goalStationId] != null) {
+      final goal = widget.tokyoStationMap[goalStationId];
 
       templeDataList.add(
         TempleData(
@@ -191,7 +198,10 @@ class _LatLngTempleDisplayAlertState
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.train),
+                  ),
                   IconButton(
                     onPressed: () {
                       mapController.move(currentCenter, 13);
@@ -214,8 +224,6 @@ class _LatLngTempleDisplayAlertState
         .watch(routingProvider.select((value) => value.routingTempleDataList));
 
     //------------------// goal
-    final tokyoTrainState = ref.watch(tokyoTrainProvider);
-
     final goalStationId =
         ref.watch(routingProvider.select((value) => value.goalStationId));
     //------------------// goal
@@ -265,7 +273,10 @@ class _LatLngTempleDisplayAlertState
 
                         TempleDialog(
                           context: context,
-                          widget: const GoalStationSettingAlert(),
+                          widget: GoalStationSettingAlert(
+                            tokyoStationMap: widget.tokyoStationMap,
+                            tokyoTrainList: widget.tokyoTrainList,
+                          ),
                           paddingLeft: context.screenSize.width * 0.2,
                           clearBarrierColor: true,
                         );
@@ -287,9 +298,8 @@ class _LatLngTempleDisplayAlertState
                     const SizedBox(width: 20),
                     Expanded(
                       child: Text(
-                        (tokyoTrainState.tokyoStationMap[goalStationId] != null)
-                            ? tokyoTrainState
-                                .tokyoStationMap[goalStationId]!.stationName
+                        (widget.tokyoStationMap[goalStationId] != null)
+                            ? widget.tokyoStationMap[goalStationId]!.stationName
                             : '-----',
                         style: const TextStyle(color: Colors.white),
                       ),
@@ -369,6 +379,8 @@ class _LatLngTempleDisplayAlertState
                             temple: templeDataList[i],
                             from: 'LatLngTempleMapAlert',
                             station: widget.station,
+                            templeVisitDateMap: widget.templeVisitDateMap,
+                            dateTempleMap: widget.dateTempleMap,
                           ),
                           paddingTop: context.screenSize.height * 0.7,
                           clearBarrierColor: true,

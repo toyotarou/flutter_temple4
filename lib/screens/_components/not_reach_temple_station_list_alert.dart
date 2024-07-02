@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/temple_list_model.dart';
 import '../../models/tokyo_station_model.dart';
-import '../../state/temple_list/temple_list.dart';
-import '../../state/tokyo_train/tokyo_train.dart';
+import '../../models/tokyo_train_model.dart';
 
 class NotReachTempleStationListAlert extends ConsumerStatefulWidget {
-  const NotReachTempleStationListAlert({super.key});
+  const NotReachTempleStationListAlert(
+      {super.key,
+      required this.tokyoTrainList,
+      required this.templeStationMap});
+
+  final List<TokyoTrainModel> tokyoTrainList;
+  final Map<String, List<TempleListModel>> templeStationMap;
 
   @override
   ConsumerState<NotReachTempleStationListAlert> createState() =>
@@ -18,16 +24,6 @@ class _TempleNotReachStationListAlertState
     extends ConsumerState<NotReachTempleStationListAlert> {
   List<String> notReachTrainIds = [];
   List<String> notReachStationIds = [];
-
-  ///
-  @override
-  void initState() {
-    super.initState();
-
-    ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
-
-    ref.read(templeNotReachListProvider.notifier).getAllNotReachTemple();
-  }
 
   ///
   @override
@@ -57,13 +53,10 @@ class _TempleNotReachStationListAlertState
 
   ///
   Widget displayNotReachTrain() {
-    final tokyoTrainList =
-        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: tokyoTrainList.map((e) {
+        children: widget.tokyoTrainList.map((e) {
           if (notReachTrainIds.contains(e.trainNumber.toString())) {
             return ExpansionTile(
               collapsedIconColor: Colors.white,
@@ -89,9 +82,6 @@ class _TempleNotReachStationListAlertState
 
   ///
   Widget displayNotReachStation({required TokyoStationModel data}) {
-    final templeStationMap = ref.watch(
-        templeNotReachListProvider.select((value) => value.templeStationMap));
-
     return Container(
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 10),
@@ -108,8 +98,8 @@ class _TempleNotReachStationListAlertState
             style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
           Text(
-            (templeStationMap[data.id] != null)
-                ? templeStationMap[data.id]!.length.toString()
+            (widget.templeStationMap[data.id] != null)
+                ? widget.templeStationMap[data.id]!.length.toString()
                 : '0',
             style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
@@ -120,10 +110,7 @@ class _TempleNotReachStationListAlertState
 
   ///
   void makeNotReachTempleIds() {
-    ref
-        .watch(templeNotReachListProvider
-            .select((value) => value.templeStationMap))
-        .forEach((key, value) {
+    widget.templeStationMap.forEach((key, value) {
       notReachTrainIds.add(key.split('-')[0]);
 
       notReachStationIds.add(key);
