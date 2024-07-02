@@ -45,12 +45,6 @@ class _LatLngTempleDisplayAlertState
   MapController mapController = MapController();
   late LatLng currentCenter;
 
-
-
-
-
-
-
   ///
   @override
   void initState() {
