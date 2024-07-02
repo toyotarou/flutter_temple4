@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/state/station/station.dart';
 import 'package:flutter_temple4/state/tokyo_train/tokyo_train.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -368,6 +369,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       {required TempleModel data, required String selectYear}) {
     final templeState = ref.watch(templeProvider);
 
+    var templeLatLngMap = ref
+        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+
+    var stationMap =
+        ref.watch(stationProvider.select((value) => value.stationMap));
+
     return Card(
       color: Colors.black.withOpacity(0.3),
       child: ListTile(
@@ -418,7 +425,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             GestureDetector(
               onTap: () => TempleDialog(
                 context: context,
-                widget: TempleDetailMapAlert(date: data.date),
+                widget: TempleDetailMapAlert(
+                  date: data.date,
+                  templeLatLngMap: templeLatLngMap,
+                  stationMap: stationMap,
+                ),
               ),
               child: const Icon(
                 Icons.call_made,
