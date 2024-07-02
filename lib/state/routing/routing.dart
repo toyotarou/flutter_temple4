@@ -1,6 +1,9 @@
+import 'package:flutter_temple4/extensions/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../data/http/client.dart';
+import '../../data/http/path.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../utility/utility.dart';
@@ -133,4 +136,32 @@ class Routing extends _$Routing {
   ///
   Future<void> setAdjustPercent({required int adjust}) async =>
       state = state.copyWith(adjustPercent: adjust);
+
+  ///
+  Future<void> insertRoute() async {
+    final list = [...state.routingTempleDataList];
+    final first = list.first;
+    final last = list.last;
+
+    final firstMark = first.mark.split('-')[1];
+    final lastMark = last.mark.split('-')[1];
+
+    final data = <String>['start-$firstMark'];
+    for (var i = 1; i < list.length - 1; i++) {
+      data.add(list[i].mark);
+    }
+    data.add('goal-$lastMark');
+
+    final client = ref.read(httpClientProvider);
+
+    await client
+        .post(
+          path: APIPath.insertTempleRoute,
+          body: {'date': DateTime.now().yyyymmdd, 'data': data},
+        )
+        .then((value) {})
+        .catchError((error, _) {
+          utility.showError('予期せぬエラーが発生しました');
+        });
+  }
 }

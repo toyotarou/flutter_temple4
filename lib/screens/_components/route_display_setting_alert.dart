@@ -41,8 +41,8 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
             DateTime.now().year,
             DateTime.now().month,
             DateTime.now().day,
-            routingState.startTime.split(':')[0].toInt(),
-            routingState.startTime.split(':')[1].toInt()))
+            routingState.startTime.split(' ')[1].split(':')[0].toInt(),
+            routingState.startTime.split(' ')[1].split(':')[1].toInt()))
         : timeFormat.format(selectedDateTime);
 
     speedTextController.text = routingState.walkSpeed.toString();
@@ -108,7 +108,7 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                                 '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
                             await ref
                                 .read(routingProvider.notifier)
-                                .setSelectTime(time: time);
+                                .setSelectTime(time: '${DateTime.now().yyyymmdd} $time');
                           }
                         },
                         child: Container(
@@ -284,6 +284,12 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                 const SizedBox(height: 30),
                 GestureDetector(
                   onTap: () async {
+                    if (routingState.startNow) {
+                      await ref
+                          .watch(routingProvider.notifier)
+                          .setSelectTime(time: selectedDateTime.toString());
+                    }
+
                     await ref
                         .watch(routingProvider.notifier)
                         .setWalkSpeed(speed: speedTextController.text.toInt());
