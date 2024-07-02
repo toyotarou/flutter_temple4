@@ -72,7 +72,10 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                       onPressed: () {
                         TempleDialog(
                           context: context,
-                          widget: const VisitedTempleListAlert(),
+                          widget: VisitedTempleListAlert(
+                            templeLatLngMap: widget.templeLatLngMap,
+                            templeList: widget.templeList,
+                          ),
                           paddingLeft: context.screenSize.width * 0.1,
                         );
                       },
