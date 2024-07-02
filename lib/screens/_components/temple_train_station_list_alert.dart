@@ -111,6 +111,8 @@ class _TempleTrainListAlertState
                         widget: LatLngTempleMapAlert(
                           templeList: latLngTempleList,
                           station: widget.tokyoStationMap[startStationId],
+                          tokyoStationMap: widget.tokyoStationMap,
+                          tokyoTrainList: widget.tokyoTrainList,
                         ),
                       );
                     },
