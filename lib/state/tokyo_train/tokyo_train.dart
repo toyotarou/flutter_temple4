@@ -17,8 +17,11 @@ class TokyoTrainState with _$TokyoTrainState {
   const factory TokyoTrainState({
     @Default([]) List<TokyoTrainModel> tokyoTrainList,
     @Default({}) Map<String, TokyoTrainModel> tokyoTrainMap,
-    @Default({}) Map<String, TokyoTrainModel> tokyoTrainIdMap,
+    @Default({}) Map<int, TokyoTrainModel> tokyoTrainIdMap,
     @Default({}) Map<String, TokyoStationModel> tokyoStationMap,
+
+    //
+    @Default([]) List<int> selectTrainList,
   }) = _TokyoTrainState;
 }
 
@@ -37,7 +40,7 @@ class TokyoTrain extends _$TokyoTrain {
     await client.post(path: APIPath.getTokyoTrainStation).then((value) {
       final list = <TokyoTrainModel>[];
       final map = <String, TokyoTrainModel>{};
-      final idMap = <String, TokyoTrainModel>{};
+      final idMap = <int, TokyoTrainModel>{};
       final stationMap = <String, TokyoStationModel>{};
 
       // ignore: avoid_dynamic_calls
@@ -50,7 +53,7 @@ class TokyoTrain extends _$TokyoTrain {
         list.add(val);
         map[val.trainName] = val;
 
-        idMap[val.trainNumber.toString()] = val;
+        idMap[val.trainNumber] = val;
 
         val.station.forEach((element) {
           stationMap[element.id] = element;
@@ -61,9 +64,23 @@ class TokyoTrain extends _$TokyoTrain {
         tokyoTrainList: list,
         tokyoTrainMap: map,
         tokyoStationMap: stationMap,
+        tokyoTrainIdMap: idMap,
       );
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
+  }
+
+  ///
+  Future<void> setTrainList({required int trainNumber}) async {
+    final list = [...state.selectTrainList];
+
+    if (list.contains(trainNumber)) {
+      list.remove(trainNumber);
+    } else {
+      list.add(trainNumber);
+    }
+
+    state = state.copyWith(selectTrainList: list);
   }
 }

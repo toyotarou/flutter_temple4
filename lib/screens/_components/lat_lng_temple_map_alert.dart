@@ -15,6 +15,7 @@ import '../_parts/_caution_dialog.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
 import 'goal_station_setting_alert.dart';
+import 'route_display_setting_alert.dart';
 import 'temple_info_display_alert.dart';
 
 class LatLngTempleMapAlert extends ConsumerStatefulWidget {
@@ -298,6 +299,17 @@ class _LatLngTempleDisplayAlertState
                 ),
               ],
             ),
+          ),
+          const SizedBox(width: 20),
+          GestureDetector(
+            onTap: () {
+              TempleDialog(
+                context: context,
+                widget: RouteDisplaySettingAlert(),
+                paddingLeft: context.screenSize.width * 0.1,
+              );
+            },
+            child: const Icon(Icons.settings, color: Colors.white),
           ),
           const SizedBox(width: 20),
           GestureDetector(

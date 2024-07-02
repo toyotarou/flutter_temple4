@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/screens/_components/not_reach_temple_train_select_alert.dart';
+import 'package:flutter_temple4/state/tokyo_train/tokyo_train.dart';
+import 'package:flutter_temple4/utility/utility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -30,6 +33,13 @@ class _NotReachTempleMapAlertState
 
   List<Marker> markerList = [];
 
+  MapController mapController = MapController();
+  late LatLng currentCenter;
+
+  List<Polyline> polylineList = [];
+
+  Utility utility = Utility();
+
   ///
   @override
   void initState() {
@@ -38,12 +48,18 @@ class _NotReachTempleMapAlertState
     ref.read(templeListProvider.notifier).getAllTempleListTemple();
 
     ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
+
+    ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
+
+    currentCenter = LatLng('35.7185071'.toDouble(), '139.5869534'.toDouble());
   }
 
   ///
   @override
   Widget build(BuildContext context) {
     getNotReachTemple();
+
+    makePolylineList();
 
     if (templeDataList.isNotEmpty) {
       final boundsData = makeBounds(data: templeDataList);
@@ -69,13 +85,25 @@ class _NotReachTempleMapAlertState
                       templeDataList.length.toString(),
                       style: const TextStyle(color: Colors.white),
                     ),
-                    Container(),
+                    IconButton(
+                      onPressed: () {
+                        mapController.move(currentCenter, 10);
+
+                        TempleDialog(
+                          context: context,
+                          widget: const NotReachTempleTrainSelectAlert(),
+                          paddingRight: context.screenSize.width * 0.2,
+                          clearBarrierColor: true,
+                        );
+                      },
+                      icon: const Icon(Icons.train, color: Colors.white),
+                    ),
                   ],
                 ),
               ),
-              const Divider(color: Colors.white),
               Expanded(
                 child: FlutterMap(
+                  mapController: mapController,
                   options: MapOptions(
                     bounds: LatLngBounds(
                       LatLng(
@@ -95,6 +123,7 @@ class _NotReachTempleMapAlertState
                       urlTemplate:
                           'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     ),
+                    PolylineLayer(polylines: polylineList),
                     MarkerLayer(markers: markerList),
                   ],
                 ),
@@ -199,6 +228,28 @@ class _NotReachTempleMapAlertState
             );
           },
         ),
+      );
+    }
+  }
+
+  ///
+  void makePolylineList() {
+    polylineList = [];
+
+    final tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+    final twelveColor = utility.getTwelveColor();
+
+    for (var i = 0; i < tokyoTrainState.selectTrainList.length; i++) {
+      final map =
+          tokyoTrainState.tokyoTrainIdMap[tokyoTrainState.selectTrainList[i]];
+
+      final points = <LatLng>[];
+      map?.station.forEach((element2) =>
+          points.add(LatLng(element2.lat.toDouble(), element2.lng.toDouble())));
+
+      polylineList.add(
+        Polyline(points: points, color: twelveColor[i], strokeWidth: 5),
       );
     }
   }

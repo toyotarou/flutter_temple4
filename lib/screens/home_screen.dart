@@ -59,6 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.black.withOpacity(0.7),
           appBar: AppBar(
             title: Text(
@@ -83,12 +84,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ///
   PreferredSize displayHomeAppBar() {
     return PreferredSize(
-      preferredSize: const Size.fromHeight(90),
+      preferredSize: const Size.fromHeight(120),
       child: Column(
         children: [
           displayHomeButton(),
           displaySearchForm(),
+          const SizedBox(height: 10),
           displayHomeTabBar(),
+          const SizedBox(height: 10),
         ],
       ),
     );
@@ -278,15 +281,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               color: Colors.white.withOpacity(0.2),
             ),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(element.date.year.toString()),
-                Text((templeState.templeCountMap[element.date.yyyy] != null)
-                    ? templeState.templeCountMap[element.date.yyyy]!.length
-                        .toString()
-                    : 0.toString()),
-              ],
+            child: DefaultTextStyle(
+              style: const TextStyle(color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(element.date.year.toString()),
+                  Text((templeState.templeCountMap[element.date.yyyy] != null)
+                      ? templeState.templeCountMap[element.date.yyyy]!.length
+                          .toString()
+                      : 0.toString()),
+                ],
+              ),
             ),
           ));
         }

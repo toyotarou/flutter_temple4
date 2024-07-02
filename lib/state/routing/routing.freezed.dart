@@ -23,7 +23,12 @@ mixin _$RoutingState {
 
   ///
   String get startStationId => throw _privateConstructorUsedError;
-  String get goalStationId => throw _privateConstructorUsedError;
+  String get goalStationId => throw _privateConstructorUsedError; //
+  bool get startNow => throw _privateConstructorUsedError;
+  String get startTime => throw _privateConstructorUsedError; //
+  int get walkSpeed => throw _privateConstructorUsedError; //
+  int get spotStayTime => throw _privateConstructorUsedError; //
+  int get adjustPercent => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RoutingStateCopyWith<RoutingState> get copyWith =>
@@ -40,7 +45,12 @@ abstract class $RoutingStateCopyWith<$Res> {
       {List<TempleData> routingTempleDataList,
       Map<String, TempleData> routingTempleDataMap,
       String startStationId,
-      String goalStationId});
+      String goalStationId,
+      bool startNow,
+      String startTime,
+      int walkSpeed,
+      int spotStayTime,
+      int adjustPercent});
 }
 
 /// @nodoc
@@ -60,6 +70,11 @@ class _$RoutingStateCopyWithImpl<$Res, $Val extends RoutingState>
     Object? routingTempleDataMap = null,
     Object? startStationId = null,
     Object? goalStationId = null,
+    Object? startNow = null,
+    Object? startTime = null,
+    Object? walkSpeed = null,
+    Object? spotStayTime = null,
+    Object? adjustPercent = null,
   }) {
     return _then(_value.copyWith(
       routingTempleDataList: null == routingTempleDataList
@@ -78,6 +93,26 @@ class _$RoutingStateCopyWithImpl<$Res, $Val extends RoutingState>
           ? _value.goalStationId
           : goalStationId // ignore: cast_nullable_to_non_nullable
               as String,
+      startNow: null == startNow
+          ? _value.startNow
+          : startNow // ignore: cast_nullable_to_non_nullable
+              as bool,
+      startTime: null == startTime
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as String,
+      walkSpeed: null == walkSpeed
+          ? _value.walkSpeed
+          : walkSpeed // ignore: cast_nullable_to_non_nullable
+              as int,
+      spotStayTime: null == spotStayTime
+          ? _value.spotStayTime
+          : spotStayTime // ignore: cast_nullable_to_non_nullable
+              as int,
+      adjustPercent: null == adjustPercent
+          ? _value.adjustPercent
+          : adjustPercent // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -94,7 +129,12 @@ abstract class _$$RoutingStateImplCopyWith<$Res>
       {List<TempleData> routingTempleDataList,
       Map<String, TempleData> routingTempleDataMap,
       String startStationId,
-      String goalStationId});
+      String goalStationId,
+      bool startNow,
+      String startTime,
+      int walkSpeed,
+      int spotStayTime,
+      int adjustPercent});
 }
 
 /// @nodoc
@@ -112,6 +152,11 @@ class __$$RoutingStateImplCopyWithImpl<$Res>
     Object? routingTempleDataMap = null,
     Object? startStationId = null,
     Object? goalStationId = null,
+    Object? startNow = null,
+    Object? startTime = null,
+    Object? walkSpeed = null,
+    Object? spotStayTime = null,
+    Object? adjustPercent = null,
   }) {
     return _then(_$RoutingStateImpl(
       routingTempleDataList: null == routingTempleDataList
@@ -130,6 +175,26 @@ class __$$RoutingStateImplCopyWithImpl<$Res>
           ? _value.goalStationId
           : goalStationId // ignore: cast_nullable_to_non_nullable
               as String,
+      startNow: null == startNow
+          ? _value.startNow
+          : startNow // ignore: cast_nullable_to_non_nullable
+              as bool,
+      startTime: null == startTime
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as String,
+      walkSpeed: null == walkSpeed
+          ? _value.walkSpeed
+          : walkSpeed // ignore: cast_nullable_to_non_nullable
+              as int,
+      spotStayTime: null == spotStayTime
+          ? _value.spotStayTime
+          : spotStayTime // ignore: cast_nullable_to_non_nullable
+              as int,
+      adjustPercent: null == adjustPercent
+          ? _value.adjustPercent
+          : adjustPercent // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -141,7 +206,12 @@ class _$RoutingStateImpl implements _RoutingState {
       {final List<TempleData> routingTempleDataList = const [],
       final Map<String, TempleData> routingTempleDataMap = const {},
       this.startStationId = '',
-      this.goalStationId = ''})
+      this.goalStationId = '',
+      this.startNow = true,
+      this.startTime = '',
+      this.walkSpeed = 5,
+      this.spotStayTime = 20,
+      this.adjustPercent = 20})
       : _routingTempleDataList = routingTempleDataList,
         _routingTempleDataMap = routingTempleDataMap;
 
@@ -172,10 +242,29 @@ class _$RoutingStateImpl implements _RoutingState {
   @override
   @JsonKey()
   final String goalStationId;
+//
+  @override
+  @JsonKey()
+  final bool startNow;
+  @override
+  @JsonKey()
+  final String startTime;
+//
+  @override
+  @JsonKey()
+  final int walkSpeed;
+//
+  @override
+  @JsonKey()
+  final int spotStayTime;
+//
+  @override
+  @JsonKey()
+  final int adjustPercent;
 
   @override
   String toString() {
-    return 'RoutingState(routingTempleDataList: $routingTempleDataList, routingTempleDataMap: $routingTempleDataMap, startStationId: $startStationId, goalStationId: $goalStationId)';
+    return 'RoutingState(routingTempleDataList: $routingTempleDataList, routingTempleDataMap: $routingTempleDataMap, startStationId: $startStationId, goalStationId: $goalStationId, startNow: $startNow, startTime: $startTime, walkSpeed: $walkSpeed, spotStayTime: $spotStayTime, adjustPercent: $adjustPercent)';
   }
 
   @override
@@ -190,7 +279,17 @@ class _$RoutingStateImpl implements _RoutingState {
             (identical(other.startStationId, startStationId) ||
                 other.startStationId == startStationId) &&
             (identical(other.goalStationId, goalStationId) ||
-                other.goalStationId == goalStationId));
+                other.goalStationId == goalStationId) &&
+            (identical(other.startNow, startNow) ||
+                other.startNow == startNow) &&
+            (identical(other.startTime, startTime) ||
+                other.startTime == startTime) &&
+            (identical(other.walkSpeed, walkSpeed) ||
+                other.walkSpeed == walkSpeed) &&
+            (identical(other.spotStayTime, spotStayTime) ||
+                other.spotStayTime == spotStayTime) &&
+            (identical(other.adjustPercent, adjustPercent) ||
+                other.adjustPercent == adjustPercent));
   }
 
   @override
@@ -199,7 +298,12 @@ class _$RoutingStateImpl implements _RoutingState {
       const DeepCollectionEquality().hash(_routingTempleDataList),
       const DeepCollectionEquality().hash(_routingTempleDataMap),
       startStationId,
-      goalStationId);
+      goalStationId,
+      startNow,
+      startTime,
+      walkSpeed,
+      spotStayTime,
+      adjustPercent);
 
   @JsonKey(ignore: true)
   @override
@@ -213,7 +317,12 @@ abstract class _RoutingState implements RoutingState {
       {final List<TempleData> routingTempleDataList,
       final Map<String, TempleData> routingTempleDataMap,
       final String startStationId,
-      final String goalStationId}) = _$RoutingStateImpl;
+      final String goalStationId,
+      final bool startNow,
+      final String startTime,
+      final int walkSpeed,
+      final int spotStayTime,
+      final int adjustPercent}) = _$RoutingStateImpl;
 
   @override
   List<TempleData> get routingTempleDataList;
@@ -225,6 +334,16 @@ abstract class _RoutingState implements RoutingState {
   String get startStationId;
   @override
   String get goalStationId;
+  @override //
+  bool get startNow;
+  @override
+  String get startTime;
+  @override //
+  int get walkSpeed;
+  @override //
+  int get spotStayTime;
+  @override //
+  int get adjustPercent;
   @override
   @JsonKey(ignore: true)
   _$$RoutingStateImplCopyWith<_$RoutingStateImpl> get copyWith =>

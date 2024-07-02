@@ -8,8 +8,16 @@ Future<void> caution_dialog(
     builder: (context) {
       return AlertDialog(
         backgroundColor: Colors.black.withOpacity(0.3),
-        title: (title != null) ? Text(title) : null,
-        content: Text(content),
+        title: (title != null)
+            ? Text(
+                title,
+                style: const TextStyle(color: Colors.white),
+              )
+            : null,
+        content: Text(
+          content,
+          style: const TextStyle(color: Colors.white),
+        ),
       );
     },
   );

@@ -54,6 +54,7 @@ class _VisitedTempleListAlertState
     return DefaultTabController(
       length: yearList.length,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black.withOpacity(0.2),
         appBar: AppBar(
           title: Text(

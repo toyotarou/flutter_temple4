@@ -18,6 +18,19 @@ class RoutingState with _$RoutingState {
     ///
     @Default('') String startStationId,
     @Default('') String goalStationId,
+
+    //
+    @Default(true) bool startNow,
+    @Default('') String startTime,
+
+    //
+    @Default(5) int walkSpeed,
+
+    //
+    @Default(20) int spotStayTime,
+
+    //
+    @Default(20) int adjustPercent,
   }) = _RoutingState;
 }
 
@@ -104,4 +117,20 @@ class Routing extends _$Routing {
   ///
   Future<void> setGoalStationId({required String id}) async =>
       state = state.copyWith(goalStationId: id);
+
+  ///
+  Future<void> setSelectTime({required String time}) async =>
+      state = state.copyWith(startNow: false, startTime: time);
+
+  ///
+  Future<void> setWalkSpeed({required int speed}) async =>
+      state = state.copyWith(walkSpeed: speed);
+
+  ///
+  Future<void> setSpotStayTime({required int time}) async =>
+      state = state.copyWith(spotStayTime: time);
+
+  ///
+  Future<void> setAdjustPercent({required int adjust}) async =>
+      state = state.copyWith(adjustPercent: adjust);
 }
