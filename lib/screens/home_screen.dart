@@ -5,7 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../extensions/extensions.dart';
 import '../models/temple_model.dart';
+import '../state/station/station.dart';
 import '../state/temple/temple.dart';
+import '../state/temple_lat_lng/temple_lat_lng.dart';
+import '../state/temple_list/temple_list.dart';
+import '../state/tokyo_train/tokyo_train.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
@@ -34,6 +38,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    ref.read(templeProvider.notifier).getAllTemple();
+
+    ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
 
     ref.read(templeProvider.notifier).getAllTemple();
 
@@ -161,6 +169,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayHomeButton() {
+    final templeLatLngList = ref
+        .watch(templeLatLngProvider.select((value) => value.templeLatLngList));
+
+    final templeLatLngMap = ref
+        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+
+    final templeList =
+        ref.watch(templeProvider.select((value) => value.templeList));
+
+    final tokyoStationMap =
+        ref.watch(tokyoTrainProvider.select((value) => value.tokyoStationMap));
+
+    final tokyoTrainList =
+        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
+
+    final templeListList =
+        ref.watch(templeListProvider.select((value) => value.templeListList));
+
+    final tokyoTrainIdMap =
+        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainIdMap));
+
+    final templeStationMap = ref.watch(
+        templeNotReachListProvider.select((value) => value.templeStationMap));
+
+    final templeVisitDateMap =
+        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
+
+    final dateTempleMap =
+        ref.watch(templeProvider.select((value) => value.dateTempleMap));
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -178,7 +216,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 TempleDialog(
                   context: context,
-                  widget: const VisitedTempleMapAlert(),
+                  widget: VisitedTempleMapAlert(
+                    templeLatLngMap: templeLatLngMap,
+                    templeList: templeList,
+                    templeVisitDateMap: templeVisitDateMap,
+
+
+                      dateTempleMap:dateTempleMap,
+
+
+
+
+
+                  ),
                   clearBarrierColor: true,
                 );
               },
@@ -197,14 +247,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               IconButton(
                 onPressed: () => TempleDialog(
                   context: context,
-                  widget: const TempleTrainStationListAlert(),
+                  widget: TempleTrainStationListAlert(
+                    tokyoStationMap: tokyoStationMap,
+                    tokyoTrainList: tokyoTrainList,
+                    templeStationMap: templeStationMap,
+                    templeVisitDateMap: templeVisitDateMap,
+                    dateTempleMap: dateTempleMap,
+                  ),
                 ),
                 icon: const Icon(Icons.train, color: Colors.white),
               ),
               IconButton(
                 onPressed: () => TempleDialog(
                   context: context,
-                  widget: const NotReachTempleMapAlert(),
+                  widget: NotReachTempleMapAlert(
+                    templeLatLngList: templeLatLngList,
+                    tokyoTrainIdMap: tokyoTrainIdMap,
+                    templeListList: templeListList,
+                    tokyoTrainList: tokyoTrainList,
+                    templeVisitDateMap: templeVisitDateMap,
+                    dateTempleMap: dateTempleMap,
+                  ),
                 ),
                 icon:
                     const Icon(FontAwesomeIcons.toriiGate, color: Colors.white),
@@ -330,6 +393,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       {required TempleModel data, required String selectYear}) {
     final templeState = ref.watch(templeProvider);
 
+    final templeLatLngMap = ref
+        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+
+    final stationMap =
+        ref.watch(stationProvider.select((value) => value.stationMap));
+
     return Card(
       color: Colors.black.withOpacity(0.3),
       child: ListTile(
@@ -380,7 +449,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             GestureDetector(
               onTap: () => TempleDialog(
                 context: context,
-                widget: TempleDetailMapAlert(date: data.date),
+                widget: TempleDetailMapAlert(
+                  date: data.date,
+                  templeLatLngMap: templeLatLngMap,
+                  stationMap: stationMap,
+                ),
               ),
               child: const Icon(
                 Icons.call_made,

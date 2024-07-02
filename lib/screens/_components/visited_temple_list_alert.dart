@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_temple4/models/temple_lat_lng_model.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/temple_model.dart';
@@ -10,7 +11,17 @@ import '../function.dart';
 import 'visited_temple_map_alert.dart';
 
 class VisitedTempleListAlert extends ConsumerStatefulWidget {
-  const VisitedTempleListAlert({super.key});
+  const VisitedTempleListAlert(
+      {super.key,
+      required this.templeLatLngMap,
+      required this.templeList,
+      required this.templeVisitDateMap,
+      required this.dateTempleMap});
+
+  final Map<String, TempleLatLngModel> templeLatLngMap;
+  final List<TempleModel> templeList;
+  final Map<String, List<String>> templeVisitDateMap;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<VisitedTempleListAlert> createState() =>
@@ -271,7 +282,12 @@ class _VisitedTempleListAlertState
 
               TempleDialog(
                 context: context,
-                widget: const VisitedTempleMapAlert(),
+                widget: VisitedTempleMapAlert(
+                  templeLatLngMap: widget.templeLatLngMap,
+                  templeList: widget.templeList,
+                  templeVisitDateMap: widget.templeVisitDateMap,
+                  dateTempleMap: widget.dateTempleMap,
+                ),
                 clearBarrierColor: true,
               );
             },
@@ -342,7 +358,12 @@ class _VisitedTempleListAlertState
 
               TempleDialog(
                 context: context,
-                widget: const VisitedTempleMapAlert(),
+                widget: VisitedTempleMapAlert(
+                  templeLatLngMap: widget.templeLatLngMap,
+                  templeList: widget.templeList,
+                  templeVisitDateMap: widget.templeVisitDateMap,
+                  dateTempleMap: widget.dateTempleMap,
+                ),
                 clearBarrierColor: true,
               );
             },
