@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../controllers/routing/routing.dart';
 import '../../extensions/extensions.dart';
-import '../../state/routing/routing.dart';
 import '../_parts/_temple_dialog.dart';
 import 'route_display_alert.dart';
 
@@ -24,10 +24,10 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
   ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routingState = ref.watch(routingProvider);
+    final RoutingState routingState = ref.watch(routingProvider);
 
-    final timeFormat = DateFormat('HH:mm');
-    final startTime = (routingState.startTime != '')
+    final DateFormat timeFormat = DateFormat('HH:mm');
+    final String startTime = (routingState.startTime != '')
         ? timeFormat.format(DateTime(
             DateTime.now().year,
             DateTime.now().month,
@@ -53,16 +53,16 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
           child: DefaultTextStyle(
             style: const TextStyle(fontSize: 12),
             child: Column(
-              children: [
+              children: <Widget>[
                 const SizedBox(height: 20),
                 Container(width: context.screenSize.width),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       flex: 7,
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           const Text('出発時刻：'),
                           if (routingState.startNow) const Text('(現在時刻)'),
                           Text(startTime),
@@ -73,7 +73,7 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                       flex: 3,
                       child: GestureDetector(
                         onTap: () async {
-                          final selectedTime = await showTimePicker(
+                          final TimeOfDay? selectedTime = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay.now(),
                             builder: (BuildContext context, Widget? child) {
@@ -95,7 +95,7 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                           );
 
                           if (selectedTime != null) {
-                            final time =
+                            final String time =
                                 '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
                             await ref
                                 .read(routingProvider.notifier)
@@ -125,7 +125,7 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                   thickness: 2,
                 ),
                 Row(
-                  children: [
+                  children: <Widget>[
                     const Expanded(
                       flex: 7,
                       child: Text('歩く速度（時速）：'),
@@ -156,14 +156,14 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                             borderSide: BorderSide(color: Colors.grey),
                           ),
                         ),
-                        onTapOutside: (event) =>
+                        onTapOutside: (PointerDownEvent event) =>
                             FocusManager.instance.primaryFocus?.unfocus(),
                       ),
                     ),
                     const SizedBox(
                       width: 40,
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           SizedBox(width: 20),
                           Text('Km'),
                         ],
@@ -176,7 +176,7 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                   thickness: 2,
                 ),
                 Row(
-                  children: [
+                  children: <Widget>[
                     const Expanded(
                       flex: 7,
                       child: Text('施設滞在時間：'),
@@ -207,14 +207,14 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                             borderSide: BorderSide(color: Colors.grey),
                           ),
                         ),
-                        onTapOutside: (event) =>
+                        onTapOutside: (PointerDownEvent event) =>
                             FocusManager.instance.primaryFocus?.unfocus(),
                       ),
                     ),
                     const SizedBox(
                       width: 40,
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           SizedBox(width: 20),
                           Text('分'),
                         ],
@@ -227,7 +227,7 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                   thickness: 2,
                 ),
                 Row(
-                  children: [
+                  children: <Widget>[
                     const Expanded(
                       flex: 7,
                       child: Text('調整率：'),
@@ -258,14 +258,14 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                             borderSide: BorderSide(color: Colors.grey),
                           ),
                         ),
-                        onTapOutside: (event) =>
+                        onTapOutside: (PointerDownEvent event) =>
                             FocusManager.instance.primaryFocus?.unfocus(),
                       ),
                     ),
                     const SizedBox(
                       width: 40,
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           SizedBox(width: 20),
                           Text('%'),
                         ],
@@ -293,6 +293,7 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                         adjust: adjustPercentTextController.text.toInt());
 
                     await TempleDialog(
+                      // ignore: use_build_context_synchronously
                       context: context,
                       widget: const RouteDisplayAlert(),
                     );

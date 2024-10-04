@@ -13,48 +13,48 @@ extension ContextEx on BuildContext {
 ///
 extension DateTimeEx on DateTime {
   String get yyyymmdd {
-    final outputFormat = DateFormat('yyyy-MM-dd');
+    final DateFormat outputFormat = DateFormat('yyyy-MM-dd');
     return outputFormat.format(this);
   }
 
   String get yyyymm {
-    final outputFormat = DateFormat('yyyy-MM');
+    final DateFormat outputFormat = DateFormat('yyyy-MM');
     return outputFormat.format(this);
   }
 
   String get mmdd {
-    final outputFormat = DateFormat('MM-dd');
+    final DateFormat outputFormat = DateFormat('MM-dd');
     return outputFormat.format(this);
   }
 
   String get yyyy {
-    final outputFormat = DateFormat('yyyy');
+    final DateFormat outputFormat = DateFormat('yyyy');
     return outputFormat.format(this);
   }
 
   String get mm {
-    final outputFormat = DateFormat('MM');
+    final DateFormat outputFormat = DateFormat('MM');
     return outputFormat.format(this);
   }
 
   String get dd {
-    final outputFormat = DateFormat('dd');
+    final DateFormat outputFormat = DateFormat('dd');
     return outputFormat.format(this);
   }
 
   String get youbiStr {
-    final outputFormat = DateFormat('EEEE');
+    final DateFormat outputFormat = DateFormat('EEEE');
     return outputFormat.format(this);
   }
 }
 
 ///
 
-const _fullLengthCode = 65248;
+const int _fullLengthCode = 65248;
 
 extension StringEx on String {
   DateTime toDateTime() {
-    final dateFormatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final DateFormat dateFormatter = DateFormat('yyyy-MM-dd HH:mm:ss');
     return dateFormatter.parseStrict(this);
   }
 
@@ -63,7 +63,7 @@ extension StringEx on String {
   }
 
   String toCurrency() {
-    final formatter = NumberFormat('#,###');
+    final NumberFormat formatter = NumberFormat('#,###');
     return formatter.format(int.parse(this));
   }
 
@@ -72,9 +72,9 @@ extension StringEx on String {
   }
 
   String alphanumericToFullLength() {
-    final regex = RegExp(r'^[a-zA-Z0-9]+$');
-    final string = runes.map<String>((rune) {
-      final char = String.fromCharCode(rune);
+    final RegExp regex = RegExp(r'^[a-zA-Z0-9]+$');
+    final Iterable<String> string = runes.map<String>((int rune) {
+      final String char = String.fromCharCode(rune);
       return regex.hasMatch(char)
           ? String.fromCharCode(rune + _fullLengthCode)
           : char;
@@ -83,9 +83,9 @@ extension StringEx on String {
   }
 
   String alphanumericToHalfLength() {
-    final regex = RegExp(r'^[Ａ-Ｚａ-ｚ０-９]+$');
-    final string = runes.map<String>((rune) {
-      final char = String.fromCharCode(rune);
+    final RegExp regex = RegExp(r'^[Ａ-Ｚａ-ｚ０-９]+$');
+    final Iterable<String> string = runes.map<String>((int rune) {
+      final String char = String.fromCharCode(rune);
       return regex.hasMatch(char)
           ? String.fromCharCode(rune - _fullLengthCode)
           : char;

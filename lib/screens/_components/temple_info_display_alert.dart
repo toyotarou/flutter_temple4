@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controllers/routing/routing.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
-import '../../state/routing/routing.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
 import 'visited_temple_photo_alert.dart';
@@ -47,7 +47,7 @@ class _TempleInfoDisplayAlertState
         child: DefaultTextStyle(
           style: const TextStyle(fontSize: 12),
           child: Column(
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               displayTempleInfo(),
               displayAddRemoveRoutingButton(),
@@ -64,15 +64,15 @@ class _TempleInfoDisplayAlertState
       return Container();
     }
 
-    final routingTempleDataList = ref
-        .watch(routingProvider.select((value) => value.routingTempleDataList));
+    final List<TempleData> routingTempleDataList = ref
+        .watch(routingProvider.select((RoutingState value) => value.routingTempleDataList));
 
-    final pos = routingTempleDataList
-        .indexWhere((element) => element.mark == widget.temple.mark);
+    final int pos = routingTempleDataList
+        .indexWhere((TempleData element) => element.mark == widget.temple.mark);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         Container(),
         ElevatedButton(
           onPressed: () {
@@ -94,12 +94,12 @@ class _TempleInfoDisplayAlertState
   Widget displayTempleInfo() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         displayTempleInfoCircleAvatar(),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               Container(width: context.screenSize.width),
               Text(widget.temple.name),
               Text(widget.temple.address),
@@ -119,7 +119,7 @@ class _TempleInfoDisplayAlertState
   Widget displayVisitedTemplePhoto() {
     if (widget.from != 'VisitedTempleMapAlert') {
       return Row(
-        children: [Container(), const SizedBox(width: 20)],
+        children: <Widget>[Container(), const SizedBox(width: 20)],
       );
     }
 
@@ -144,12 +144,12 @@ class _TempleInfoDisplayAlertState
   Widget displayTempleInfoCircleAvatar() {
     if (widget.from == 'VisitedTempleMapAlert') {
       return Row(
-        children: [Container(), const SizedBox(width: 20)],
+        children: <Widget>[Container(), const SizedBox(width: 20)],
       );
     }
 
     return Row(
-      children: [
+      children: <Widget>[
         CircleAvatar(
           backgroundColor:
               getCircleAvatarBgColor(element: widget.temple, ref: ref),
@@ -176,7 +176,7 @@ class _TempleInfoDisplayAlertState
         thumbVisibility: true,
         child: SingleChildScrollView(
           child: Wrap(
-            children: widget.templeVisitDateMap[widget.temple.name]!.map((e) {
+            children: widget.templeVisitDateMap[widget.temple.name]!.map((String e) {
               return Container(
                 width: context.screenSize.width / 5,
                 padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),

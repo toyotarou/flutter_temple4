@@ -5,7 +5,7 @@ Future<void> caution_dialog(
     {required BuildContext context, String? title, required String content}) {
   return showDialog(
     context: context,
-    builder: (context) {
+    builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: Colors.black.withOpacity(0.3),
         title: (title != null)

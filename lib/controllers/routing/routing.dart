@@ -1,9 +1,9 @@
-import 'package:flutter_temple4/extensions/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/http/client.dart';
 import '../../data/http/path.dart';
+import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../utility/utility.dart';
@@ -15,8 +15,9 @@ part 'routing.g.dart';
 @freezed
 class RoutingState with _$RoutingState {
   const factory RoutingState({
-    @Default([]) List<TempleData> routingTempleDataList,
-    @Default({}) Map<String, TempleData> routingTempleDataMap,
+    @Default(<TempleData>[]) List<TempleData> routingTempleDataList,
+    @Default(<String, TempleData>{})
+    Map<String, TempleData> routingTempleDataMap,
 
     ///
     @Default('') String startStationId,
@@ -39,7 +40,7 @@ class RoutingState with _$RoutingState {
 
 @riverpod
 class Routing extends _$Routing {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -48,11 +49,11 @@ class Routing extends _$Routing {
   ///
   Future<void> setRouting(
       {required TempleData templeData, TokyoStationModel? station}) async {
-    final list = [...state.routingTempleDataList];
+    final List<TempleData> list = <TempleData>[...state.routingTempleDataList];
 
     if (list.isEmpty) {
       if (station != null) {
-        final stationTempleData = TempleData(
+        final TempleData stationTempleData = TempleData(
           name: station.stationName,
           address: station.address,
           latitude: station.lat,
@@ -69,10 +70,13 @@ class Routing extends _$Routing {
         list.removeAt(list.length - 1);
       }
     } else {
-      final markList = <String>[];
-      list.forEach((element) => markList.add(element.mark));
+      final List<String> markList = <String>[];
+      for (final TempleData element in list) {
+        markList.add(element.mark);
+      }
 
-      final pos = markList.indexWhere((element) => element == templeData.mark);
+      final int pos =
+          markList.indexWhere((String element) => element == templeData.mark);
 
       if (pos != -1) {
         list.removeAt(pos);
@@ -92,11 +96,11 @@ class Routing extends _$Routing {
 
   ///
   Future<void> removeGoalStation() async {
-    final list = [...state.routingTempleDataList];
+    final List<TempleData> list = <TempleData>[...state.routingTempleDataList];
 
-    var pos = 0;
-    for (var i = 1; i < list.length; i++) {
-      final exMarkLength = list[i].mark.split('-').length;
+    int pos = 0;
+    for (int i = 1; i < list.length; i++) {
+      final int exMarkLength = list[i].mark.split('-').length;
 
       if (exMarkLength == 2) {
         pos = i;
@@ -110,7 +114,7 @@ class Routing extends _$Routing {
 
   ///
   Future<void> clearRoutingTempleDataList() async {
-    state = state.copyWith(routingTempleDataList: []);
+    state = state.copyWith(routingTempleDataList: <TempleData>[]);
   }
 
   ///
@@ -139,27 +143,32 @@ class Routing extends _$Routing {
 
   ///
   Future<void> insertRoute() async {
-    final list = [...state.routingTempleDataList];
-    final first = list.first;
-    final last = list.last;
+    final List<TempleData> list = <TempleData>[...state.routingTempleDataList];
+    final TempleData first = list.first;
+    final TempleData last = list.last;
 
-    final firstMark = first.mark.split('-')[1];
-    final lastMark = last.mark.split('-')[1];
+    final String firstMark = first.mark.split('-')[1];
+    final String lastMark = last.mark.split('-')[1];
 
-    final data = <String>['start-$firstMark'];
-    for (var i = 1; i < list.length - 1; i++) {
+    final List<String> data = <String>['start-$firstMark'];
+    for (int i = 1; i < list.length - 1; i++) {
       data.add(list[i].mark);
     }
     data.add('goal-$lastMark');
 
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
     await client
         .post(
           path: APIPath.insertTempleRoute,
-          body: {'date': DateTime.now().yyyymmdd, 'data': data},
+          body: <String, dynamic>{
+            'date': DateTime.now().yyyymmdd,
+            'data': data
+          },
         )
+        // ignore: always_specify_types
         .then((value) {})
+        // ignore: always_specify_types
         .catchError((error, _) {
           utility.showError('予期せぬエラーが発生しました');
         });

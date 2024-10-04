@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/tokyo_train_model.dart';
-import '../../state/tokyo_train/tokyo_train.dart';
 import '../_parts/_caution_dialog.dart';
 
 class NotReachTempleTrainSelectAlert extends ConsumerStatefulWidget {
@@ -43,7 +43,7 @@ class _NotReachTempleTrainSelectAlertState
           style: const TextStyle(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Expanded(child: displayTrainCheckPanel()),
@@ -56,18 +56,18 @@ class _NotReachTempleTrainSelectAlertState
 
   ///
   Widget displayTrainCheckPanel() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final tokyoTrainState = ref.watch(tokyoTrainProvider);
+    final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
 
-    widget.tokyoTrainList.forEach((element) {
+    for (final TokyoTrainModel element in widget.tokyoTrainList) {
       list.add(
         CheckboxListTile(
           contentPadding: EdgeInsets.zero,
           activeColor: Colors.greenAccent,
           controlAffinity: ListTileControlAffinity.leading,
           value: tokyoTrainState.selectTrainList.contains(element.trainNumber),
-          onChanged: (value) {
+          onChanged: (bool? value) {
             if (!tokyoTrainState.selectTrainList
                 .contains(element.trainNumber)) {
               if (tokyoTrainState.selectTrainList.length > 2) {
@@ -87,7 +87,7 @@ class _NotReachTempleTrainSelectAlertState
           ),
         ),
       );
-    });
+    }
 
     return SingleChildScrollView(child: Column(children: list));
   }

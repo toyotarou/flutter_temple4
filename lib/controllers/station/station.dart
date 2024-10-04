@@ -14,14 +14,14 @@ part 'station.g.dart';
 @freezed
 class StationState with _$StationState {
   const factory StationState({
-    @Default([]) List<StationModel> stationList,
-    @Default({}) Map<String, StationModel> stationMap,
+    @Default(<StationModel>[]) List<StationModel> stationList,
+    @Default(<String, StationModel>{}) Map<String, StationModel> stationMap,
   }) = _StationState;
 }
 
 @riverpod
 class Station extends _$Station {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -29,15 +29,16 @@ class Station extends _$Station {
 
   ///
   Future<void> getAllStation() async {
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
+    // ignore: always_specify_types
     await client.post(path: APIPath.getAllStation).then((value) {
-      final list = <StationModel>[];
-      final map = <String, StationModel>{};
+      final List<StationModel> list = <StationModel>[];
+      final Map<String, StationModel> map = <String, StationModel>{};
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final val = StationModel.fromJson(
+      for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+        final StationModel val = StationModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['data'][i] as Map<String, dynamic>,
         );
@@ -47,6 +48,7 @@ class Station extends _$Station {
       }
 
       state = state.copyWith(stationList: list, stationMap: map);
+    // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

@@ -34,12 +34,12 @@ class _TempleCourseDisplayAlertState
             style: const TextStyle(fontSize: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 const SizedBox(height: 20),
                 Container(width: context.screenSize.width),
                 Column(
                   children: widget.data
-                      .map((e) => displayCourseData(data: e))
+                      .map((TempleData e) => displayCourseData(data: e))
                       .toList(),
                 ),
               ],
@@ -53,10 +53,10 @@ class _TempleCourseDisplayAlertState
   ///
   Widget displayCourseData({required TempleData data}) {
     return Column(
-      children: [
+      children: <Widget>[
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             CircleAvatar(
               backgroundColor: getCircleAvatarBgColor(element: data, ref: ref),
               child: Text(
@@ -71,7 +71,7 @@ class _TempleCourseDisplayAlertState
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(data.name),
                 Text(data.address),
                 const SizedBox(height: 10),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/models/temple_lat_lng_model.dart';
 
+import '../../controllers/temple/temple.dart';
+import '../../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../../extensions/extensions.dart';
+import '../../models/temple_lat_lng_model.dart';
 import '../../models/temple_model.dart';
-import '../../state/temple/temple.dart';
-import '../../state/temple_lat_lng/temple_lat_lng.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
 import 'visited_temple_map_alert.dart';
@@ -30,9 +30,9 @@ class VisitedTempleListAlert extends ConsumerStatefulWidget {
 
 class _VisitedTempleListAlertState
     extends ConsumerState<VisitedTempleListAlert> {
-  List<int> yearList = [];
+  List<int> yearList = <int>[];
 
-  List<GlobalKey> globalKeyList2 = [];
+  List<GlobalKey> globalKeyList2 = <GlobalKey<State<StatefulWidget>>>[];
 
   ///
   @override
@@ -43,7 +43,8 @@ class _VisitedTempleListAlertState
 
     ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
 
-    globalKeyList2 = List.generate(100, (index) => GlobalKey());
+    // ignore: always_specify_types
+    globalKeyList2 = List.generate(100, (int index) => GlobalKey());
   }
 
   ///
@@ -54,8 +55,8 @@ class _VisitedTempleListAlertState
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final selectVisitedTempleListKey = ref.watch(
-          templeProvider.select((value) => value.selectVisitedTempleListKey));
+      final int selectVisitedTempleListKey = ref.watch(templeProvider
+          .select((TempleState value) => value.selectVisitedTempleListKey));
 
       if (selectVisitedTempleListKey != -1) {
         scrollToIndex(selectVisitedTempleListKey);
@@ -83,7 +84,7 @@ class _VisitedTempleListAlertState
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
             Expanded(child: displayTempleList()),
@@ -98,7 +99,7 @@ class _VisitedTempleListAlertState
     return PreferredSize(
       preferredSize: const Size.fromHeight(20),
       child: Column(
-        children: [
+        children: <Widget>[
           displayVisitedTempleListTabBar(),
         ],
       ),
@@ -118,12 +119,12 @@ class _VisitedTempleListAlertState
 
   ///
   List<Widget> _getTabs() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final selectVisitedTempleListKey = ref.watch(
-        templeProvider.select((value) => value.selectVisitedTempleListKey));
+    final int selectVisitedTempleListKey = ref.watch(templeProvider
+        .select((TempleState value) => value.selectVisitedTempleListKey));
 
-    for (var i = 0; i < yearList.length; i++) {
+    for (int i = 0; i < yearList.length; i++) {
       list.add(
         GestureDetector(
           onTap: () {
@@ -151,7 +152,7 @@ class _VisitedTempleListAlertState
 
   ///
   Future<void> scrollToIndex(int index) async {
-    final target = globalKeyList2[index].currentContext!;
+    final BuildContext target = globalKeyList2[index].currentContext!;
 
     await Scrollable.ensureVisible(
       target,
@@ -161,18 +162,19 @@ class _VisitedTempleListAlertState
 
   ///
   Widget displayTempleList() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final templeState = ref.watch(templeProvider);
+    final TempleState templeState = ref.watch(templeProvider);
 
-    final roopList = List<TempleModel>.from(templeState.templeList);
+    final List<TempleModel> roopList =
+        List<TempleModel>.from(templeState.templeList);
 
-    var keepY = '';
-    var keepYm = '';
-    roopList.forEach((element) {
+    String keepY = '';
+    String keepYm = '';
+    for (final TempleModel element in roopList) {
       if (keepY != element.date.yyyy) {
-        final pos =
-            yearList.indexWhere((element2) => element2 == element.date.year);
+        final int pos = yearList
+            .indexWhere((int element2) => element2 == element.date.year);
 
         list.add(
           Container(
@@ -180,7 +182,7 @@ class _VisitedTempleListAlertState
             decoration: BoxDecoration(color: Colors.white.withOpacity(0.2)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 Text(key: globalKeyList2[pos], element.date.yyyy),
                 Container(),
               ],
@@ -195,8 +197,11 @@ class _VisitedTempleListAlertState
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.white.withOpacity(0.1), Colors.transparent],
-                stops: const [0.7, 1],
+                colors: <Color>[
+                  Colors.white.withOpacity(0.1),
+                  Colors.transparent
+                ],
+                stops: const <double>[0.7, 1],
               ),
             ),
             margin: const EdgeInsets.only(bottom: 5),
@@ -209,13 +214,13 @@ class _VisitedTempleListAlertState
       list.add(displayVisitedMainTempleList(data: element));
 
       if (element.memo != '') {
-        element.memo.split('、').forEach((element2) => list
+        element.memo.split('、').forEach((String element2) => list
             .add(displayVisitedSubTempleList(data: element, data2: element2)));
       }
 
       keepYm = element.date.yyyymm;
       keepY = element.date.yyyy;
-    });
+    }
 
     return SingleChildScrollView(
       child: DefaultTextStyle(
@@ -230,10 +235,11 @@ class _VisitedTempleListAlertState
 
   ///
   Widget displayVisitedMainTempleList({required TempleModel data}) {
-    final templeLatLngMap = ref
-        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
+        templeLatLngProvider
+            .select((TempleLatLngState value) => value.templeLatLngMap));
 
-    final templeState = ref.watch(templeProvider);
+    final TempleState templeState = ref.watch(templeProvider);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -244,11 +250,11 @@ class _VisitedTempleListAlertState
         ),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   data.temple,
                   style: TextStyle(
@@ -306,10 +312,11 @@ class _VisitedTempleListAlertState
   ///
   Widget displayVisitedSubTempleList(
       {required TempleModel data, required String data2}) {
-    final templeLatLngMap = ref
-        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
+        templeLatLngProvider
+            .select((TempleLatLngState value) => value.templeLatLngMap));
 
-    final templeState = ref.watch(templeProvider);
+    final TempleState templeState = ref.watch(templeProvider);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -320,11 +327,11 @@ class _VisitedTempleListAlertState
         ),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   data2,
                   style: TextStyle(

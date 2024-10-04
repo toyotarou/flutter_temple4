@@ -14,15 +14,17 @@ part 'temple_list.g.dart';
 @freezed
 class TempleListState with _$TempleListState {
   const factory TempleListState({
-    @Default([]) List<TempleListModel> templeListList,
-    @Default({}) Map<String, TempleListModel> templeListMap,
-    @Default({}) Map<String, List<TempleListModel>> templeStationMap,
+    @Default(<TempleListModel>[]) List<TempleListModel> templeListList,
+    @Default(<String, TempleListModel>{})
+    Map<String, TempleListModel> templeListMap,
+    @Default(<String, List<TempleListModel>>{})
+    Map<String, List<TempleListModel>> templeStationMap,
   }) = _TempleListState;
 }
 
 @riverpod
 class TempleList extends _$TempleList {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -30,16 +32,18 @@ class TempleList extends _$TempleList {
 
   ///
   Future<void> getAllTempleListTemple() async {
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
+    // ignore: always_specify_types
     await client.post(path: APIPath.getTempleListTemple).then((value) {
-      final list = <TempleListModel>[];
-      final map = <String, TempleListModel>{};
-      final templeStationMap = <String, List<TempleListModel>>{};
+      final List<TempleListModel> list = <TempleListModel>[];
+      final Map<String, TempleListModel> map = <String, TempleListModel>{};
+      final Map<String, List<TempleListModel>> templeStationMap =
+          <String, List<TempleListModel>>{};
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final val = TempleListModel.fromJson(
+      for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+        final TempleListModel val = TempleListModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['data'][i] as Map<String, dynamic>,
         );
@@ -47,19 +51,19 @@ class TempleList extends _$TempleList {
         list.add(val);
         map[val.name] = val;
 
-        val.nearStation.split(',').forEach((element) {
-          templeStationMap[element.trim()] = [];
+        val.nearStation.split(',').forEach((String element) {
+          templeStationMap[element.trim()] = <TempleListModel>[];
         });
       }
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final val = TempleListModel.fromJson(
+      for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+        final TempleListModel val = TempleListModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['data'][i] as Map<String, dynamic>,
         );
 
-        val.nearStation.split(',').forEach((element) {
+        val.nearStation.split(',').forEach((String element) {
           templeStationMap[element.trim()]?.add(val);
         });
       }
@@ -69,6 +73,7 @@ class TempleList extends _$TempleList {
         templeListMap: map,
         templeStationMap: templeStationMap,
       );
+    // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
@@ -77,7 +82,7 @@ class TempleList extends _$TempleList {
 
 @riverpod
 class TempleNotReachList extends _$TempleNotReachList {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -85,16 +90,18 @@ class TempleNotReachList extends _$TempleNotReachList {
 
   ///
   Future<void> getAllNotReachTemple() async {
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
+    // ignore: always_specify_types
     await client.post(path: APIPath.templeNotReached).then((value) {
-      final list = <TempleListModel>[];
-      final map = <String, TempleListModel>{};
-      final templeStationMap = <String, List<TempleListModel>>{};
+      final List<TempleListModel> list = <TempleListModel>[];
+      final Map<String, TempleListModel> map = <String, TempleListModel>{};
+      final Map<String, List<TempleListModel>> templeStationMap =
+          <String, List<TempleListModel>>{};
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final val = TempleListModel.fromJson(
+      for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+        final TempleListModel val = TempleListModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['data'][i] as Map<String, dynamic>,
         );
@@ -102,19 +109,19 @@ class TempleNotReachList extends _$TempleNotReachList {
         list.add(val);
         map[val.name] = val;
 
-        val.nearStation.split(',').forEach((element) {
-          templeStationMap[element.trim()] = [];
+        val.nearStation.split(',').forEach((String element) {
+          templeStationMap[element.trim()] = <TempleListModel>[];
         });
       }
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final val = TempleListModel.fromJson(
+      for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+        final TempleListModel val = TempleListModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['data'][i] as Map<String, dynamic>,
         );
 
-        val.nearStation.split(',').forEach((element) {
+        val.nearStation.split(',').forEach((String element) {
           templeStationMap[element.trim()]?.add(val);
         });
       }
@@ -124,6 +131,7 @@ class TempleNotReachList extends _$TempleNotReachList {
         templeListMap: map,
         templeStationMap: templeStationMap,
       );
+    // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

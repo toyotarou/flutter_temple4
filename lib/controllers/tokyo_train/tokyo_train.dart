@@ -1,10 +1,10 @@
-import 'package:flutter_temple4/models/tokyo_station_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/http/client.dart';
 import '../../data/http/path.dart';
 import '../../extensions/extensions.dart';
+import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
 import '../../utility/utility.dart';
 
@@ -15,19 +15,22 @@ part 'tokyo_train.g.dart';
 @freezed
 class TokyoTrainState with _$TokyoTrainState {
   const factory TokyoTrainState({
-    @Default([]) List<TokyoTrainModel> tokyoTrainList,
-    @Default({}) Map<String, TokyoTrainModel> tokyoTrainMap,
-    @Default({}) Map<int, TokyoTrainModel> tokyoTrainIdMap,
-    @Default({}) Map<String, TokyoStationModel> tokyoStationMap,
+    @Default(<TokyoTrainModel>[]) List<TokyoTrainModel> tokyoTrainList,
+    @Default(<String, TokyoTrainModel>{})
+    Map<String, TokyoTrainModel> tokyoTrainMap,
+    @Default(<String, TokyoTrainModel>{})
+    Map<int, TokyoTrainModel> tokyoTrainIdMap,
+    @Default(<String, TokyoStationModel>{})
+    Map<String, TokyoStationModel> tokyoStationMap,
 
     //
-    @Default([]) List<int> selectTrainList,
+    @Default(<int>[]) List<int> selectTrainList,
   }) = _TokyoTrainState;
 }
 
 @riverpod
 class TokyoTrain extends _$TokyoTrain {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -35,17 +38,19 @@ class TokyoTrain extends _$TokyoTrain {
 
   ///
   Future<void> getTokyoTrain() async {
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
+    // ignore: always_specify_types
     await client.post(path: APIPath.getTokyoTrainStation).then((value) {
-      final list = <TokyoTrainModel>[];
-      final map = <String, TokyoTrainModel>{};
-      final idMap = <int, TokyoTrainModel>{};
-      final stationMap = <String, TokyoStationModel>{};
+      final List<TokyoTrainModel> list = <TokyoTrainModel>[];
+      final Map<String, TokyoTrainModel> map = <String, TokyoTrainModel>{};
+      final Map<int, TokyoTrainModel> idMap = <int, TokyoTrainModel>{};
+      final Map<String, TokyoStationModel> stationMap =
+          <String, TokyoStationModel>{};
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final val = TokyoTrainModel.fromJson(
+      for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+        final TokyoTrainModel val = TokyoTrainModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['data'][i] as Map<String, dynamic>,
         );
@@ -55,9 +60,9 @@ class TokyoTrain extends _$TokyoTrain {
 
         idMap[val.trainNumber] = val;
 
-        val.station.forEach((element) {
+        for (final TokyoStationModel element in val.station) {
           stationMap[element.id] = element;
-        });
+        }
       }
 
       state = state.copyWith(
@@ -66,6 +71,7 @@ class TokyoTrain extends _$TokyoTrain {
         tokyoStationMap: stationMap,
         tokyoTrainIdMap: idMap,
       );
+      // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
@@ -73,7 +79,7 @@ class TokyoTrain extends _$TokyoTrain {
 
   ///
   Future<void> setTrainList({required int trainNumber}) async {
-    final list = [...state.selectTrainList];
+    final List<int> list = <int>[...state.selectTrainList];
 
     if (list.contains(trainNumber)) {
       list.remove(trainNumber);

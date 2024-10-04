@@ -15,21 +15,22 @@ class TempleModel {
   });
 
   factory TempleModel.fromJson(Map<String, dynamic> json) => TempleModel(
-        date: DateTime.parse(json['date']),
-        temple: json['temple'],
-        address: json['address'],
-        station: json['station'],
-        memo: json['memo'],
-        gohonzon: json['gohonzon'],
-        startPoint: json['start_point'],
-        endPoint: json['end_point'],
-        thumbnail: json['thumbnail'],
-        lat: json['lat'],
-        lng: json['lng'],
+        date: DateTime.parse(json['date'].toString()),
+        temple: json['temple'].toString(),
+        address: json['address'].toString(),
+        station: json['station'].toString(),
+        memo: json['memo'].toString(),
+        gohonzon: json['gohonzon'].toString(),
+        startPoint: json['start_point'].toString(),
+        endPoint: json['end_point'].toString(),
+        thumbnail: json['thumbnail'].toString(),
+        lat: json['lat'].toString(),
+        lng: json['lng'].toString(),
         photo: List<String>.from(
             // ignore: avoid_dynamic_calls
-            json['photo'].map((x) => x)),
+            (json['photo'] as List<String>).map((String x) => x)),
       );
+
   DateTime date;
   String temple;
   String address;
@@ -43,7 +44,7 @@ class TempleModel {
   String lng;
   List<String> photo;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'date':
             "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
         'temple': temple,
@@ -56,6 +57,6 @@ class TempleModel {
         'thumbnail': thumbnail,
         'lat': lat,
         'lng': lng,
-        'photo': List<dynamic>.from(photo.map((x) => x)),
+        'photo': List<dynamic>.from(photo.map((String x) => x)),
       };
 }

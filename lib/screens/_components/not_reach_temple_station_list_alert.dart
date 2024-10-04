@@ -22,8 +22,8 @@ class NotReachTempleStationListAlert extends ConsumerStatefulWidget {
 
 class _TempleNotReachStationListAlertState
     extends ConsumerState<NotReachTempleStationListAlert> {
-  List<String> notReachTrainIds = [];
-  List<String> notReachStationIds = [];
+  List<String> notReachTrainIds = <String>[];
+  List<String> notReachStationIds = <String>[];
 
   ///
   @override
@@ -41,7 +41,7 @@ class _TempleNotReachStationListAlertState
         height: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
             Expanded(child: displayNotReachTrain()),
@@ -56,7 +56,7 @@ class _TempleNotReachStationListAlertState
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: widget.tokyoTrainList.map((e) {
+        children: widget.tokyoTrainList.map((TokyoTrainModel e) {
           if (notReachTrainIds.contains(e.trainNumber.toString())) {
             return ExpansionTile(
               collapsedIconColor: Colors.white,
@@ -64,7 +64,7 @@ class _TempleNotReachStationListAlertState
                 e.trainName,
                 style: const TextStyle(color: Colors.white, fontSize: 12),
               ),
-              children: e.station.map((e2) {
+              children: e.station.map((TokyoStationModel e2) {
                 if (notReachStationIds.contains(e2.id)) {
                   return displayNotReachStation(data: e2);
                 } else {
@@ -92,7 +92,7 @@ class _TempleNotReachStationListAlertState
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           Text(
             data.stationName,
             style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -110,7 +110,7 @@ class _TempleNotReachStationListAlertState
 
   ///
   void makeNotReachTempleIds() {
-    widget.templeStationMap.forEach((key, value) {
+    widget.templeStationMap.forEach((String key, List<TempleListModel> value) {
       notReachTrainIds.add(key.split('-')[0]);
 
       notReachStationIds.add(key);

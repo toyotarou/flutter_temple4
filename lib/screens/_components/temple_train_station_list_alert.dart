@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_temple4/models/temple_model.dart';
 
+import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
+import '../../controllers/routing/routing.dart';
 import '../../extensions/extensions.dart';
+import '../../models/lat_lng_temple_model.dart';
 import '../../models/temple_list_model.dart';
+import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
-import '../../state/lat_lng_temple/lat_lng_temple.dart';
-import '../../state/routing/routing.dart';
 import '../_parts/_caution_dialog.dart';
 import '../_parts/_temple_dialog.dart';
 import 'lat_lng_temple_map_alert.dart';
@@ -51,13 +52,13 @@ class _TempleTrainListAlertState
         height: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
             DefaultTextStyle(
               style: const TextStyle(fontSize: 12),
               child: Column(
-                children: [
+                children: <Widget>[
                   displaySelectedStation(),
                   displayTempleTrainStationListButton(),
                 ],
@@ -73,18 +74,18 @@ class _TempleTrainListAlertState
 
   ///
   Widget displayTempleTrainStationListButton() {
-    final startStationId =
-        ref.watch(routingProvider.select((value) => value.startStationId));
+    final String startStationId =
+        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
 
-    final latLngTempleList = ref
-        .watch(latLngTempleProvider.select((value) => value.latLngTempleList));
+    final List<LatLngTempleModel> latLngTempleList = ref
+        .watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         Container(),
         Row(
-          children: [
+          children: <Widget>[
             IconButton(
               onPressed: () {
                 TempleDialog(
@@ -146,17 +147,17 @@ class _TempleTrainListAlertState
 
   ///
   Widget displaySelectedStation() {
-    final startStationId =
-        ref.watch(routingProvider.select((value) => value.startStationId));
+    final String startStationId =
+        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
 
-    final latLngTempleList = ref
-        .watch(latLngTempleProvider.select((value) => value.latLngTempleList));
+    final List<LatLngTempleModel> latLngTempleList = ref
+        .watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList));
 
     getReachTempleNum();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         Text(
           (widget.tokyoStationMap[startStationId] != null)
               ? widget.tokyoStationMap[startStationId]!.stationName
@@ -164,7 +165,7 @@ class _TempleTrainListAlertState
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
+          children: <Widget>[
             Text(latLngTempleList.length.toString()),
             Text(reachTempleNum.toString()),
             Text(
@@ -179,21 +180,21 @@ class _TempleTrainListAlertState
 
   ///
   Widget displayTokyoTrainList() {
-    final startStationId =
-        ref.watch(routingProvider.select((value) => value.startStationId));
+    final String startStationId =
+        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
 
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: widget.tokyoTrainList.map((e) {
+          children: widget.tokyoTrainList.map((TokyoTrainModel e) {
             return ExpansionTile(
               collapsedIconColor: Colors.white,
               title: Text(
                 e.trainName,
                 style: const TextStyle(fontSize: 12, color: Colors.white),
               ),
-              children: e.station.map((e2) {
+              children: e.station.map((TokyoStationModel e2) {
                 return Container(
                   padding: const EdgeInsets.all(10),
                   margin: const EdgeInsets.only(bottom: 10),
@@ -213,13 +214,13 @@ class _TempleTrainListAlertState
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: <Widget>[
                         Text(e2.stationName),
                         GestureDetector(
                           onTap: () {
                             ref
                                 .read(latLngTempleProvider.notifier)
-                                .getLatLngTemple(param: {
+                                .getLatLngTemple(param: <String, String>{
                               'latitude': e2.lat,
                               'longitude': e2.lng,
                             });
@@ -252,8 +253,8 @@ class _TempleTrainListAlertState
     reachTempleNum = 0;
 
     ref
-        .watch(latLngTempleProvider.select((value) => value.latLngTempleList))
-        .forEach((element) {
+        .watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList))
+        .forEach((LatLngTempleModel element) {
       if (element.cnt > 0) {
         reachTempleNum++;
       }

@@ -3,13 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../controllers/station/station.dart';
+import '../controllers/temple/temple.dart';
+import '../controllers/temple_lat_lng/temple_lat_lng.dart';
+import '../controllers/temple_list/temple_list.dart';
+import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
+import '../models/station_model.dart';
+import '../models/temple_lat_lng_model.dart';
+import '../models/temple_list_model.dart';
 import '../models/temple_model.dart';
-import '../state/station/station.dart';
-import '../state/temple/temple.dart';
-import '../state/temple_lat_lng/temple_lat_lng.dart';
-import '../state/temple_list/temple_list.dart';
-import '../state/tokyo_train/tokyo_train.dart';
+import '../models/tokyo_station_model.dart';
+import '../models/tokyo_train_model.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/temple_detail_map_alert.dart';
@@ -26,9 +31,9 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  List<int> yearList = [];
+  List<int> yearList = <int>[];
 
-  List<GlobalKey> globalKeyList = [];
+  List<GlobalKey> globalKeyList = <GlobalKey<State<StatefulWidget>>>[];
 
   Utility utility = Utility();
 
@@ -45,7 +50,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     ref.read(templeProvider.notifier).getAllTemple();
 
-    globalKeyList = List.generate(100, (index) => GlobalKey());
+    // ignore: always_specify_types
+    globalKeyList = List.generate(100, (int index) => GlobalKey());
   }
 
   ///
@@ -79,7 +85,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             bottom: displayHomeAppBar(),
           ),
           body: Column(
-            children: [
+            children: <Widget>[
               const SizedBox(height: 10),
               Expanded(child: displayTempleList()),
             ],
@@ -94,7 +100,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return PreferredSize(
       preferredSize: const Size.fromHeight(120),
       child: Column(
-        children: [
+        children: <Widget>[
           displayHomeButton(),
           displaySearchForm(),
           const SizedBox(height: 10),
@@ -107,9 +113,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayHomeTabBar() {
-    final templeState = ref.watch(templeProvider);
+    final TempleState templeState = ref.watch(templeProvider);
 
-    if (templeState.doSearch == true) {
+    if (templeState.doSearch) {
       return Container(
         height: 40,
         margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
@@ -128,12 +134,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   List<Widget> _getTabs() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final selectYear =
-        ref.watch(templeProvider.select((value) => value.selectYear));
+    // ignore: always_specify_types
+    final selectYear = ref
+        .watch(templeProvider.select((TempleState value) => value.selectYear));
 
-    for (var i = 0; i < yearList.length; i++) {
+    for (int i = 0; i < yearList.length; i++) {
       list.add(
         GestureDetector(
           onTap: () {
@@ -159,7 +166,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Future<void> scrollToIndex(int index) async {
-    final target = globalKeyList[index].currentContext!;
+    final BuildContext target = globalKeyList[index].currentContext!;
 
     await Scrollable.ensureVisible(
       target,
@@ -169,41 +176,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayHomeButton() {
-    final templeLatLngList = ref
-        .watch(templeLatLngProvider.select((value) => value.templeLatLngList));
+    final List<TempleLatLngModel> templeLatLngList = ref.watch(
+        templeLatLngProvider
+            .select((TempleLatLngState value) => value.templeLatLngList));
 
-    final templeLatLngMap = ref
-        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
+        templeLatLngProvider
+            .select((TempleLatLngState value) => value.templeLatLngMap));
 
-    final templeList =
-        ref.watch(templeProvider.select((value) => value.templeList));
+    final List<TempleModel> templeList = ref
+        .watch(templeProvider.select((TempleState value) => value.templeList));
 
-    final tokyoStationMap =
-        ref.watch(tokyoTrainProvider.select((value) => value.tokyoStationMap));
+    final Map<String, TokyoStationModel> tokyoStationMap = ref.watch(
+        tokyoTrainProvider
+            .select((TokyoTrainState value) => value.tokyoStationMap));
 
-    final tokyoTrainList =
-        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainList));
+    final List<TokyoTrainModel> tokyoTrainList = ref.watch(tokyoTrainProvider
+        .select((TokyoTrainState value) => value.tokyoTrainList));
 
-    final templeListList =
-        ref.watch(templeListProvider.select((value) => value.templeListList));
+    final List<TempleListModel> templeListList = ref.watch(templeListProvider
+        .select((TempleListState value) => value.templeListList));
 
-    final tokyoTrainIdMap =
-        ref.watch(tokyoTrainProvider.select((value) => value.tokyoTrainIdMap));
+    final Map<int, TokyoTrainModel> tokyoTrainIdMap = ref.watch(
+        tokyoTrainProvider
+            .select((TokyoTrainState value) => value.tokyoTrainIdMap));
 
-    final templeStationMap = ref.watch(
-        templeNotReachListProvider.select((value) => value.templeStationMap));
+    final Map<String, List<TempleListModel>> templeStationMap = ref.watch(
+        templeNotReachListProvider
+            .select((TempleListState value) => value.templeStationMap));
 
-    final templeVisitDateMap =
-        ref.watch(templeProvider.select((value) => value.templeVisitDateMap));
+    final Map<String, List<String>> templeVisitDateMap = ref.watch(
+        templeProvider.select((TempleState value) => value.templeVisitDateMap));
 
-    final dateTempleMap =
-        ref.watch(templeProvider.select((value) => value.dateTempleMap));
+    final Map<String, TempleModel> dateTempleMap = ref.watch(
+        templeProvider.select((TempleState value) => value.dateTempleMap));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         Row(
-          children: [
+          children: <Widget>[
             IconButton(
               onPressed: () {
                 ref
@@ -220,14 +232,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     templeLatLngMap: templeLatLngMap,
                     templeList: templeList,
                     templeVisitDateMap: templeVisitDateMap,
-
-
-                      dateTempleMap:dateTempleMap,
-
-
-
-
-
+                    dateTempleMap: dateTempleMap,
                   ),
                   clearBarrierColor: true,
                 );
@@ -243,7 +248,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
-            children: [
+            children: <Widget>[
               IconButton(
                 onPressed: () => TempleDialog(
                   context: context,
@@ -283,7 +288,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ///
   Widget displaySearchForm() {
     return Row(
-      children: [
+      children: <Widget>[
         IconButton(
           onPressed: () {
             searchWordEditingController.text = '';
@@ -312,9 +317,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 borderSide: BorderSide(color: Colors.grey),
               ),
             ),
-            onTapOutside: (event) =>
+            onTapOutside: (PointerDownEvent event) =>
                 FocusManager.instance.primaryFocus?.unfocus(),
-            onChanged: (value) {},
+            onChanged: (String value) {},
           ),
         ),
         IconButton(
@@ -329,15 +334,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayTempleList() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final templeState = ref.watch(templeProvider);
+    final TempleState templeState = ref.watch(templeProvider);
 
-    var keepYear = 0;
-    var i = 0;
-    templeState.templeList.forEach((element) {
+    int keepYear = 0;
+    int i = 0;
+    for (final TempleModel element in templeState.templeList) {
       if (keepYear != element.date.year) {
-        if (templeState.doSearch == false) {
+        if (!templeState.doSearch) {
           list.add(Container(
             key: globalKeyList[i],
             decoration: BoxDecoration(
@@ -348,7 +353,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               style: const TextStyle(color: Colors.white),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   Text(element.date.year.toString()),
                   Text((templeState.templeCountMap[element.date.yyyy] != null)
                       ? templeState.templeCountMap[element.date.yyyy]!.length
@@ -363,10 +368,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         i++;
       }
 
-      var dispFlag = true;
+      bool dispFlag = true;
 
       if (templeState.doSearch) {
-        final reg = RegExp(templeState.searchWord);
+        final RegExp reg = RegExp(templeState.searchWord);
 
         if (reg.firstMatch(element.temple) != null ||
             reg.firstMatch(element.memo) != null) {
@@ -378,12 +383,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       if (dispFlag) {
         list.add(
-          displayHomeCard(data: element, selectYear: templeState.selectYear),
+          displayHomeCard(
+            data: element,
+            selectYear: templeState.selectYear.toString(),
+          ),
         );
       }
 
       keepYear = element.date.year;
-    });
+    }
 
     return SingleChildScrollView(child: Column(children: list));
   }
@@ -391,13 +399,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ///
   Widget displayHomeCard(
       {required TempleModel data, required String selectYear}) {
-    final templeState = ref.watch(templeProvider);
+    final TempleState templeState = ref.watch(templeProvider);
 
-    final templeLatLngMap = ref
-        .watch(templeLatLngProvider.select((value) => value.templeLatLngMap));
+    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
+        templeLatLngProvider
+            .select((TempleLatLngState value) => value.templeLatLngMap));
 
-    final stationMap =
-        ref.watch(stationProvider.select((value) => value.stationMap));
+    final Map<String, StationModel> stationMap = ref.watch(
+        stationProvider.select((StationState value) => value.stationMap));
 
     return Card(
       color: Colors.black.withOpacity(0.3),
@@ -408,9 +417,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   templeState.searchWord != '')
               ? CachedNetworkImage(
                   imageUrl: data.thumbnail,
-                  placeholder: (context, url) =>
+                  placeholder: (BuildContext context, String url) =>
                       Image.asset('assets/images/no_image.png'),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  errorWidget:
+                      (BuildContext context, String url, Object error) =>
+                          const Icon(Icons.error),
                 )
               : Container(
                   decoration:
@@ -425,10 +436,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Container(), Text(data.date.yyyymmdd)],
+                  children: <Widget>[Container(), Text(data.date.yyyymmdd)],
                 ),
                 Text(data.temple),
                 const SizedBox(height: 5),
@@ -445,7 +456,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         trailing: Column(
-          children: [
+          children: <Widget>[
             GestureDetector(
               onTap: () => TempleDialog(
                 context: context,

@@ -12,18 +12,20 @@ class LatLngTempleModel {
     required this.cnt,
   });
 
-  factory LatLngTempleModel.fromJson(Map<String, dynamic> json) => LatLngTempleModel(
-        id: json['id'],
-        city: json['city'],
-        jinjachouId: json['jinjachou_id'],
-        url: json['url'],
-        name: json['name'],
-        address: json['address'],
-        latitude: json['latitude'],
-        longitude: json['longitude'],
-        dist: json['dist'],
-        cnt: json['cnt'],
+  factory LatLngTempleModel.fromJson(Map<String, dynamic> json) =>
+      LatLngTempleModel(
+        id: int.parse(json['id'].toString()),
+        city: json['city'].toString(),
+        jinjachouId: json['jinjachou_id'].toString(),
+        url: json['url'].toString(),
+        name: json['name'].toString(),
+        address: json['address'].toString(),
+        latitude: json['latitude'].toString(),
+        longitude: json['longitude'].toString(),
+        dist: json['dist'].toString(),
+        cnt: int.parse(json['cnt'].toString()),
       );
+
   int id;
   String city;
   String jinjachouId;
@@ -35,7 +37,7 @@ class LatLngTempleModel {
   String dist;
   int cnt;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'city': city,
         'jinjachou_id': jinjachouId,

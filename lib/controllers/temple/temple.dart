@@ -14,37 +14,38 @@ part 'temple.g.dart';
 @freezed
 class TempleState with _$TempleState {
   const factory TempleState({
-    @Default([]) List<TempleModel> templeList,
-    @Default({}) Map<String, TempleModel> dateTempleMap,
-    @Default({}) Map<String, TempleModel> latLngTempleMap,
-    @Default({}) Map<String, TempleModel> nameTempleMap,
+    @Default(<TempleModel>[]) List<TempleModel> templeList,
+    @Default(<String, TempleModel>{}) Map<String, TempleModel> dateTempleMap,
+    @Default(<String, TempleModel>{}) Map<String, TempleModel> latLngTempleMap,
+    @Default(<String, TempleModel>{}) Map<String, TempleModel> nameTempleMap,
 
     ///
     @Default('') String searchWord,
     @Default(false) bool doSearch,
 
     ///
-    @Default('') selectYear,
+    @Default('') String selectYear,
 
     //
-    @Default('') selectTempleName,
-    @Default('') selectTempleLat,
-    @Default('') selectTempleLng,
+    @Default('') String selectTempleName,
+    @Default('') String selectTempleLat,
+    @Default('') String selectTempleLng,
 
     //
     @Default(-1) int selectVisitedTempleListKey,
 
     //
-    @Default({}) Map<String, List<String>> templeVisitDateMap,
+    @Default(<String, List<String>>{})
+    Map<String, List<String>> templeVisitDateMap,
 
     //
-    @Default({}) Map<String, List<String>> templeCountMap,
+    @Default(<String, List<String>>{}) Map<String, List<String>> templeCountMap,
   }) = _TempleState;
 }
 
 @riverpod
 class Temple extends _$Temple {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -52,21 +53,22 @@ class Temple extends _$Temple {
 
   ///
   Future<void> getAllTemple() async {
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
+    // ignore: always_specify_types
     await client.post(path: APIPath.getAllTemple).then((value) {
-      final list = <TempleModel>[];
-      final map = <String, TempleModel>{};
-      final map2 = <String, TempleModel>{};
+      final List<TempleModel> list = <TempleModel>[];
+      final Map<String, TempleModel> map = <String, TempleModel>{};
+      final Map<String, TempleModel> map2 = <String, TempleModel>{};
 
-      final map3 = <String, List<String>>{};
-      final templeNameList = <String>[];
+      final Map<String, List<String>> map3 = <String, List<String>>{};
+      final List<String> templeNameList = <String>[];
 
-      final map4 = <String, List<String>>{};
+      final Map<String, List<String>> map4 = <String, List<String>>{};
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
-        final val = TempleModel.fromJson(
+      for (int i = 0; i < value['list'].length.toString().toInt(); i++) {
+        final TempleModel val = TempleModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['list'][i] as Map<String, dynamic>,
         );
@@ -76,27 +78,27 @@ class Temple extends _$Temple {
 
         map2['${val.lat}|${val.lng}'] = val;
 
-        map3[val.temple] = [];
+        map3[val.temple] = <String>[];
         templeNameList.add(val.temple);
 
-        map4[val.date.yyyy] = [];
+        map4[val.date.yyyy] = <String>[];
       }
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
-        final val = TempleModel.fromJson(
+      for (int i = 0; i < value['list'].length.toString().toInt(); i++) {
+        final TempleModel val = TempleModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['list'][i] as Map<String, dynamic>,
         );
 
-        val.memo.split('、').forEach((element) {
-          map3[element] = [];
+        val.memo.split('、').forEach((String element) {
+          map3[element] = <String>[];
         });
       }
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
-        final val = TempleModel.fromJson(
+      for (int i = 0; i < value['list'].length.toString().toInt(); i++) {
+        final TempleModel val = TempleModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['list'][i] as Map<String, dynamic>,
         );
@@ -105,7 +107,7 @@ class Temple extends _$Temple {
 
         map4[val.date.yyyy]?.add(val.temple);
 
-        val.memo.split('、').forEach((element) {
+        val.memo.split('、').forEach((String element) {
           if (element != '') {
             map3[element]?.add(val.date.yyyymmdd);
 
@@ -121,6 +123,7 @@ class Temple extends _$Temple {
         templeVisitDateMap: map3,
         templeCountMap: map4,
       );
+    // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

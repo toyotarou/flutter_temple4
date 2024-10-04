@@ -13,16 +13,17 @@ class TempleListModel {
 
   factory TempleListModel.fromJson(Map<String, dynamic> json) =>
       TempleListModel(
-        id: json['id'],
-        city: json['city'],
-        jinjachouId: json['jinjachou_id'],
-        url: json['url'],
-        name: json['name'],
-        address: json['address'],
-        lat: json['lat'],
-        lng: json['lng'],
-        nearStation: json['near_station'],
+        id: int.parse(json['id'].toString()),
+        city: json['city'].toString(),
+        jinjachouId: json['jinjachou_id'].toString(),
+        url: json['url'].toString(),
+        name: json['name'].toString(),
+        address: json['address'].toString(),
+        lat: json['lat'].toString(),
+        lng: json['lng'].toString(),
+        nearStation: json['near_station'].toString(),
       );
+
   int id;
   String city;
   String jinjachouId;
@@ -33,7 +34,7 @@ class TempleListModel {
   String lng;
   String nearStation;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'city': city,
         'jinjachou_id': jinjachouId,

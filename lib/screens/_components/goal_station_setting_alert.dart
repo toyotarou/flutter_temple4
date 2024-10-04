@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controllers/routing/routing.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
-import '../../state/routing/routing.dart';
+
+
 
 class GoalStationSettingAlert extends ConsumerStatefulWidget {
   const GoalStationSettingAlert(
@@ -35,7 +37,7 @@ class _GoalStationSettingAlertState
         height: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
             Expanded(child: displayGoalTrain()),
@@ -52,13 +54,13 @@ class _GoalStationSettingAlertState
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: widget.tokyoTrainList.map((e) {
+        children: widget.tokyoTrainList.map((TokyoTrainModel e) {
           return ExpansionTile(
             collapsedIconColor: Colors.white,
             title: Text(e.trainName,
                 style: const TextStyle(fontSize: 12, color: Colors.white)),
             children:
-                e.station.map((e2) => displayGoalStation(data: e2)).toList(),
+                e.station.map((TokyoStationModel e2) => displayGoalStation(data: e2)).toList(),
           );
         }).toList(),
       ),
@@ -69,11 +71,11 @@ class _GoalStationSettingAlertState
   Widget displayGoalStation({required TokyoStationModel data}) {
 //    final tokyoTrainState = ref.watch(tokyoTrainProvider);
 
-    final goalStationId =
-        ref.watch(routingProvider.select((value) => value.goalStationId));
+    final String goalStationId =
+        ref.watch(routingProvider.select((RoutingState value) => value.goalStationId));
 
-    final startStationId =
-        ref.watch(routingProvider.select((value) => value.startStationId));
+    final String startStationId =
+        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -90,7 +92,7 @@ class _GoalStationSettingAlertState
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: <Widget>[
             Text(data.stationName),
             GestureDetector(
               onTap: () {
@@ -98,7 +100,7 @@ class _GoalStationSettingAlertState
                     .read(routingProvider.notifier)
                     .setGoalStationId(id: data.id);
 
-                final station = widget.tokyoStationMap[data.id];
+                final TokyoStationModel? station = widget.tokyoStationMap[data.id];
 
                 ref.read(routingProvider.notifier).setRouting(
                       templeData: TempleData(

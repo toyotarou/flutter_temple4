@@ -24,13 +24,13 @@ class HttpClient {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
   }) async {
-    final uri = Uri.http(Environment.apiEndPoint,
+    final Uri uri = Uri.http(Environment.apiEndPoint,
         '${Environment.apiBasePath}/${path.value}', queryParameters);
 
-    final response = await _client.post(uri,
+    final Response response = await _client.post(uri,
         headers: await _headers, body: json.encode(body));
 
-    final bodyString = utf8.decode(response.bodyBytes);
+    final String bodyString = utf8.decode(response.bodyBytes);
 
     try {
       if (bodyString.isEmpty) {

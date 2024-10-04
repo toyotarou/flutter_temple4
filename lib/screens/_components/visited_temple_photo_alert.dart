@@ -48,7 +48,7 @@ class _VisitedTemplePhotoAlertState
           style: const TextStyle(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Text(widget.temple.name),
@@ -64,16 +64,16 @@ class _VisitedTemplePhotoAlertState
 
   ///
   Widget displayVisitedTemplePhoto() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    widget.templeVisitDateMap[widget.temple.name]?.forEach((element) {
+    widget.templeVisitDateMap[widget.temple.name]?.forEach((String element) {
       list.add(
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.white.withOpacity(0.1), Colors.transparent],
-              stops: const [0.7, 1],
+              colors: <Color>[Colors.white.withOpacity(0.1), Colors.transparent],
+              stops: const <double>[0.7, 1],
             ),
           ),
           padding: const EdgeInsets.all(5),
@@ -81,18 +81,18 @@ class _VisitedTemplePhotoAlertState
         ),
       );
 
-      final list2 = <Widget>[];
+      final List<Widget> list2 = <Widget>[];
 
-      widget.dateTempleMap[element]?.photo.forEach((element2) {
+      widget.dateTempleMap[element]?.photo.forEach((String element2) {
         list2.add(
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             width: 50,
             child: CachedNetworkImage(
               imageUrl: element2,
-              placeholder: (context, url) =>
+              placeholder: (BuildContext context, String url) =>
                   Image.asset('assets/images/no_image.png'),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+              errorWidget: (BuildContext context, String url, Object error) => const Icon(Icons.error),
             ),
           ),
         );

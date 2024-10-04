@@ -14,14 +14,15 @@ part 'temple_lat_lng.g.dart';
 @freezed
 class TempleLatLngState with _$TempleLatLngState {
   const factory TempleLatLngState({
-    @Default([]) List<TempleLatLngModel> templeLatLngList,
-    @Default({}) Map<String, TempleLatLngModel> templeLatLngMap,
+    @Default(<TempleLatLngModel>[]) List<TempleLatLngModel> templeLatLngList,
+    @Default(<String, TempleLatLngModel>{})
+    Map<String, TempleLatLngModel> templeLatLngMap,
   }) = _TempleLatLngState;
 }
 
 @riverpod
 class TempleLatLng extends _$TempleLatLng {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -29,15 +30,16 @@ class TempleLatLng extends _$TempleLatLng {
 
   ///
   Future<void> getAllTempleLatLng() async {
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
+    // ignore: always_specify_types
     await client.post(path: APIPath.getTempleLatLng).then((value) {
-      final list = <TempleLatLngModel>[];
-      final map = <String, TempleLatLngModel>{};
+      final List<TempleLatLngModel> list = <TempleLatLngModel>[];
+      final Map<String, TempleLatLngModel> map = <String, TempleLatLngModel>{};
 
       // ignore: avoid_dynamic_calls
-      for (var i = 0; i < value['list'].length.toString().toInt(); i++) {
-        final val = TempleLatLngModel.fromJson(
+      for (int i = 0; i < value['list'].length.toString().toInt(); i++) {
+        final TempleLatLngModel val = TempleLatLngModel.fromJson(
           // ignore: avoid_dynamic_calls
           value['list'][i] as Map<String, dynamic>,
         );
@@ -47,6 +49,7 @@ class TempleLatLng extends _$TempleLatLng {
       }
 
       state = state.copyWith(templeLatLngList: list, templeLatLngMap: map);
+    // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

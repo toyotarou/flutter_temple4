@@ -10,14 +10,15 @@ class StationModel {
   });
 
   factory StationModel.fromJson(Map<String, dynamic> json) => StationModel(
-        id: json['id'],
-        stationName: json['station_name'],
-        address: json['address'],
-        lat: json['lat'],
-        lng: json['lng'],
-        lineNumber: json['line_number'],
-        lineName: json['line_name'],
+        id: int.parse(json['id'].toString()),
+        stationName: json['station_name'].toString(),
+        address: json['address'].toString(),
+        lat: json['lat'].toString(),
+        lng: json['lng'].toString(),
+        lineNumber: json['line_number'].toString(),
+        lineName: json['line_name'].toString(),
       );
+
   int id;
   String stationName;
   String address;
@@ -26,7 +27,7 @@ class StationModel {
   String lineNumber;
   String lineName;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'station_name': stationName,
         'address': address,

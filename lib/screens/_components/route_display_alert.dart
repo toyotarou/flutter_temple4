@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../controllers/routing/routing.dart';
 import '../../extensions/extensions.dart';
-import '../../state/routing/routing.dart';
+import '../../models/common/temple_data.dart';
 import '../function.dart';
 
 class RouteDisplayAlert extends ConsumerStatefulWidget {
@@ -30,12 +31,12 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
           style: const TextStyle(fontSize: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: <Widget>[
                   IconButton(
                     onPressed: () {
                       ref.read(routingProvider.notifier).insertRoute();
@@ -62,26 +63,26 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
 
   ///
   Widget displayRoute() {
-    final list = <Widget>[];
+    final List<Widget> list = <Widget>[];
 
-    final routingState = ref.watch(routingProvider);
+    final RoutingState routingState = ref.watch(routingProvider);
 
-    final timeFormat = DateFormat('HH:mm');
-    final startTime = timeFormat.format(DateTime.parse(routingState.startTime));
+    final DateFormat timeFormat = DateFormat('HH:mm');
+    final String startTime = timeFormat.format(DateTime.parse(routingState.startTime));
 
-    var keepEndTime = '';
+    String keepEndTime = '';
 
-    final record = routingState.routingTempleDataList;
+    final List<TempleData> record = routingState.routingTempleDataList;
 
-    for (var i = 0; i < record.length; i++) {
-      final ll = [record[i].latitude, record[i].longitude];
+    for (int i = 0; i < record.length; i++) {
+      final List<String> ll = <String>[record[i].latitude, record[i].longitude];
 
-      var distance = '';
-      var walkMinutes = 0;
+      String distance = '';
+      int walkMinutes = 0;
       if (i < record.length - 1) {
         if ((record[i].latitude == record[i + 1].latitude) &&
             (record[i].longitude == record[i + 1].longitude)) {
-          //TODO 緯度経度が同じ場合
+          // 緯度経度が同じ場合
           distance = '0';
         } else {
           distance = calcDistance(
@@ -92,29 +93,29 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
           );
         }
 
-        final dist1000 = int.parse(
+        final int dist1000 = int.parse(
           (double.parse(distance) * 1000).toString().split('.')[0],
         );
-        final ws = routingState.walkSpeed * 1000;
-        final percent = (100 + routingState.adjustPercent) / 100;
+        final int ws = routingState.walkSpeed * 1000;
+        final double percent = (100 + routingState.adjustPercent) / 100;
         walkMinutes = ((dist1000 / ws * 60) * percent).round();
       }
 
-      final exMark = record[i].mark.split('-');
+      final List<String> exMark = record[i].mark.split('-');
 
       //------------------------//
-      var st = (i == 0) ? startTime : keepEndTime;
-      final spotStayTime = (exMark.length == 1) ? routingState.spotStayTime : 0;
+      String st = (i == 0) ? startTime : keepEndTime;
+      final int spotStayTime = (exMark.length == 1) ? routingState.spotStayTime : 0;
       st = getTimeStr(time: st, minutes: spotStayTime);
-      final endTime = getTimeStr(time: st, minutes: walkMinutes);
+      final String endTime = getTimeStr(time: st, minutes: walkMinutes);
       //------------------------//
 
       list.add(
         Column(
-          children: [
+          children: <Widget>[
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 CircleAvatar(
                   backgroundColor: getCircleAvatarBgColor(
                     element: record[i],
@@ -129,19 +130,19 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       Text(record[i].name),
                       Container(
                         padding: const EdgeInsets.only(left: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Text(record[i].address),
                             Text(
                               ll.join(' / '),
                               style: const TextStyle(fontSize: 8),
                             ),
-                            if (exMark.length == 1) ...[
+                            if (exMark.length == 1) ...<Widget>[
                               Text('滞在時間：$spotStayTime 分'),
                             ],
                           ],
@@ -155,7 +156,7 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
             if (i < record.length - 1)
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Icon(
                     Icons.arrow_downward_outlined,
                     size: 40,
@@ -165,10 +166,10 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Text(st),
                         Row(
-                          children: [
+                          children: <Widget>[
                             Text('$distance Km'),
                             const Text(' / '),
                             Text('$walkMinutes 分'),
@@ -193,7 +194,7 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
 
   ///
   String getTimeStr({required String time, required int minutes}) {
-    final dt = DateTime(
+    final DateTime dt = DateTime(
       DateTime.now().year,
       DateTime.now().month,
       DateTime.now().day,
@@ -201,7 +202,7 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
       time.split(':')[1].toInt(),
     ).add(Duration(minutes: minutes));
 
-    final timeFormat = DateFormat('HH:mm');
+    final DateFormat timeFormat = DateFormat('HH:mm');
 
     return timeFormat.format(dt);
   }

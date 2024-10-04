@@ -14,8 +14,9 @@ part 'lat_lng_temple.g.dart';
 @freezed
 class LatLngTempleState with _$LatLngTempleState {
   const factory LatLngTempleState({
-    @Default([]) List<LatLngTempleModel> latLngTempleList,
-    @Default({}) Map<String, LatLngTempleModel> latLngTempleMap,
+    @Default(<LatLngTempleModel>[]) List<LatLngTempleModel> latLngTempleList,
+    @Default(<String, LatLngTempleModel>{})
+    Map<String, LatLngTempleModel> latLngTempleMap,
 
     ///
     @Default(false) bool listSorting,
@@ -27,7 +28,7 @@ class LatLngTempleState with _$LatLngTempleState {
 
 @riverpod
 class LatLngTemple extends _$LatLngTemple {
-  final utility = Utility();
+  final Utility utility = Utility();
 
   ///
   @override
@@ -35,26 +36,27 @@ class LatLngTemple extends _$LatLngTemple {
 
   ///
   Future<void> getLatLngTemple({required Map<String, String> param}) async {
-    final client = ref.read(httpClientProvider);
+    final HttpClient client = ref.read(httpClientProvider);
 
     await client.post(
       path: APIPath.getLatLngTemple,
-      body: {
+      body: <String, dynamic>{
         'latitude': param['latitude'],
         'longitude': param['longitude'],
         'radius': 10
       },
+    // ignore: always_specify_types
     ).then((value) {
-      final list = <LatLngTempleModel>[];
-      final map = <String, LatLngTempleModel>{};
+      final List<LatLngTempleModel> list = <LatLngTempleModel>[];
+      final Map<String, LatLngTempleModel> map = <String, LatLngTempleModel>{};
 
-      // ignore: avoid_dynamic_calls
+      // ignore: avoid_dynamic_calls, always_specify_types
       final id = (value['data'][0] as Map<String, dynamic>)['id'];
 
       if (id != '88888888') {
         // ignore: avoid_dynamic_calls
-        for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
-          final val = LatLngTempleModel.fromJson(
+        for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+          final LatLngTempleModel val = LatLngTempleModel.fromJson(
             // ignore: avoid_dynamic_calls
             value['data'][i] as Map<String, dynamic>,
           );
@@ -65,6 +67,7 @@ class LatLngTemple extends _$LatLngTemple {
       }
 
       state = state.copyWith(latLngTempleList: list, latLngTempleMap: map);
+    // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
@@ -72,13 +75,13 @@ class LatLngTemple extends _$LatLngTemple {
 
   ///
   Future<void> toggleListSorting() async {
-    final listSorting = state.listSorting;
+    final bool listSorting = state.listSorting;
     state = state.copyWith(listSorting: !listSorting);
   }
 
   ///
   Future<void> setOrangeDisplay() async {
-    final orangeDisplay = state.orangeDisplay;
+    final bool orangeDisplay = state.orangeDisplay;
     state = state.copyWith(orangeDisplay: !orangeDisplay);
   }
 }
