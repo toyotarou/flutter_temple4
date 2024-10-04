@@ -123,7 +123,7 @@ class Temple extends _$Temple {
         templeVisitDateMap: map3,
         templeCountMap: map4,
       );
-    // ignore: always_specify_types
+      // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

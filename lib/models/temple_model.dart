@@ -28,7 +28,7 @@ class TempleModel {
         lng: json['lng'].toString(),
         photo: List<String>.from(
             // ignore: avoid_dynamic_calls
-            (json['photo'] as List<String>).map((String x) => x)),
+            (json['photo'] as List<dynamic>).map((dynamic x) => x)),
       );
 
   DateTime date;
