@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/routing/routing.dart';
+import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/lat_lng_temple_model.dart';
@@ -22,14 +24,15 @@ import 'route_display_setting_alert.dart';
 import 'temple_info_display_alert.dart';
 
 class LatLngTempleMapAlert extends ConsumerStatefulWidget {
-  const LatLngTempleMapAlert(
-      {super.key,
-      required this.templeList,
-      this.station,
-      required this.tokyoStationMap,
-      required this.tokyoTrainList,
-      required this.templeVisitDateMap,
-      required this.dateTempleMap});
+  const LatLngTempleMapAlert({
+    super.key,
+    required this.templeList,
+    this.station,
+    required this.tokyoStationMap,
+    required this.tokyoTrainList,
+    required this.templeVisitDateMap,
+    required this.dateTempleMap,
+  });
 
   final List<LatLngTempleModel> templeList;
   final TokyoStationModel? station;
@@ -40,10 +43,11 @@ class LatLngTempleMapAlert extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<LatLngTempleMapAlert> createState() =>
-      _LatLngTempleMapAlertState();
+      _LatLngTempleDisplayAlertState();
 }
 
-class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
+class _LatLngTempleDisplayAlertState
+    extends ConsumerState<LatLngTempleMapAlert> {
   List<TempleData> templeDataList = <TempleData>[];
 
   List<Marker> markerList = <Marker>[];
@@ -58,6 +62,14 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
   double minLng = 0.0;
   double maxLng = 0.0;
 
+  bool firstMapDisplay = false;
+
+  ///
+  Future<void> _loadMapTiles() async {
+    // ignore: always_specify_types
+    return Future.delayed(Duration(seconds: firstMapDisplay ? 0 : 2));
+  }
+
   ///
   @override
   void initState() {
@@ -68,19 +80,16 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
   }
 
   ///
-  Future<void> _loadMapTiles() async =>
-      // ignore: always_specify_types
-      Future.delayed(const Duration(seconds: 2));
-
-  ///
   @override
   Widget build(BuildContext context) {
-    final List<TempleData> routingTempleDataList = ref
-        .watch(routingProvider.select((RoutingState value) => value.routingTempleDataList));
+    final List<TempleData> routingTempleDataList = ref.watch(routingProvider
+        .select((RoutingState value) => value.routingTempleDataList));
 
     //------------------// goal
-    final String goalStationId =
-        ref.watch(routingProvider.select((RoutingState value) => value.goalStationId));
+    final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+    final String goalStationId = ref.watch(
+        routingProvider.select((RoutingState value) => value.goalStationId));
     //------------------// goal
 
     templeDataList = <TempleData>[];
@@ -117,8 +126,9 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
       ));
     }
 
-    if (widget.tokyoStationMap[goalStationId] != null) {
-      final TokyoStationModel? goal = widget.tokyoStationMap[goalStationId];
+    if (tokyoTrainState.tokyoStationMap[goalStationId] != null) {
+      final TokyoStationModel? goal =
+          tokyoTrainState.tokyoStationMap[goalStationId];
 
       if (goal != null) {
         latList.add(double.parse(goal.lat));
@@ -146,6 +156,7 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
     makeMarker();
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         if (widget.station != null) ...<Widget>[
           Column(
@@ -176,6 +187,8 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
               } else if (snapshot.hasError) {
                 return const Center(child: Text('Error loading map'));
               } else {
+                firstMapDisplay = true;
+
                 return FlutterMap(
                   mapController: mapController,
                   options: MapOptions(
@@ -222,10 +235,7 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.train),
-            ),
+            Container(),
             IconButton(
               onPressed: () {
                 mapController.move(currentCenter, 13);
@@ -242,98 +252,15 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
   }
 
   ///
-  void makeMarker() {
-    markerList = <Marker>[];
-
-    final bool orangeDisplay =
-        ref.watch(latLngTempleProvider.select((LatLngTempleState value) => value.orangeDisplay));
-
-    for (int i = 0; i < templeDataList.length; i++) {
-      if (orangeDisplay) {
-        if (templeDataList[i].cnt > 0) {
-          continue;
-        }
-      }
-
-      markerList.add(
-        Marker(
-          point: LatLng(
-            templeDataList[i].latitude.toDouble(),
-            templeDataList[i].longitude.toDouble(),
-          ),
-          width: 40,
-          height: 40,
-          child: GestureDetector(
-            onTap: (templeDataList[i].mark == '0')
-                ? null
-                : () {
-                    final int exMarkLength =
-                        templeDataList[i].mark.split('-').length;
-
-                    if (exMarkLength == 2) {
-                      return;
-                    } else {
-                      TempleDialog(
-                        context: context,
-                        widget: TempleInfoDisplayAlert(
-                          temple: templeDataList[i],
-                          from: 'LatLngTempleMapAlert',
-                          station: widget.station,
-                          templeVisitDateMap: widget.templeVisitDateMap,
-                          dateTempleMap: widget.dateTempleMap,
-                        ),
-                        paddingTop: context.screenSize.height * 0.7,
-                        clearBarrierColor: true,
-                      );
-                    }
-                  },
-            child: CircleAvatar(
-              backgroundColor: getCircleAvatarBgColor(
-                element: templeDataList[i],
-                ref: ref,
-              ),
-              child: getCircleAvatarText(element: templeDataList[i]),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  ///
-  Widget getCircleAvatarText({required TempleData element}) {
-    final List<TempleData> routingTempleDataList = ref
-        .watch(routingProvider.select((RoutingState value) => value.routingTempleDataList));
-
-    String str = '';
-    if (element.mark == '0') {
-      str = 'S';
-    } else if (element.mark.split('-').length == 2) {
-      if (routingTempleDataList.isNotEmpty &&
-          routingTempleDataList[0].name == element.name) {
-        str = 'S';
-      } else {
-        str = 'G';
-      }
-    } else {
-      str = element.mark.padLeft(3, '0');
-    }
-
-    return Text(
-      str,
-      style: const TextStyle(
-          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
-    );
-  }
-
-  ///
   Widget displayLatLngTempleMapButtonWidget() {
-    final List<TempleData> routingTempleDataList = ref
-        .watch(routingProvider.select((RoutingState value) => value.routingTempleDataList));
+    final List<TempleData> routingTempleDataList = ref.watch(routingProvider
+        .select((RoutingState value) => value.routingTempleDataList));
 
     //------------------// goal
-    final String goalStationId =
-        ref.watch(routingProvider.select((RoutingState value) => value.goalStationId));
+    final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+    final String goalStationId = ref.watch(
+        routingProvider.select((RoutingState value) => value.goalStationId));
     //------------------// goal
 
     return Container(
@@ -406,8 +333,9 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: Text(
-                        (widget.tokyoStationMap[goalStationId] != null)
-                            ? widget.tokyoStationMap[goalStationId]!.stationName
+                        (tokyoTrainState.tokyoStationMap[goalStationId] != null)
+                            ? tokyoTrainState
+                                .tokyoStationMap[goalStationId]!.stationName
                             : '-----',
                         style: const TextStyle(color: Colors.white),
                       ),
@@ -451,11 +379,103 @@ class _LatLngTempleMapAlertState extends ConsumerState<LatLngTempleMapAlert> {
   }
 
   ///
+  void makeMarker() {
+    markerList = <Marker>[];
+
+    final bool orangeDisplay = ref.watch(latLngTempleProvider
+        .select((LatLngTempleState value) => value.orangeDisplay));
+
+    for (int i = 0; i < templeDataList.length; i++) {
+      if (orangeDisplay) {
+        if (templeDataList[i].cnt > 0) {
+          continue;
+        }
+      }
+
+      markerList.add(
+        Marker(
+          point: LatLng(
+            templeDataList[i].latitude.toDouble(),
+            templeDataList[i].longitude.toDouble(),
+          ),
+          width: 40,
+          height: 40,
+          child: GestureDetector(
+            onTap: (templeDataList[i].mark == '0')
+                ? null
+                : () {
+                    final int exMarkLength =
+                        templeDataList[i].mark.split('-').length;
+
+                    if (exMarkLength == 2) {
+                      return;
+                    } else {
+                      TempleDialog(
+                        context: context,
+                        widget: TempleInfoDisplayAlert(
+                          temple: templeDataList[i],
+                          from: 'LatLngTempleMapAlert',
+                          station: widget.station,
+                          templeVisitDateMap: widget.templeVisitDateMap,
+                          dateTempleMap: widget.dateTempleMap,
+                        ),
+                        paddingTop: context.screenSize.height * 0.4,
+                        clearBarrierColor: true,
+                      );
+                    }
+                  },
+            child: CircleAvatar(
+              backgroundColor:
+                  getCircleAvatarBgColor(element: templeDataList[i], ref: ref),
+              child: Text(
+                (templeDataList[i].mark == '0')
+                    ? 'STA'
+                    : templeDataList[i].mark.padLeft(3, '0'),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  ///
+  Widget getCircleAvatarText({required TempleData element}) {
+    final List<TempleData> routingTempleDataList = ref.watch(routingProvider
+        .select((RoutingState value) => value.routingTempleDataList));
+
+    String str = '';
+    if (element.mark == '0') {
+      str = 'S';
+    } else if (element.mark.split('-').length == 2) {
+      if (routingTempleDataList.isNotEmpty &&
+          routingTempleDataList[0].name == element.name) {
+        str = 'S';
+      } else {
+        str = 'G';
+      }
+    } else {
+      str = element.mark.padLeft(3, '0');
+    }
+
+    return Text(
+      str,
+      style: const TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+    );
+  }
+
+  ///
   Widget displaySelectedRoutingTemple() {
     final List<Widget> list = <Widget>[];
 
-    final List<TempleData> routingTempleDataList = ref
-        .watch(routingProvider.select((RoutingState value) => value.routingTempleDataList));
+    final List<TempleData> routingTempleDataList = ref.watch(routingProvider
+        .select((RoutingState value) => value.routingTempleDataList));
 
     for (int i = 1; i < routingTempleDataList.length; i++) {
       final String distance = calcDistance(
