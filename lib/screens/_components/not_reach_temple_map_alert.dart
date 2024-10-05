@@ -59,15 +59,20 @@ class _NotReachTempleMapAlertState
   double minLng = 0.0;
   double maxLng = 0.0;
 
+  bool firstMapDisplay = false;
+
   ///
-  Future<void> _loadMapTiles() async =>
-      // ignore: always_specify_types
-      Future.delayed(const Duration(seconds: 2));
+  Future<void> _loadMapTiles() async {
+    // ignore: always_specify_types
+    return Future.delayed(Duration(seconds: firstMapDisplay ? 0 : 2));
+  }
 
   ///
   @override
   Widget build(BuildContext context) {
     getNotReachTemple();
+
+    makePolylineList();
 
     makeMarker();
 
@@ -110,6 +115,8 @@ class _NotReachTempleMapAlertState
                 } else if (snapshot.hasError) {
                   return const Center(child: Text('Error loading map'));
                 } else {
+                  firstMapDisplay = true;
+
                   return FlutterMap(
                     mapController: mapController,
                     options: MapOptions(
@@ -131,6 +138,8 @@ class _NotReachTempleMapAlertState
                         userAgentPackageName: 'com.example.app',
                       ),
                       MarkerLayer(markers: markerList),
+                      // ignore: always_specify_types
+                      PolylineLayer(polylines: polylineList),
                     ],
                   );
                 }
@@ -257,19 +266,18 @@ class _NotReachTempleMapAlertState
 
     final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
 
-    final List<Color> twelveColor = utility.getTwelveColor();
+    final List<LatLng> points = <LatLng>[];
 
     for (int i = 0; i < tokyoTrainState.selectTrainList.length; i++) {
       final TokyoTrainModel? map =
           widget.tokyoTrainIdMap[tokyoTrainState.selectTrainList[i]];
 
-      final List<LatLng> points = <LatLng>[];
       map?.station.forEach((TokyoStationModel element2) =>
           points.add(LatLng(element2.lat.toDouble(), element2.lng.toDouble())));
 
       polylineList.add(
         // ignore: always_specify_types
-        Polyline(points: points, color: twelveColor[i], strokeWidth: 5),
+        Polyline(points: points, color: Colors.redAccent, strokeWidth: 5),
       );
     }
   }

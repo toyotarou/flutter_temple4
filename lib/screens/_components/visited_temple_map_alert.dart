@@ -3,17 +3,19 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/temple/temple.dart';
+import '../../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/temple_lat_lng_model.dart';
 import '../../models/temple_model.dart';
 import '../../utility/tile_provider.dart';
-import '../../utility/utility.dart';
 import '../_parts/_temple_dialog.dart';
 import 'temple_info_display_alert.dart';
+import 'visited_temple_list_alert.dart';
 
 class VisitedTempleMapAlert extends ConsumerStatefulWidget {
   const VisitedTempleMapAlert(
@@ -38,10 +40,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
 
   List<Marker> markerList = <Marker>[];
 
-  List<Polyline<Object>> polylineList = <Polyline<Object>>[];
-
-  Utility utility = Utility();
-
   final MapController mapController = MapController();
 
   double minLat = 0.0;
@@ -49,10 +47,13 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
   double minLng = 0.0;
   double maxLng = 0.0;
 
+  bool firstMapDisplay = false;
+
   ///
-  Future<void> _loadMapTiles() async =>
-      // ignore: always_specify_types
-      Future.delayed(const Duration(seconds: 2));
+  Future<void> _loadMapTiles() async {
+    // ignore: always_specify_types
+    return Future.delayed(Duration(seconds: firstMapDisplay ? 0 : 2));
+  }
 
   ///
   @override
@@ -61,49 +62,107 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
 
     makeMarker();
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
-        children: <Widget>[
-          const SizedBox(height: 10),
-          Expanded(
-            child: FutureBuilder<void>(
-              future: _loadMapTiles(),
-              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return const Center(child: Text('Error loading map'));
-                } else {
-                  return FlutterMap(
-                    mapController: mapController,
-                    options: MapOptions(
-                      initialCameraFit: CameraFit.bounds(
-                        bounds: LatLngBounds.fromPoints(
-                          <LatLng>[
-                            LatLng(minLat, maxLng),
-                            LatLng(maxLat, minLng)
-                          ],
-                        ),
-                        padding: const EdgeInsets.all(50),
-                      ),
+    final TempleState templeState = ref.watch(templeProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                onPressed: () {
+                  TempleDialog(
+                    context: context,
+                    widget: VisitedTempleListAlert(
+                      templeLatLngMap: widget.templeLatLngMap,
+                      templeList: widget.templeList,
+                      templeVisitDateMap: widget.templeVisitDateMap,
+                      dateTempleMap: widget.dateTempleMap,
                     ),
-                    children: <Widget>[
-                      TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        tileProvider: CachedTileProvider(),
-                        userAgentPackageName: 'com.example.app',
-                      ),
-                      MarkerLayer(markers: markerList),
-                    ],
+                    paddingLeft: context.screenSize.width * 0.1,
                   );
-                }
-              },
-            ),
+                },
+                icon: const Icon(Icons.list, color: Colors.white),
+              ),
+              if (templeState.selectTempleName != '') ...<Widget>[
+                IconButton(
+                  onPressed: () {
+                    ref
+                        .read(templeProvider.notifier)
+                        .setSelectTemple(name: '', lat: '', lng: '');
+
+                    Navigator.pop(context);
+
+                    TempleDialog(
+                      context: context,
+                      widget: VisitedTempleMapAlert(
+                        templeLatLngMap: widget.templeLatLngMap,
+                        templeList: widget.templeList,
+                        templeVisitDateMap: widget.templeVisitDateMap,
+                        dateTempleMap: widget.dateTempleMap,
+                      ),
+                      clearBarrierColor: true,
+                    );
+                  },
+                  icon: const Icon(Icons.map, color: Colors.white),
+                ),
+              ],
+              if (templeState.selectTempleName == '') ...<Widget>[Container()],
+            ],
           ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: FutureBuilder<void>(
+            future: _loadMapTiles(),
+            builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Error loading map'));
+              } else {
+                firstMapDisplay = true;
+
+                return FlutterMap(
+                  mapController: mapController,
+                  options: (templeState.selectTempleName != '')
+                      ? MapOptions(
+                          initialCenter: LatLng(
+                            templeState.selectTempleLat.toDouble(),
+                            templeState.selectTempleLng.toDouble(),
+                          ),
+                          initialZoom: 16,
+                          maxZoom: 17,
+                          minZoom: 3,
+                        )
+                      : MapOptions(
+                          initialCameraFit: CameraFit.bounds(
+                            bounds: LatLngBounds.fromPoints(
+                              <LatLng>[
+                                LatLng(minLat, maxLng),
+                                LatLng(maxLat, minLng)
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(50),
+                          ),
+                        ),
+                  children: <Widget>[
+                    TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      tileProvider: CachedTileProvider(),
+                      userAgentPackageName: 'com.example.app',
+                    ),
+                    MarkerLayer(markers: markerList),
+                  ],
+                );
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -111,12 +170,15 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
   void makeTempleDataList() {
     templeDataList = <TempleData>[];
 
-    final List<String> templeNamesList = <String>[];
-
     final List<double> latList = <double>[];
     final List<double> lngList = <double>[];
 
-    widget.templeList
+    final List<TempleModel> templeList = ref
+        .watch(templeProvider.select((TempleState value) => value.templeList));
+
+    final List<String> templeNamesList = <String>[];
+
+    templeList
       ..forEach((TempleModel element) {
         templeNamesList.add(element.temple);
       })
@@ -130,8 +192,12 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
         }
       });
 
+    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
+        templeLatLngProvider
+            .select((TempleLatLngState value) => value.templeLatLngMap));
+
     for (final String element in templeNamesList) {
-      final TempleLatLngModel? temple = widget.templeLatLngMap[element];
+      final TempleLatLngModel? temple = templeLatLngMap[element];
 
       if (temple != null) {
         latList.add(double.parse(temple.lat));
