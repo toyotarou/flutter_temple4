@@ -59,8 +59,6 @@ class _NotReachTempleMapAlertState
   double minLng = 0.0;
   double maxLng = 0.0;
 
-  double initialZoom = 7.0;
-
   ///
   Future<void> _loadMapTiles() async =>
       // ignore: always_specify_types
@@ -122,10 +120,8 @@ class _NotReachTempleMapAlertState
                             LatLng(maxLat, minLng)
                           ],
                         ),
-                        maxZoom: initialZoom,
                         padding: const EdgeInsets.all(50),
                       ),
-                      initialZoom: initialZoom,
                     ),
                     children: <Widget>[
                       TileLayer(
