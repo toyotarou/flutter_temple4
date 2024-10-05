@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'temple_list.dart';
+part of 'temple_not_reach_list.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$TempleListState {
+mixin _$TempleNotReachListState {
   List<TempleListModel> get templeListList =>
       throw _privateConstructorUsedError;
   Map<String, TempleListModel> get templeListMap =>
@@ -23,18 +23,18 @@ mixin _$TempleListState {
   Map<String, List<TempleListModel>> get templeStationMap =>
       throw _privateConstructorUsedError;
 
-  /// Create a copy of TempleListState
+  /// Create a copy of TempleNotReachListState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TempleListStateCopyWith<TempleListState> get copyWith =>
+  $TempleNotReachListStateCopyWith<TempleNotReachListState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TempleListStateCopyWith<$Res> {
-  factory $TempleListStateCopyWith(
-          TempleListState value, $Res Function(TempleListState) then) =
-      _$TempleListStateCopyWithImpl<$Res, TempleListState>;
+abstract class $TempleNotReachListStateCopyWith<$Res> {
+  factory $TempleNotReachListStateCopyWith(TempleNotReachListState value,
+          $Res Function(TempleNotReachListState) then) =
+      _$TempleNotReachListStateCopyWithImpl<$Res, TempleNotReachListState>;
   @useResult
   $Res call(
       {List<TempleListModel> templeListList,
@@ -43,16 +43,17 @@ abstract class $TempleListStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TempleListStateCopyWithImpl<$Res, $Val extends TempleListState>
-    implements $TempleListStateCopyWith<$Res> {
-  _$TempleListStateCopyWithImpl(this._value, this._then);
+class _$TempleNotReachListStateCopyWithImpl<$Res,
+        $Val extends TempleNotReachListState>
+    implements $TempleNotReachListStateCopyWith<$Res> {
+  _$TempleNotReachListStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TempleListState
+  /// Create a copy of TempleNotReachListState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -79,11 +80,12 @@ class _$TempleListStateCopyWithImpl<$Res, $Val extends TempleListState>
 }
 
 /// @nodoc
-abstract class _$$TempleListStateImplCopyWith<$Res>
-    implements $TempleListStateCopyWith<$Res> {
-  factory _$$TempleListStateImplCopyWith(_$TempleListStateImpl value,
-          $Res Function(_$TempleListStateImpl) then) =
-      __$$TempleListStateImplCopyWithImpl<$Res>;
+abstract class _$$TempleNotReachListStateImplCopyWith<$Res>
+    implements $TempleNotReachListStateCopyWith<$Res> {
+  factory _$$TempleNotReachListStateImplCopyWith(
+          _$TempleNotReachListStateImpl value,
+          $Res Function(_$TempleNotReachListStateImpl) then) =
+      __$$TempleNotReachListStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -93,14 +95,16 @@ abstract class _$$TempleListStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TempleListStateImplCopyWithImpl<$Res>
-    extends _$TempleListStateCopyWithImpl<$Res, _$TempleListStateImpl>
-    implements _$$TempleListStateImplCopyWith<$Res> {
-  __$$TempleListStateImplCopyWithImpl(
-      _$TempleListStateImpl _value, $Res Function(_$TempleListStateImpl) _then)
+class __$$TempleNotReachListStateImplCopyWithImpl<$Res>
+    extends _$TempleNotReachListStateCopyWithImpl<$Res,
+        _$TempleNotReachListStateImpl>
+    implements _$$TempleNotReachListStateImplCopyWith<$Res> {
+  __$$TempleNotReachListStateImplCopyWithImpl(
+      _$TempleNotReachListStateImpl _value,
+      $Res Function(_$TempleNotReachListStateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of TempleListState
+  /// Create a copy of TempleNotReachListState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -109,7 +113,7 @@ class __$$TempleListStateImplCopyWithImpl<$Res>
     Object? templeListMap = null,
     Object? templeStationMap = null,
   }) {
-    return _then(_$TempleListStateImpl(
+    return _then(_$TempleNotReachListStateImpl(
       templeListList: null == templeListList
           ? _value._templeListList
           : templeListList // ignore: cast_nullable_to_non_nullable
@@ -128,8 +132,8 @@ class __$$TempleListStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$TempleListStateImpl implements _TempleListState {
-  const _$TempleListStateImpl(
+class _$TempleNotReachListStateImpl implements _TempleNotReachListState {
+  const _$TempleNotReachListStateImpl(
       {final List<TempleListModel> templeListList = const <TempleListModel>[],
       final Map<String, TempleListModel> templeListMap =
           const <String, TempleListModel>{},
@@ -168,14 +172,14 @@ class _$TempleListStateImpl implements _TempleListState {
 
   @override
   String toString() {
-    return 'TempleListState(templeListList: $templeListList, templeListMap: $templeListMap, templeStationMap: $templeStationMap)';
+    return 'TempleNotReachListState(templeListList: $templeListList, templeListMap: $templeListMap, templeStationMap: $templeStationMap)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TempleListStateImpl &&
+            other is _$TempleNotReachListStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._templeListList, _templeListList) &&
             const DeepCollectionEquality()
@@ -191,22 +195,22 @@ class _$TempleListStateImpl implements _TempleListState {
       const DeepCollectionEquality().hash(_templeListMap),
       const DeepCollectionEquality().hash(_templeStationMap));
 
-  /// Create a copy of TempleListState
+  /// Create a copy of TempleNotReachListState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TempleListStateImplCopyWith<_$TempleListStateImpl> get copyWith =>
-      __$$TempleListStateImplCopyWithImpl<_$TempleListStateImpl>(
-          this, _$identity);
+  _$$TempleNotReachListStateImplCopyWith<_$TempleNotReachListStateImpl>
+      get copyWith => __$$TempleNotReachListStateImplCopyWithImpl<
+          _$TempleNotReachListStateImpl>(this, _$identity);
 }
 
-abstract class _TempleListState implements TempleListState {
-  const factory _TempleListState(
+abstract class _TempleNotReachListState implements TempleNotReachListState {
+  const factory _TempleNotReachListState(
           {final List<TempleListModel> templeListList,
           final Map<String, TempleListModel> templeListMap,
           final Map<String, List<TempleListModel>> templeStationMap}) =
-      _$TempleListStateImpl;
+      _$TempleNotReachListStateImpl;
 
   @override
   List<TempleListModel> get templeListList;
@@ -215,10 +219,10 @@ abstract class _TempleListState implements TempleListState {
   @override
   Map<String, List<TempleListModel>> get templeStationMap;
 
-  /// Create a copy of TempleListState
+  /// Create a copy of TempleNotReachListState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TempleListStateImplCopyWith<_$TempleListStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TempleNotReachListStateImplCopyWith<_$TempleNotReachListStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

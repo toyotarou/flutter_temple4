@@ -19,13 +19,11 @@ class NotReachTempleTrainSelectAlert extends ConsumerStatefulWidget {
 
 class _NotReachTempleTrainSelectAlertState
     extends ConsumerState<NotReachTempleTrainSelectAlert> {
-  ///
-  @override
-  void initState() {
-    super.initState();
 
-    ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
-  }
+
+
+
+
 
   ///
   @override

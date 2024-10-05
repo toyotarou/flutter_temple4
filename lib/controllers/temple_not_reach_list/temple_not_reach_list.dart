@@ -7,35 +7,35 @@ import '../../extensions/extensions.dart';
 import '../../models/temple_list_model.dart';
 import '../../utility/utility.dart';
 
-part 'temple_list.freezed.dart';
+part 'temple_not_reach_list.freezed.dart';
 
-part 'temple_list.g.dart';
+part 'temple_not_reach_list.g.dart';
 
 @freezed
-class TempleListState with _$TempleListState {
-  const factory TempleListState({
+class TempleNotReachListState with _$TempleNotReachListState {
+  const factory TempleNotReachListState({
     @Default(<TempleListModel>[]) List<TempleListModel> templeListList,
     @Default(<String, TempleListModel>{})
     Map<String, TempleListModel> templeListMap,
     @Default(<String, List<TempleListModel>>{})
     Map<String, List<TempleListModel>> templeStationMap,
-  }) = _TempleListState;
+  }) = _TempleNotReachListState;
 }
 
 @riverpod
-class TempleList extends _$TempleList {
+class TempleNotReachList extends _$TempleNotReachList {
   final Utility utility = Utility();
 
   ///
   @override
-  TempleListState build() => const TempleListState();
+  TempleNotReachListState build() => const TempleNotReachListState();
 
   ///
-  Future<void> getAllTempleListTemple() async {
+  Future<void> getAllNotReachTemple() async {
     final HttpClient client = ref.read(httpClientProvider);
 
     // ignore: always_specify_types
-    await client.post(path: APIPath.getTempleListTemple).then((value) {
+    await client.post(path: APIPath.templeNotReached).then((value) {
       final List<TempleListModel> list = <TempleListModel>[];
       final Map<String, TempleListModel> map = <String, TempleListModel>{};
       final Map<String, List<TempleListModel>> templeStationMap =

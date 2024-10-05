@@ -20,7 +20,9 @@ mixin _$StationState {
   Map<String, StationModel> get stationMap =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StationState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StationStateCopyWith<StationState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -45,6 +47,8 @@ class _$StationStateCopyWithImpl<$Res, $Val extends StationState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StationState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -84,6 +88,8 @@ class __$$StationStateImplCopyWithImpl<$Res>
       _$StationStateImpl _value, $Res Function(_$StationStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of StationState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -107,8 +113,9 @@ class __$$StationStateImplCopyWithImpl<$Res>
 
 class _$StationStateImpl implements _StationState {
   const _$StationStateImpl(
-      {final List<StationModel> stationList = const [],
-      final Map<String, StationModel> stationMap = const {}})
+      {final List<StationModel> stationList = const <StationModel>[],
+      final Map<String, StationModel> stationMap =
+          const <String, StationModel>{}})
       : _stationList = stationList,
         _stationMap = stationMap;
 
@@ -152,7 +159,9 @@ class _$StationStateImpl implements _StationState {
       const DeepCollectionEquality().hash(_stationList),
       const DeepCollectionEquality().hash(_stationMap));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StationState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StationStateImplCopyWith<_$StationStateImpl> get copyWith =>
@@ -168,8 +177,11 @@ abstract class _StationState implements StationState {
   List<StationModel> get stationList;
   @override
   Map<String, StationModel> get stationMap;
+
+  /// Create a copy of StationState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StationStateImplCopyWith<_$StationStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

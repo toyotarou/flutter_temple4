@@ -18,7 +18,7 @@ class TokyoTrainState with _$TokyoTrainState {
     @Default(<TokyoTrainModel>[]) List<TokyoTrainModel> tokyoTrainList,
     @Default(<String, TokyoTrainModel>{})
     Map<String, TokyoTrainModel> tokyoTrainMap,
-    @Default(<String, TokyoTrainModel>{})
+    @Default(<int, TokyoTrainModel>{})
     Map<int, TokyoTrainModel> tokyoTrainIdMap,
     @Default(<String, TokyoStationModel>{})
     Map<String, TokyoStationModel> tokyoStationMap,
@@ -71,7 +71,7 @@ class TokyoTrain extends _$TokyoTrain {
         tokyoStationMap: stationMap,
         tokyoTrainIdMap: idMap,
       );
-      // ignore: always_specify_types
+    // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

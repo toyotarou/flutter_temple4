@@ -26,7 +26,9 @@ mixin _$TokyoTrainState {
       throw _privateConstructorUsedError; //
   List<int> get selectTrainList => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TokyoTrainState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TokyoTrainStateCopyWith<TokyoTrainState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,6 +57,8 @@ class _$TokyoTrainStateCopyWithImpl<$Res, $Val extends TokyoTrainState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TokyoTrainState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -113,6 +117,8 @@ class __$$TokyoTrainStateImplCopyWithImpl<$Res>
       _$TokyoTrainStateImpl _value, $Res Function(_$TokyoTrainStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TokyoTrainState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -151,11 +157,14 @@ class __$$TokyoTrainStateImplCopyWithImpl<$Res>
 
 class _$TokyoTrainStateImpl implements _TokyoTrainState {
   const _$TokyoTrainStateImpl(
-      {final List<TokyoTrainModel> tokyoTrainList = const [],
-      final Map<String, TokyoTrainModel> tokyoTrainMap = const {},
-      final Map<int, TokyoTrainModel> tokyoTrainIdMap = const {},
-      final Map<String, TokyoStationModel> tokyoStationMap = const {},
-      final List<int> selectTrainList = const []})
+      {final List<TokyoTrainModel> tokyoTrainList = const <TokyoTrainModel>[],
+      final Map<String, TokyoTrainModel> tokyoTrainMap =
+          const <String, TokyoTrainModel>{},
+      final Map<int, TokyoTrainModel> tokyoTrainIdMap =
+          const <int, TokyoTrainModel>{},
+      final Map<String, TokyoStationModel> tokyoStationMap =
+          const <String, TokyoStationModel>{},
+      final List<int> selectTrainList = const <int>[]})
       : _tokyoTrainList = tokyoTrainList,
         _tokyoTrainMap = tokyoTrainMap,
         _tokyoTrainIdMap = tokyoTrainIdMap,
@@ -240,7 +249,9 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
       const DeepCollectionEquality().hash(_tokyoStationMap),
       const DeepCollectionEquality().hash(_selectTrainList));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TokyoTrainState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TokyoTrainStateImplCopyWith<_$TokyoTrainStateImpl> get copyWith =>
@@ -263,11 +274,14 @@ abstract class _TokyoTrainState implements TokyoTrainState {
   @override
   Map<int, TokyoTrainModel> get tokyoTrainIdMap;
   @override
-  Map<String, TokyoStationModel> get tokyoStationMap;
-  @override //
-  List<int> get selectTrainList;
+  Map<String, TokyoStationModel> get tokyoStationMap; //
   @override
-  @JsonKey(ignore: true)
+  List<int> get selectTrainList;
+
+  /// Create a copy of TokyoTrainState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TokyoTrainStateImplCopyWith<_$TokyoTrainStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

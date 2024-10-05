@@ -30,7 +30,9 @@ mixin _$RoutingState {
   int get spotStayTime => throw _privateConstructorUsedError; //
   int get adjustPercent => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoutingState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RoutingStateCopyWith<RoutingState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -63,6 +65,8 @@ class _$RoutingStateCopyWithImpl<$Res, $Val extends RoutingState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RoutingState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,6 +149,8 @@ class __$$RoutingStateImplCopyWithImpl<$Res>
       _$RoutingStateImpl _value, $Res Function(_$RoutingStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoutingState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -203,8 +209,9 @@ class __$$RoutingStateImplCopyWithImpl<$Res>
 
 class _$RoutingStateImpl implements _RoutingState {
   const _$RoutingStateImpl(
-      {final List<TempleData> routingTempleDataList = const [],
-      final Map<String, TempleData> routingTempleDataMap = const {},
+      {final List<TempleData> routingTempleDataList = const <TempleData>[],
+      final Map<String, TempleData> routingTempleDataMap =
+          const <String, TempleData>{},
       this.startStationId = '',
       this.goalStationId = '',
       this.startNow = true,
@@ -305,7 +312,9 @@ class _$RoutingStateImpl implements _RoutingState {
       spotStayTime,
       adjustPercent);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoutingState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoutingStateImplCopyWith<_$RoutingStateImpl> get copyWith =>
@@ -328,24 +337,27 @@ abstract class _RoutingState implements RoutingState {
   List<TempleData> get routingTempleDataList;
   @override
   Map<String, TempleData> get routingTempleDataMap;
-  @override
 
   ///
+  @override
   String get startStationId;
   @override
-  String get goalStationId;
-  @override //
+  String get goalStationId; //
+  @override
   bool get startNow;
   @override
-  String get startTime;
-  @override //
-  int get walkSpeed;
-  @override //
-  int get spotStayTime;
-  @override //
-  int get adjustPercent;
+  String get startTime; //
   @override
-  @JsonKey(ignore: true)
+  int get walkSpeed; //
+  @override
+  int get spotStayTime; //
+  @override
+  int get adjustPercent;
+
+  /// Create a copy of RoutingState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoutingStateImplCopyWith<_$RoutingStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

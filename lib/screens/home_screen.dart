@@ -7,6 +7,7 @@ import '../controllers/station/station.dart';
 import '../controllers/temple/temple.dart';
 import '../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../controllers/temple_list/temple_list.dart';
+import '../controllers/temple_not_reach_list/temple_not_reach_list.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
 import '../models/station_model.dart';
@@ -48,7 +49,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
 
-    ref.read(templeProvider.notifier).getAllTemple();
+    ref.read(templeListProvider.notifier).getAllTempleListTemple();
+
+    ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
+
+    ref.read(stationProvider.notifier).getAllStation();
 
     // ignore: always_specify_types
     globalKeyList = List.generate(100, (int index) => GlobalKey());
@@ -203,7 +208,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final Map<String, List<TempleListModel>> templeStationMap = ref.watch(
         templeNotReachListProvider
-            .select((TempleListState value) => value.templeStationMap));
+            .select((TempleNotReachListState value) => value.templeStationMap));
 
     final Map<String, List<String>> templeVisitDateMap = ref.watch(
         templeProvider.select((TempleState value) => value.templeVisitDateMap));
@@ -383,10 +388,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       if (dispFlag) {
         list.add(
-          displayHomeCard(
-            data: element,
-            selectYear: templeState.selectYear.toString(),
-          ),
+          displayHomeCard(data: element, selectYear: templeState.selectYear),
         );
       }
 

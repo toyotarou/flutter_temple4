@@ -21,7 +21,9 @@ mixin _$TempleLatLngState {
   Map<String, TempleLatLngModel> get templeLatLngMap =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TempleLatLngState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TempleLatLngStateCopyWith<TempleLatLngState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,6 +49,8 @@ class _$TempleLatLngStateCopyWithImpl<$Res, $Val extends TempleLatLngState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TempleLatLngState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -87,6 +91,8 @@ class __$$TempleLatLngStateImplCopyWithImpl<$Res>
       $Res Function(_$TempleLatLngStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TempleLatLngState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -110,8 +116,10 @@ class __$$TempleLatLngStateImplCopyWithImpl<$Res>
 
 class _$TempleLatLngStateImpl implements _TempleLatLngState {
   const _$TempleLatLngStateImpl(
-      {final List<TempleLatLngModel> templeLatLngList = const [],
-      final Map<String, TempleLatLngModel> templeLatLngMap = const {}})
+      {final List<TempleLatLngModel> templeLatLngList =
+          const <TempleLatLngModel>[],
+      final Map<String, TempleLatLngModel> templeLatLngMap =
+          const <String, TempleLatLngModel>{}})
       : _templeLatLngList = templeLatLngList,
         _templeLatLngMap = templeLatLngMap;
 
@@ -156,7 +164,9 @@ class _$TempleLatLngStateImpl implements _TempleLatLngState {
       const DeepCollectionEquality().hash(_templeLatLngList),
       const DeepCollectionEquality().hash(_templeLatLngMap));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TempleLatLngState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TempleLatLngStateImplCopyWith<_$TempleLatLngStateImpl> get copyWith =>
@@ -174,8 +184,11 @@ abstract class _TempleLatLngState implements TempleLatLngState {
   List<TempleLatLngModel> get templeLatLngList;
   @override
   Map<String, TempleLatLngModel> get templeLatLngMap;
+
+  /// Create a copy of TempleLatLngState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TempleLatLngStateImplCopyWith<_$TempleLatLngStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
