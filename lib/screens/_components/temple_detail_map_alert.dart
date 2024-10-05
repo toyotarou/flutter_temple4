@@ -1,9 +1,10 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+//import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/temple/temple.dart';
@@ -32,10 +33,10 @@ class TempleDetailMapAlert extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<TempleDetailMapAlert> createState() =>
-      _TempleDetailMapAlertState();
+      _TempleDetailDialogState();
 }
 
-class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
+class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
   List<TempleData> templeDataList = <TempleData>[];
 
   List<Marker> markerList = <Marker>[];
@@ -44,6 +45,9 @@ class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
 
   Utility utility = Utility();
 
+  String start = '';
+  String end = '';
+
   final MapController mapController = MapController();
 
   double minLat = 0.0;
@@ -51,13 +55,13 @@ class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
   double minLng = 0.0;
   double maxLng = 0.0;
 
-  String start = '';
-  String end = '';
+  bool firstMapDisplay = false;
 
   ///
-  Future<void> _loadMapTiles() async =>
-      // ignore: always_specify_types
-      Future.delayed(const Duration(seconds: 2));
+  Future<void> _loadMapTiles() async {
+    // ignore: always_specify_types
+    return Future.delayed(Duration(seconds: firstMapDisplay ? 0 : 2));
+  }
 
   ///
   @override
@@ -70,45 +74,184 @@ class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
 
     return Stack(
       children: <Widget>[
-        FutureBuilder<void>(
-          future: _loadMapTiles(),
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return const Center(child: Text('Error loading map'));
-            } else {
-              return FlutterMap(
-                mapController: mapController,
-                options: MapOptions(
-                  initialCenter: LatLng(minLat, minLng),
-                  initialCameraFit: ((minLat == maxLat) && (minLng == maxLng))
-                      ? null
-                      : CameraFit.bounds(
-                          bounds: LatLngBounds.fromPoints(
-                            <LatLng>[
-                              LatLng(minLat, maxLng),
-                              LatLng(maxLat, minLng)
-                            ],
-                          ),
-                          padding: const EdgeInsets.all(50),
+        Column(
+          children: <Widget>[
+            Expanded(
+              child: FutureBuilder<void>(
+                future: _loadMapTiles(),
+                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text('Error loading map'));
+                  } else {
+                    firstMapDisplay = true;
+
+                    return FlutterMap(
+                      mapController: mapController,
+                      options: MapOptions(
+                        initialCenter: LatLng(minLat, minLng),
+                        initialCameraFit:
+                            ((minLat == maxLat) && (minLng == maxLng))
+                                ? null
+                                : CameraFit.bounds(
+                                    bounds: LatLngBounds.fromPoints(
+                                      <LatLng>[
+                                        LatLng(minLat, maxLng),
+                                        LatLng(maxLat, minLng)
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(50),
+                                  ),
+                      ),
+                      children: <Widget>[
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          tileProvider: CachedTileProvider(),
+                          userAgentPackageName: 'com.example.app',
                         ),
-                ),
-                children: <Widget>[
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    tileProvider: CachedTileProvider(),
-                    userAgentPackageName: 'com.example.app',
-                  ),
-                  MarkerLayer(markers: markerList),
-                ],
-              );
-            }
-          },
+                        MarkerLayer(markers: markerList),
+                        // ignore: always_specify_types
+                        PolylineLayer(
+                          polylines: <Polyline<Object>>[
+                            // ignore: always_specify_types
+                            Polyline(
+                              points: templeDataList.map((TempleData e) {
+                                return LatLng(
+                                  e.latitude.toDouble(),
+                                  e.longitude.toDouble(),
+                                );
+                              }).toList(),
+                              color: Colors.redAccent,
+                              strokeWidth: 5,
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
         ),
         displayInfoPlate(),
       ],
+    );
+  }
+
+  ///
+  Widget displayInfoPlate() {
+    final Map<String, TempleModel> dateTempleMap = ref.watch(
+        templeProvider.select((TempleState value) => value.dateTempleMap));
+
+    final TempleModel? temple = dateTempleMap[widget.date.yyyymmdd];
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          IconButton(
+            onPressed: () {
+              TempleDialog(
+                context: context,
+                widget: TempleCourseDisplayAlert(data: templeDataList),
+                paddingLeft: context.screenSize.width * 0.2,
+                clearBarrierColor: true,
+              );
+            },
+            icon: const Icon(
+              Icons.info_outline,
+              size: 30,
+              color: Colors.white,
+            ),
+          ),
+          if (temple == null)
+            Container()
+          else
+            DefaultTextStyle(
+              style: const TextStyle(color: Colors.white),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(widget.date.yyyymmdd),
+                  Text(temple.temple),
+                  const SizedBox(height: 10),
+                  Text(start),
+                  Text(end),
+                  if (temple.memo != '') ...<Widget>[
+                    const SizedBox(height: 10),
+                    Flexible(
+                      child: SizedBox(
+                        width: context.screenSize.width * 0.6,
+                        child: Text(temple.memo),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  displayThumbNailPhoto(),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  ///
+  Widget displayThumbNailPhoto() {
+    final Map<String, TempleModel> dateTempleMap = ref.watch(
+        templeProvider.select((TempleState value) => value.dateTempleMap));
+
+    final TempleModel? temple = dateTempleMap[widget.date.yyyymmdd];
+
+    final List<Widget> list = <Widget>[];
+
+    if (temple != null) {
+      if (temple.photo.isNotEmpty) {
+        for (int i = 0; i < temple.photo.length; i++) {
+          list.add(
+            GestureDetector(
+              onTap: () {
+                TempleDialog(
+                  context: context,
+                  widget: TemplePhotoGalleryAlert(
+                    photoList: temple.photo,
+                    number: i,
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                width: 50,
+                // child: CachedNetworkImage(
+                //   imageUrl: temple.photo[i],
+                //   placeholder: (context, url) =>
+                //       Image.asset('assets/images/no_image.png'),
+                //   errorWidget: (context, url, error) => const Icon(Icons.error),
+                // ),
+
+                child: Image.network(temple.photo[i]),
+              ),
+            ),
+          );
+        }
+      }
+    }
+
+    return SizedBox(
+      width: context.screenSize.width * 0.6,
+      child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal, child: Row(children: list)),
     );
   }
 
@@ -128,8 +271,8 @@ class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
       getStartEndPointInfo(temple: temple, flag: 'start');
 
       if (widget.templeLatLngMap[temple.temple] != null) {
-        latList.add(widget.templeLatLngMap[temple.temple]!.lat.toDouble());
-        lngList.add(widget.templeLatLngMap[temple.temple]!.lng.toDouble());
+        latList.add(double.parse(widget.templeLatLngMap[temple.temple]!.lat));
+        lngList.add(double.parse(widget.templeLatLngMap[temple.temple]!.lng));
 
         templeDataList.add(
           TempleData(
@@ -148,8 +291,8 @@ class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
           final TempleLatLngModel? latlng = widget.templeLatLngMap[element];
 
           if (latlng != null) {
-            latList.add(latlng.lat.toDouble());
-            lngList.add(latlng.lng.toDouble());
+            latList.add(double.parse(latlng.lat));
+            lngList.add(double.parse(latlng.lng));
 
             templeDataList.add(
               TempleData(
@@ -260,14 +403,9 @@ class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
             backgroundColor:
                 getCircleAvatarBgColor(element: templeDataList[i], ref: ref),
             child: Text(
-              (templeDataList[i].mark == '0')
-                  ? 'STA'
-                  : templeDataList[i].mark.padLeft(3, '0'),
+              templeDataList[i].mark,
               style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
+                  color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -293,112 +431,5 @@ class _TempleDetailMapAlertState extends ConsumerState<TempleDetailMapAlert> {
     }
 
     setState(() {});
-  }
-
-  ///
-  Widget displayInfoPlate() {
-    final Map<String, TempleModel> dateTempleMap = ref.watch(
-        templeProvider.select((TempleState value) => value.dateTempleMap));
-
-    final TempleModel? temple = dateTempleMap[widget.date.yyyymmdd];
-
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          IconButton(
-            onPressed: () {
-              TempleDialog(
-                context: context,
-                widget: TempleCourseDisplayAlert(data: templeDataList),
-                paddingLeft: context.screenSize.width * 0.2,
-                clearBarrierColor: true,
-              );
-            },
-            icon: const Icon(
-              Icons.info_outline,
-              size: 30,
-              color: Colors.white,
-            ),
-          ),
-          if (temple == null)
-            Container()
-          else
-            DefaultTextStyle(
-              style: const TextStyle(color: Colors.white),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(widget.date.yyyymmdd),
-                  Text(temple.temple),
-                  const SizedBox(height: 10),
-                  Text(start),
-                  Text(end),
-                  if (temple.memo != '') ...<Widget>[
-                    const SizedBox(height: 10),
-                    Flexible(
-                      child: SizedBox(
-                        width: context.screenSize.width * 0.6,
-                        child: Text(temple.memo),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  displayThumbNailPhoto(),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  ///
-  Widget displayThumbNailPhoto() {
-    final Map<String, TempleModel> dateTempleMap = ref.watch(
-        templeProvider.select((TempleState value) => value.dateTempleMap));
-
-    final TempleModel? temple = dateTempleMap[widget.date.yyyymmdd];
-
-    final List<Widget> list = <Widget>[];
-
-    if (temple != null) {
-      if (temple.photo.isNotEmpty) {
-        for (int i = 0; i < temple.photo.length; i++) {
-          list.add(
-            GestureDetector(
-              onTap: () {
-                TempleDialog(
-                  context: context,
-                  widget: TemplePhotoGalleryAlert(
-                    photoList: temple.photo,
-                    number: i,
-                  ),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                width: 50,
-                child: Image.network(temple.photo[i]),
-              ),
-            ),
-          );
-        }
-      }
-    }
-
-    return SizedBox(
-      width: context.screenSize.width * 0.6,
-      child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal, child: Row(children: list)),
-    );
   }
 }
