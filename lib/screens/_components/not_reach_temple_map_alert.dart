@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/tokyo_train/tokyo_train.dart';
@@ -60,27 +59,17 @@ class _NotReachTempleMapAlertState
   double minLng = 0.0;
   double maxLng = 0.0;
 
-  double halfLat = 0.0;
-  double halfLng = 0.0;
-
   double initialZoom = 7.0;
+
+  ///
+  Future<void> _loadMapTiles() async =>
+      // ignore: always_specify_types
+      Future.delayed(const Duration(seconds: 2));
 
   ///
   @override
   Widget build(BuildContext context) {
     getNotReachTemple();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      mapController.fitCamera(
-        CameraFit.bounds(
-          bounds: LatLngBounds.fromPoints(
-            <LatLng>[LatLng(minLat, maxLng), LatLng(maxLat, minLng)],
-          ),
-          maxZoom: initialZoom,
-          padding: const EdgeInsets.all(50),
-        ),
-      );
-    });
 
     makeMarker();
 
@@ -91,81 +80,65 @@ class _NotReachTempleMapAlertState
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      templeDataList.length.toString(),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    Container(),
-                  ],
+                Text(
+                  templeDataList.length.toString(),
+                  style: const TextStyle(color: Colors.white),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      onPressed: () {
-                        TempleDialog(
-                          context: context,
-                          widget: NotReachTempleTrainSelectAlert(
-                            tokyoTrainList: widget.tokyoTrainList,
-                          ),
-                          paddingRight: context.screenSize.width * 0.2,
-                          clearBarrierColor: true,
-                        );
-                      },
-                      icon: const Icon(Icons.train, color: Colors.white),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        IconButton(
-                          onPressed: (initialZoom < 7)
-                              ? () => setState(() => initialZoom++)
-                              : null,
-                          icon: Icon(
-                            FontAwesomeIcons.plus,
-                            color: (initialZoom < 7)
-                                ? Colors.white
-                                : Colors.transparent,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: (initialZoom > 0)
-                              ? () => setState(() => initialZoom--)
-                              : null,
-                          icon: Icon(
-                            FontAwesomeIcons.minus,
-                            color: (initialZoom > 0)
-                                ? Colors.white
-                                : Colors.transparent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                IconButton(
+                  onPressed: () {
+                    TempleDialog(
+                      context: context,
+                      widget: NotReachTempleTrainSelectAlert(
+                        tokyoTrainList: widget.tokyoTrainList,
+                      ),
+                      paddingRight: context.screenSize.width * 0.2,
+                      clearBarrierColor: true,
+                    );
+                  },
+                  icon: const Icon(Icons.train, color: Colors.white),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: FlutterMap(
-              mapController: mapController,
-              options: MapOptions(
-                initialCenter: LatLng(halfLat, halfLng),
-                initialZoom: initialZoom,
-              ),
-              children: <Widget>[
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  tileProvider: CachedTileProvider(),
-                  userAgentPackageName: 'com.example.app',
-                ),
-                MarkerLayer(markers: markerList),
-              ],
+            child: FutureBuilder<void>(
+              future: _loadMapTiles(),
+              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(child: Text('Error loading map'));
+                } else {
+                  return FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                      initialCameraFit: CameraFit.bounds(
+                        bounds: LatLngBounds.fromPoints(
+                          <LatLng>[
+                            LatLng(minLat, maxLng),
+                            LatLng(maxLat, minLng)
+                          ],
+                        ),
+                        maxZoom: initialZoom,
+                        padding: const EdgeInsets.all(50),
+                      ),
+                      initialZoom: initialZoom,
+                    ),
+                    children: <Widget>[
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        tileProvider: CachedTileProvider(),
+                        userAgentPackageName: 'com.example.app',
+                      ),
+                      MarkerLayer(markers: markerList),
+                    ],
+                  );
+                }
+              },
             ),
           ),
         ],
@@ -232,9 +205,6 @@ class _NotReachTempleMapAlertState
       maxLat = latList.reduce(max);
       minLng = lngList.reduce(min);
       maxLng = lngList.reduce(max);
-
-      halfLat = double.parse(((minLat + maxLat) / 2).toStringAsFixed(6));
-      halfLng = double.parse(((minLng + maxLng) / 2).toStringAsFixed(6));
     }
   }
 
