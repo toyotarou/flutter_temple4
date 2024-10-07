@@ -1,7 +1,6 @@
 import 'dart:math';
 
-//import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:cached_network_image/cached_network_image.dart' as cni;
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -231,17 +230,16 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
                 );
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                width: 50,
-                // child: CachedNetworkImage(
-                //   imageUrl: temple.photo[i],
-                //   placeholder: (context, url) =>
-                //       Image.asset('assets/images/no_image.png'),
-                //   errorWidget: (context, url, error) => const Icon(Icons.error),
-                // ),
-
-                child: Image.network(temple.photo[i]),
-              ),
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  width: 50,
+                  child: cni.CachedNetworkImage(
+                    imageUrl: temple.photo[i],
+                    placeholder: (BuildContext context, String url) =>
+                        Image.asset('assets/images/no_image.png'),
+                    errorWidget:
+                        (BuildContext context, String url, Object error) =>
+                            const Icon(Icons.error),
+                  )),
             ),
           );
         }

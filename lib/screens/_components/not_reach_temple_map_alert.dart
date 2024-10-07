@@ -9,6 +9,7 @@ import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
+import '../../models/near_station_model.dart';
 import '../../models/temple_lat_lng_model.dart';
 import '../../models/temple_list_model.dart';
 import '../../models/temple_model.dart';
@@ -260,32 +261,26 @@ class _NotReachTempleMapAlertState
       );
     }
 
-    final String selectedNearStationLatitude = ref.watch(
-        latLngTempleProvider.select(
-            (LatLngTempleState value) => value.selectedNearStationLatitude));
+    final NearStationResponseStationModel? selectedNearStation = ref.watch(
+        latLngTempleProvider
+            .select((LatLngTempleState value) => value.selectedNearStation));
 
-    final String selectedNearStationLongitude = ref.watch(
-        latLngTempleProvider.select(
-            (LatLngTempleState value) => value.selectedNearStationLongitude));
-
-    if (selectedNearStationLatitude != '' &&
-        selectedNearStationLongitude != '') {
-      markerList.add(
-        Marker(
-          point: LatLng(
-            selectedNearStationLatitude.toDouble(),
-            selectedNearStationLongitude.toDouble(),
-          ),
-          width: 40,
-          height: 40,
-          child: GestureDetector(
-            child: CircleAvatar(
-              backgroundColor: Colors.purple.withOpacity(0.5),
-              child: const Text(''),
+    if (selectedNearStation != null) {
+      if (selectedNearStation.y > 0 && selectedNearStation.x > 0) {
+        markerList.add(
+          Marker(
+            point: LatLng(selectedNearStation.y, selectedNearStation.x),
+            width: 40,
+            height: 40,
+            child: GestureDetector(
+              child: CircleAvatar(
+                backgroundColor: Colors.purple.withOpacity(0.5),
+                child: const Text(''),
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 

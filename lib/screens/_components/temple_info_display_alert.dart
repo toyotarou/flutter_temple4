@@ -51,6 +51,10 @@ class _TempleInfoDisplayAlertState
   ///
   @override
   Widget build(BuildContext context) {
+    final NearStationResponseStationModel? selectedNearStation = ref.watch(
+        latLngTempleProvider
+            .select((LatLngTempleState value) => value.selectedNearStation));
+
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -70,6 +74,10 @@ class _TempleInfoDisplayAlertState
               displayAddRemoveRoutingButton(),
               const SizedBox(height: 10),
               displayNearStation(),
+              Text(
+                (selectedNearStation != null) ? selectedNearStation.line : '',
+                style: const TextStyle(fontSize: 12),
+              ),
             ],
           ),
         ),
@@ -222,18 +230,22 @@ class _TempleInfoDisplayAlertState
           nearStationProvider
               .select((NearStationState value) => value.nearStationList));
 
-      return Wrap(
+      return Row(
           children: nearStationList.map((NearStationResponseStationModel e) {
-        return Padding(
-          padding: const EdgeInsets.only(right: 10, bottom: 5),
-          child: GestureDetector(
-            onTap: () {
-              ref.read(latLngTempleProvider.notifier).setSelectedNearStation(
-                  latitude: e.y.toString(), longitude: e.x.toString());
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.purple.withOpacity(0.2),
-              child: Text(e.name, style: const TextStyle(fontSize: 10)),
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10, bottom: 5),
+            child: GestureDetector(
+              onTap: () {
+                ref
+                    .read(latLngTempleProvider.notifier)
+                    .setSelectedNearStation(station: e);
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.purple.withOpacity(0.2),
+                child: Text(e.name, style: const TextStyle(fontSize: 10)),
+              ),
             ),
           ),
         );

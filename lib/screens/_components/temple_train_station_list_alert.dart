@@ -74,11 +74,12 @@ class _TempleTrainListAlertState
 
   ///
   Widget displayTempleTrainStationListButton() {
-    final String startStationId =
-        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
+    final String startStationId = ref.watch(
+        routingProvider.select((RoutingState value) => value.startStationId));
 
-    final List<LatLngTempleModel> latLngTempleList = ref
-        .watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList));
+    final List<LatLngTempleModel> latLngTempleList = ref.watch(
+        latLngTempleProvider
+            .select((LatLngTempleState value) => value.latLngTempleList));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,6 +121,10 @@ class _TempleTrainListAlertState
                           .read(routingProvider.notifier)
                           .setGoalStationId(id: '');
 
+                      ref
+                          .read(latLngTempleProvider.notifier)
+                          .clearSelectedNearStation();
+
                       TempleDialog(
                         context: context,
                         widget: LatLngTempleMapAlert(
@@ -147,11 +152,12 @@ class _TempleTrainListAlertState
 
   ///
   Widget displaySelectedStation() {
-    final String startStationId =
-        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
+    final String startStationId = ref.watch(
+        routingProvider.select((RoutingState value) => value.startStationId));
 
-    final List<LatLngTempleModel> latLngTempleList = ref
-        .watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList));
+    final List<LatLngTempleModel> latLngTempleList = ref.watch(
+        latLngTempleProvider
+            .select((LatLngTempleState value) => value.latLngTempleList));
 
     getReachTempleNum();
 
@@ -180,8 +186,8 @@ class _TempleTrainListAlertState
 
   ///
   Widget displayTokyoTrainList() {
-    final String startStationId =
-        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
+    final String startStationId = ref.watch(
+        routingProvider.select((RoutingState value) => value.startStationId));
 
     return Expanded(
       child: SingleChildScrollView(
@@ -253,7 +259,8 @@ class _TempleTrainListAlertState
     reachTempleNum = 0;
 
     ref
-        .watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList))
+        .watch(latLngTempleProvider
+            .select((LatLngTempleState value) => value.latLngTempleList))
         .forEach((LatLngTempleModel element) {
       if (element.cnt > 0) {
         reachTempleNum++;

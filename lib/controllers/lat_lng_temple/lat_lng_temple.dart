@@ -5,6 +5,7 @@ import '../../data/http/client.dart';
 import '../../data/http/path.dart';
 import '../../extensions/extensions.dart';
 import '../../models/lat_lng_temple_model.dart';
+import '../../models/near_station_model.dart';
 import '../../utility/utility.dart';
 
 part 'lat_lng_temple.freezed.dart';
@@ -17,14 +18,9 @@ class LatLngTempleState with _$LatLngTempleState {
     @Default(<LatLngTempleModel>[]) List<LatLngTempleModel> latLngTempleList,
     @Default(<String, LatLngTempleModel>{})
     Map<String, LatLngTempleModel> latLngTempleMap,
-
-    ///
     @Default(false) bool listSorting,
-
-    ///
     @Default(false) bool orangeDisplay,
-    @Default('') String selectedNearStationLatitude,
-    @Default('') String selectedNearStationLongitude,
+    NearStationResponseStationModel? selectedNearStation,
   }) = _LatLngTempleState;
 }
 
@@ -89,10 +85,12 @@ class LatLngTemple extends _$LatLngTemple {
 
   ///
   Future<void> setSelectedNearStation(
-      {required String latitude, required String longitude}) async {
-    state = state.copyWith(
-      selectedNearStationLatitude: latitude,
-      selectedNearStationLongitude: longitude,
-    );
+      {required NearStationResponseStationModel station}) async {
+    state = state.copyWith(selectedNearStation: station);
+  }
+
+  ///
+  Future<void> clearSelectedNearStation() async {
+    state = state.copyWith(selectedNearStation: null);
   }
 }

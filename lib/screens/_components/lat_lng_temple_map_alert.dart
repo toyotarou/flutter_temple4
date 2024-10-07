@@ -12,6 +12,7 @@ import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/lat_lng_temple_model.dart';
+import '../../models/near_station_model.dart';
 import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
@@ -427,46 +428,33 @@ class _LatLngTempleDisplayAlertState
             child: CircleAvatar(
               backgroundColor:
                   getCircleAvatarBgColor(element: templeDataList[i], ref: ref),
-              child: Text(
-                (templeDataList[i].mark == '0')
-                    ? 'STA'
-                    : templeDataList[i].mark.padLeft(3, '0'),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
+              child: getCircleAvatarText(element: templeDataList[i]),
             ),
           ),
         ),
       );
     }
 
-    final String selectedNearStationLatitude = ref.watch(latLngTempleProvider
-        .select((LatLngTempleState value) => value.selectedNearStationLatitude));
+    final NearStationResponseStationModel? selectedNearStation = ref.watch(
+        latLngTempleProvider
+            .select((LatLngTempleState value) => value.selectedNearStation));
 
-    final String selectedNearStationLongitude = ref.watch(latLngTempleProvider
-        .select((LatLngTempleState value) => value.selectedNearStationLongitude));
-
-    if (selectedNearStationLatitude != '' &&
-        selectedNearStationLongitude != '') {
-      markerList.add(
-        Marker(
-          point: LatLng(
-            selectedNearStationLatitude.toDouble(),
-            selectedNearStationLongitude.toDouble(),
-          ),
-          width: 40,
-          height: 40,
-          child: GestureDetector(
-            child: CircleAvatar(
-              backgroundColor: Colors.purple.withOpacity(0.5),
-              child: const Text(''),
+    if (selectedNearStation != null) {
+      if (selectedNearStation.y > 0 && selectedNearStation.x > 0) {
+        markerList.add(
+          Marker(
+            point: LatLng(selectedNearStation.y, selectedNearStation.x),
+            width: 40,
+            height: 40,
+            child: GestureDetector(
+              child: CircleAvatar(
+                backgroundColor: Colors.brown.withOpacity(0.5),
+                child: const Text(''),
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 

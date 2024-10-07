@@ -20,14 +20,10 @@ mixin _$LatLngTempleState {
       throw _privateConstructorUsedError;
   Map<String, LatLngTempleModel> get latLngTempleMap =>
       throw _privateConstructorUsedError;
-
-  ///
   bool get listSorting => throw _privateConstructorUsedError;
-
-  ///
   bool get orangeDisplay => throw _privateConstructorUsedError;
-  String get selectedNearStationLatitude => throw _privateConstructorUsedError;
-  String get selectedNearStationLongitude => throw _privateConstructorUsedError;
+  NearStationResponseStationModel? get selectedNearStation =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of LatLngTempleState
   /// with the given fields replaced by the non-null parameter values.
@@ -47,8 +43,7 @@ abstract class $LatLngTempleStateCopyWith<$Res> {
       Map<String, LatLngTempleModel> latLngTempleMap,
       bool listSorting,
       bool orangeDisplay,
-      String selectedNearStationLatitude,
-      String selectedNearStationLongitude});
+      NearStationResponseStationModel? selectedNearStation});
 }
 
 /// @nodoc
@@ -70,8 +65,7 @@ class _$LatLngTempleStateCopyWithImpl<$Res, $Val extends LatLngTempleState>
     Object? latLngTempleMap = null,
     Object? listSorting = null,
     Object? orangeDisplay = null,
-    Object? selectedNearStationLatitude = null,
-    Object? selectedNearStationLongitude = null,
+    Object? selectedNearStation = freezed,
   }) {
     return _then(_value.copyWith(
       latLngTempleList: null == latLngTempleList
@@ -90,14 +84,10 @@ class _$LatLngTempleStateCopyWithImpl<$Res, $Val extends LatLngTempleState>
           ? _value.orangeDisplay
           : orangeDisplay // ignore: cast_nullable_to_non_nullable
               as bool,
-      selectedNearStationLatitude: null == selectedNearStationLatitude
-          ? _value.selectedNearStationLatitude
-          : selectedNearStationLatitude // ignore: cast_nullable_to_non_nullable
-              as String,
-      selectedNearStationLongitude: null == selectedNearStationLongitude
-          ? _value.selectedNearStationLongitude
-          : selectedNearStationLongitude // ignore: cast_nullable_to_non_nullable
-              as String,
+      selectedNearStation: freezed == selectedNearStation
+          ? _value.selectedNearStation
+          : selectedNearStation // ignore: cast_nullable_to_non_nullable
+              as NearStationResponseStationModel?,
     ) as $Val);
   }
 }
@@ -115,8 +105,7 @@ abstract class _$$LatLngTempleStateImplCopyWith<$Res>
       Map<String, LatLngTempleModel> latLngTempleMap,
       bool listSorting,
       bool orangeDisplay,
-      String selectedNearStationLatitude,
-      String selectedNearStationLongitude});
+      NearStationResponseStationModel? selectedNearStation});
 }
 
 /// @nodoc
@@ -136,8 +125,7 @@ class __$$LatLngTempleStateImplCopyWithImpl<$Res>
     Object? latLngTempleMap = null,
     Object? listSorting = null,
     Object? orangeDisplay = null,
-    Object? selectedNearStationLatitude = null,
-    Object? selectedNearStationLongitude = null,
+    Object? selectedNearStation = freezed,
   }) {
     return _then(_$LatLngTempleStateImpl(
       latLngTempleList: null == latLngTempleList
@@ -156,14 +144,10 @@ class __$$LatLngTempleStateImplCopyWithImpl<$Res>
           ? _value.orangeDisplay
           : orangeDisplay // ignore: cast_nullable_to_non_nullable
               as bool,
-      selectedNearStationLatitude: null == selectedNearStationLatitude
-          ? _value.selectedNearStationLatitude
-          : selectedNearStationLatitude // ignore: cast_nullable_to_non_nullable
-              as String,
-      selectedNearStationLongitude: null == selectedNearStationLongitude
-          ? _value.selectedNearStationLongitude
-          : selectedNearStationLongitude // ignore: cast_nullable_to_non_nullable
-              as String,
+      selectedNearStation: freezed == selectedNearStation
+          ? _value.selectedNearStation
+          : selectedNearStation // ignore: cast_nullable_to_non_nullable
+              as NearStationResponseStationModel?,
     ));
   }
 }
@@ -178,8 +162,7 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
           const <String, LatLngTempleModel>{},
       this.listSorting = false,
       this.orangeDisplay = false,
-      this.selectedNearStationLatitude = '',
-      this.selectedNearStationLongitude = ''})
+      this.selectedNearStation})
       : _latLngTempleList = latLngTempleList,
         _latLngTempleMap = latLngTempleMap;
 
@@ -202,25 +185,18 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
     return EqualUnmodifiableMapView(_latLngTempleMap);
   }
 
-  ///
   @override
   @JsonKey()
   final bool listSorting;
-
-  ///
   @override
   @JsonKey()
   final bool orangeDisplay;
   @override
-  @JsonKey()
-  final String selectedNearStationLatitude;
-  @override
-  @JsonKey()
-  final String selectedNearStationLongitude;
+  final NearStationResponseStationModel? selectedNearStation;
 
   @override
   String toString() {
-    return 'LatLngTempleState(latLngTempleList: $latLngTempleList, latLngTempleMap: $latLngTempleMap, listSorting: $listSorting, orangeDisplay: $orangeDisplay, selectedNearStationLatitude: $selectedNearStationLatitude, selectedNearStationLongitude: $selectedNearStationLongitude)';
+    return 'LatLngTempleState(latLngTempleList: $latLngTempleList, latLngTempleMap: $latLngTempleMap, listSorting: $listSorting, orangeDisplay: $orangeDisplay, selectedNearStation: $selectedNearStation)';
   }
 
   @override
@@ -236,14 +212,8 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
                 other.listSorting == listSorting) &&
             (identical(other.orangeDisplay, orangeDisplay) ||
                 other.orangeDisplay == orangeDisplay) &&
-            (identical(other.selectedNearStationLatitude,
-                    selectedNearStationLatitude) ||
-                other.selectedNearStationLatitude ==
-                    selectedNearStationLatitude) &&
-            (identical(other.selectedNearStationLongitude,
-                    selectedNearStationLongitude) ||
-                other.selectedNearStationLongitude ==
-                    selectedNearStationLongitude));
+            (identical(other.selectedNearStation, selectedNearStation) ||
+                other.selectedNearStation == selectedNearStation));
   }
 
   @override
@@ -253,8 +223,7 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
       const DeepCollectionEquality().hash(_latLngTempleMap),
       listSorting,
       orangeDisplay,
-      selectedNearStationLatitude,
-      selectedNearStationLongitude);
+      selectedNearStation);
 
   /// Create a copy of LatLngTempleState
   /// with the given fields replaced by the non-null parameter values.
@@ -268,29 +237,23 @@ class _$LatLngTempleStateImpl implements _LatLngTempleState {
 
 abstract class _LatLngTempleState implements LatLngTempleState {
   const factory _LatLngTempleState(
-      {final List<LatLngTempleModel> latLngTempleList,
-      final Map<String, LatLngTempleModel> latLngTempleMap,
-      final bool listSorting,
-      final bool orangeDisplay,
-      final String selectedNearStationLatitude,
-      final String selectedNearStationLongitude}) = _$LatLngTempleStateImpl;
+          {final List<LatLngTempleModel> latLngTempleList,
+          final Map<String, LatLngTempleModel> latLngTempleMap,
+          final bool listSorting,
+          final bool orangeDisplay,
+          final NearStationResponseStationModel? selectedNearStation}) =
+      _$LatLngTempleStateImpl;
 
   @override
   List<LatLngTempleModel> get latLngTempleList;
   @override
   Map<String, LatLngTempleModel> get latLngTempleMap;
-
-  ///
   @override
   bool get listSorting;
-
-  ///
   @override
   bool get orangeDisplay;
   @override
-  String get selectedNearStationLatitude;
-  @override
-  String get selectedNearStationLongitude;
+  NearStationResponseStationModel? get selectedNearStation;
 
   /// Create a copy of LatLngTempleState
   /// with the given fields replaced by the non-null parameter values.
