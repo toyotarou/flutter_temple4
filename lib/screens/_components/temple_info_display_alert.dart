@@ -8,27 +8,25 @@ import '../../models/common/temple_data.dart';
 import '../../models/near_station_model.dart';
 import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
-import '../../models/tokyo_train_model.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
 import 'visited_temple_photo_alert.dart';
 
 class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
-  const TempleInfoDisplayAlert(
-      {super.key,
-      required this.temple,
-      required this.from,
-      this.station,
-      required this.templeVisitDateMap,
-      required this.dateTempleMap,
-      required this.tokyoTrainList});
+  const TempleInfoDisplayAlert({
+    super.key,
+    required this.temple,
+    required this.from,
+    this.station,
+    required this.templeVisitDateMap,
+    required this.dateTempleMap,
+  });
 
   final TempleData temple;
   final String from;
   final TokyoStationModel? station;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
-  final List<TokyoTrainModel> tokyoTrainList;
 
   @override
   ConsumerState<TempleInfoDisplayAlert> createState() =>
@@ -37,9 +35,6 @@ class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
 
 class _TempleInfoDisplayAlertState
     extends ConsumerState<TempleInfoDisplayAlert> {
-  Map<String, TokyoStationModel> tokyoStationNameMap =
-      <String, TokyoStationModel>{};
-
   ///
   @override
   void initState() {
@@ -54,8 +49,6 @@ class _TempleInfoDisplayAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    makeTokyoStationNameMap();
-
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -80,15 +73,6 @@ class _TempleInfoDisplayAlertState
         ),
       ),
     );
-  }
-
-  ///
-  void makeTokyoStationNameMap() {
-    for (final TokyoTrainModel element in widget.tokyoTrainList) {
-      for (final TokyoStationModel element2 in element.station) {
-        tokyoStationNameMap[element2.stationName] = element2;
-      }
-    }
   }
 
   ///
@@ -244,7 +228,8 @@ class _TempleInfoDisplayAlertState
         padding: const EdgeInsets.only(right: 10, bottom: 5),
         child: GestureDetector(
           onTap: () {
-            print(tokyoStationNameMap[e.name]);
+            print(e.x);
+            print(e.y);
           },
           child: CircleAvatar(
             backgroundColor: Colors.purple.withOpacity(0.2),
