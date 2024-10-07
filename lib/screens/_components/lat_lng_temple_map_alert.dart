@@ -418,10 +418,6 @@ class _LatLngTempleDisplayAlertState
                           station: widget.station,
                           templeVisitDateMap: widget.templeVisitDateMap,
                           dateTempleMap: widget.dateTempleMap,
-
-
-
-
                         ),
                         paddingTop: context.screenSize.height * 0.6,
                         clearBarrierColor: true,
@@ -441,6 +437,32 @@ class _LatLngTempleDisplayAlertState
                   fontSize: 12,
                 ),
               ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final String selectedNearStationLatitude = ref.watch(latLngTempleProvider
+        .select((LatLngTempleState value) => value.selectedNearStationLatitude));
+
+    final String selectedNearStationLongitude = ref.watch(latLngTempleProvider
+        .select((LatLngTempleState value) => value.selectedNearStationLongitude));
+
+    if (selectedNearStationLatitude != '' &&
+        selectedNearStationLongitude != '') {
+      markerList.add(
+        Marker(
+          point: LatLng(
+            selectedNearStationLatitude.toDouble(),
+            selectedNearStationLongitude.toDouble(),
+          ),
+          width: 40,
+          height: 40,
+          child: GestureDetector(
+            child: CircleAvatar(
+              backgroundColor: Colors.purple.withOpacity(0.5),
+              child: const Text(''),
             ),
           ),
         ),

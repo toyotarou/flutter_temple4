@@ -23,6 +23,8 @@ class LatLngTempleState with _$LatLngTempleState {
 
     ///
     @Default(false) bool orangeDisplay,
+    @Default('') String selectedNearStationLatitude,
+    @Default('') String selectedNearStationLongitude,
   }) = _LatLngTempleState;
 }
 
@@ -45,7 +47,7 @@ class LatLngTemple extends _$LatLngTemple {
         'longitude': param['longitude'],
         'radius': 10
       },
-    // ignore: always_specify_types
+      // ignore: always_specify_types
     ).then((value) {
       final List<LatLngTempleModel> list = <LatLngTempleModel>[];
       final Map<String, LatLngTempleModel> map = <String, LatLngTempleModel>{};
@@ -67,7 +69,7 @@ class LatLngTemple extends _$LatLngTemple {
       }
 
       state = state.copyWith(latLngTempleList: list, latLngTempleMap: map);
-    // ignore: always_specify_types
+      // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
@@ -83,5 +85,14 @@ class LatLngTemple extends _$LatLngTemple {
   Future<void> setOrangeDisplay() async {
     final bool orangeDisplay = state.orangeDisplay;
     state = state.copyWith(orangeDisplay: !orangeDisplay);
+  }
+
+  ///
+  Future<void> setSelectedNearStation(
+      {required String latitude, required String longitude}) async {
+    state = state.copyWith(
+      selectedNearStationLatitude: latitude,
+      selectedNearStationLongitude: longitude,
+    );
   }
 }

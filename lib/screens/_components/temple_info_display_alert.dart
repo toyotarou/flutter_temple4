@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/near_station/near_station.dart';
 import '../../controllers/routing/routing.dart';
 import '../../extensions/extensions.dart';
@@ -40,7 +41,8 @@ class _TempleInfoDisplayAlertState
   void initState() {
     super.initState();
 
-    if (widget.from == 'LatLngTempleMapAlert') {
+    if (widget.from == 'LatLngTempleMapAlert' ||
+        widget.from == 'NotReachTempleMapAlert') {
       ref.read(nearStationProvider.notifier).getNearStation(
           latitude: widget.temple.latitude, longitude: widget.temple.longitude);
     }
@@ -214,29 +216,30 @@ class _TempleInfoDisplayAlertState
 
   ///
   Widget displayNearStation() {
-    if (widget.from != 'LatLngTempleMapAlert') {
-      return Container();
+    if (widget.from == 'LatLngTempleMapAlert' ||
+        widget.from == 'NotReachTempleMapAlert') {
+      final List<NearStationResponseStationModel> nearStationList = ref.watch(
+          nearStationProvider
+              .select((NearStationState value) => value.nearStationList));
+
+      return Wrap(
+          children: nearStationList.map((NearStationResponseStationModel e) {
+        return Padding(
+          padding: const EdgeInsets.only(right: 10, bottom: 5),
+          child: GestureDetector(
+            onTap: () {
+              ref.read(latLngTempleProvider.notifier).setSelectedNearStation(
+                  latitude: e.y.toString(), longitude: e.x.toString());
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.purple.withOpacity(0.2),
+              child: Text(e.name, style: const TextStyle(fontSize: 10)),
+            ),
+          ),
+        );
+      }).toList());
     }
 
-    final List<NearStationResponseStationModel> nearStationList = ref.watch(
-        nearStationProvider
-            .select((NearStationState value) => value.nearStationList));
-
-    return Wrap(
-        children: nearStationList.map((NearStationResponseStationModel e) {
-      return Padding(
-        padding: const EdgeInsets.only(right: 10, bottom: 5),
-        child: GestureDetector(
-          onTap: () {
-            print(e.x);
-            print(e.y);
-          },
-          child: CircleAvatar(
-            backgroundColor: Colors.purple.withOpacity(0.2),
-            child: Text(e.name, style: const TextStyle(fontSize: 10)),
-          ),
-        ),
-      );
-    }).toList());
+    return Container();
   }
 }
