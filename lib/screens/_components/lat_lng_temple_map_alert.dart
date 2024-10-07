@@ -418,8 +418,9 @@ class _LatLngTempleDisplayAlertState
                           station: widget.station,
                           templeVisitDateMap: widget.templeVisitDateMap,
                           dateTempleMap: widget.dateTempleMap,
+                          tokyoTrainList: widget.tokyoTrainList,
                         ),
-                        paddingTop: context.screenSize.height * 0.4,
+                        paddingTop: context.screenSize.height * 0.6,
                         clearBarrierColor: true,
                       );
                     }
