@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/routing/routing.dart';
+import '../../controllers/temple/temple.dart';
 import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
@@ -411,6 +412,12 @@ class _LatLngTempleDisplayAlertState
                     if (exMarkLength == 2) {
                       return;
                     } else {
+                      ref.read(templeProvider.notifier).setSelectTemple(
+                            name: templeDataList[i].name,
+                            lat: templeDataList[i].latitude,
+                            lng: templeDataList[i].longitude,
+                          );
+
                       TempleDialog(
                         context: context,
                         widget: TempleInfoDisplayAlert(

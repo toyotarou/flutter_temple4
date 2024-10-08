@@ -13,6 +13,8 @@ import '../models/temple_model.dart';
 ///
 Color? getCircleAvatarBgColor(
     {required TempleData element, required WidgetRef ref}) {
+  final TempleState templeState = ref.watch(templeProvider);
+
   Color? color;
 
   switch (element.mark) {
@@ -46,6 +48,12 @@ Color? getCircleAvatarBgColor(
     if (pos != -1) {
       color = Colors.indigo.withOpacity(0.5);
     }
+  }
+
+  if (templeState.selectTempleName == element.name &&
+      templeState.selectTempleLat == element.latitude &&
+      templeState.selectTempleLng == element.longitude) {
+    color = Colors.redAccent.withOpacity(0.5);
   }
 
   return color;

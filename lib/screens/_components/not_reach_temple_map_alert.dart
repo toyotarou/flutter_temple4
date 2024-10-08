@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
+import '../../controllers/temple/temple.dart';
 import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
@@ -18,7 +19,6 @@ import '../../models/tokyo_train_model.dart';
 import '../../utility/tile_provider.dart';
 import '../../utility/utility.dart';
 import '../_parts/_temple_dialog.dart';
-import '../function.dart';
 import 'not_reach_temple_train_select_alert.dart';
 import 'temple_info_display_alert.dart';
 
@@ -217,6 +217,8 @@ class _NotReachTempleMapAlertState
 
   ///
   void makeMarker() {
+    final TempleState templeState = ref.watch(templeProvider);
+
     markerList = <Marker>[];
 
     for (int i = 0; i < templeDataList.length; i++) {
@@ -230,6 +232,12 @@ class _NotReachTempleMapAlertState
           height: 40,
           child: GestureDetector(
             onTap: () {
+              ref.read(templeProvider.notifier).setSelectTemple(
+                    name: templeDataList[i].name,
+                    lat: templeDataList[i].latitude,
+                    lng: templeDataList[i].longitude,
+                  );
+
               TempleDialog(
                 context: context,
                 widget: TempleInfoDisplayAlert(
@@ -244,16 +252,16 @@ class _NotReachTempleMapAlertState
             },
             child: CircleAvatar(
               backgroundColor:
-                  getCircleAvatarBgColor(element: templeDataList[i], ref: ref),
+                  (templeState.selectTempleName == templeDataList[i].name &&
+                          templeState.selectTempleLat ==
+                              templeDataList[i].latitude &&
+                          templeState.selectTempleLng ==
+                              templeDataList[i].longitude)
+                      ? Colors.redAccent.withOpacity(0.5)
+                      : Colors.orangeAccent.withOpacity(0.5),
               child: Text(
-                (templeDataList[i].mark == '0')
-                    ? 'STA'
-                    : templeDataList[i].mark.padLeft(3, '0'),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
+                templeDataList[i].mark.padLeft(3, '0'),
+                style: const TextStyle(fontSize: 10, color: Colors.black),
               ),
             ),
           ),

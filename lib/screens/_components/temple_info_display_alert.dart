@@ -243,7 +243,7 @@ class _TempleInfoDisplayAlertState
                     .setSelectedNearStation(station: e);
               },
               child: CircleAvatar(
-                backgroundColor: Colors.purple.withOpacity(0.2),
+                backgroundColor: Colors.brown.withOpacity(0.8),
                 child: Text(e.name, style: const TextStyle(fontSize: 10)),
               ),
             ),

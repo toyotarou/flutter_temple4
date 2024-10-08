@@ -268,17 +268,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 icon: const Icon(Icons.train, color: Colors.white),
               ),
               IconButton(
-                onPressed: () => TempleDialog(
-                  context: context,
-                  widget: NotReachTempleMapAlert(
-                    templeLatLngList: templeLatLngList,
-                    tokyoTrainIdMap: tokyoTrainIdMap,
-                    templeListList: templeListList,
-                    tokyoTrainList: tokyoTrainList,
-                    templeVisitDateMap: templeVisitDateMap,
-                    dateTempleMap: dateTempleMap,
-                  ),
-                ),
+                onPressed: () {
+                  ref
+                      .read(templeProvider.notifier)
+                      .setSelectTemple(name: '', lat: '', lng: '');
+
+                  TempleDialog(
+                    context: context,
+                    widget: NotReachTempleMapAlert(
+                      templeLatLngList: templeLatLngList,
+                      tokyoTrainIdMap: tokyoTrainIdMap,
+                      templeListList: templeListList,
+                      tokyoTrainList: tokyoTrainList,
+                      templeVisitDateMap: templeVisitDateMap,
+                      dateTempleMap: dateTempleMap,
+                    ),
+                  );
+                },
                 icon:
                     const Icon(FontAwesomeIcons.toriiGate, color: Colors.white),
               ),

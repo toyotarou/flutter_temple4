@@ -224,6 +224,8 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
 
   ///
   void makeMarker() {
+    final TempleState templeState = ref.watch(templeProvider);
+
     markerList = <Marker>[];
 
     for (int i = 0; i < templeDataList.length; i++) {
@@ -258,8 +260,18 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                     );
                   },
             child: CircleAvatar(
-              backgroundColor: Colors.pinkAccent.withOpacity(0.5),
-              child: const Text('', style: TextStyle(fontSize: 10)),
+              backgroundColor:
+                  (templeState.selectTempleName == templeDataList[i].name &&
+                          templeState.selectTempleLat ==
+                              templeDataList[i].latitude &&
+                          templeState.selectTempleLng ==
+                              templeDataList[i].longitude)
+                      ? Colors.redAccent.withOpacity(0.5)
+                      : Colors.pinkAccent.withOpacity(0.5),
+              child: const Text(
+                '',
+                style: TextStyle(fontSize: 10, color: Colors.black),
+              ),
             ),
           ),
         ),

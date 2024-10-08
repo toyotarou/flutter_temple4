@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/routing/routing.dart';
+import '../../controllers/temple/temple.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
-
-
 
 class GoalStationSettingAlert extends ConsumerStatefulWidget {
   const GoalStationSettingAlert(
@@ -59,8 +58,9 @@ class _GoalStationSettingAlertState
             collapsedIconColor: Colors.white,
             title: Text(e.trainName,
                 style: const TextStyle(fontSize: 12, color: Colors.white)),
-            children:
-                e.station.map((TokyoStationModel e2) => displayGoalStation(data: e2)).toList(),
+            children: e.station
+                .map((TokyoStationModel e2) => displayGoalStation(data: e2))
+                .toList(),
           );
         }).toList(),
       ),
@@ -71,11 +71,11 @@ class _GoalStationSettingAlertState
   Widget displayGoalStation({required TokyoStationModel data}) {
 //    final tokyoTrainState = ref.watch(tokyoTrainProvider);
 
-    final String goalStationId =
-        ref.watch(routingProvider.select((RoutingState value) => value.goalStationId));
+    final String goalStationId = ref.watch(
+        routingProvider.select((RoutingState value) => value.goalStationId));
 
-    final String startStationId =
-        ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
+    final String startStationId = ref.watch(
+        routingProvider.select((RoutingState value) => value.startStationId));
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -100,7 +100,12 @@ class _GoalStationSettingAlertState
                     .read(routingProvider.notifier)
                     .setGoalStationId(id: data.id);
 
-                final TokyoStationModel? station = widget.tokyoStationMap[data.id];
+                ref
+                    .read(templeProvider.notifier)
+                    .setSelectTemple(name: '', lat: '', lng: '');
+
+                final TokyoStationModel? station =
+                    widget.tokyoStationMap[data.id];
 
                 ref.read(routingProvider.notifier).setRouting(
                       templeData: TempleData(
