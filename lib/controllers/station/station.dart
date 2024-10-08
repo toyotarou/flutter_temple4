@@ -19,7 +19,7 @@ class StationState with _$StationState {
   }) = _StationState;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Station extends _$Station {
   final Utility utility = Utility();
 
@@ -48,7 +48,7 @@ class Station extends _$Station {
       }
 
       state = state.copyWith(stationList: list, stationMap: map);
-    // ignore: always_specify_types
+      // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

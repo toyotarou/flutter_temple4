@@ -56,6 +56,9 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
 
   bool firstMapDisplay = false;
 
+  List<double> latList = <double>[];
+  List<double> lngList = <double>[];
+
   ///
   Future<void> _loadMapTiles() async {
     // ignore: always_specify_types
@@ -66,6 +69,8 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
   @override
   Widget build(BuildContext context) {
     makeTempleDataList();
+
+    makeMinMaxLatLng();
 
     makeMarker();
 
@@ -230,16 +235,17 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
                 );
               },
               child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  width: 50,
-                  child: cni.CachedNetworkImage(
-                    imageUrl: temple.photo[i],
-                    placeholder: (BuildContext context, String url) =>
-                        Image.asset('assets/images/no_image.png'),
-                    errorWidget:
-                        (BuildContext context, String url, Object error) =>
-                            const Icon(Icons.error),
-                  )),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                width: 50,
+                child: cni.CachedNetworkImage(
+                  imageUrl: temple.photo[i],
+                  placeholder: (BuildContext context, String url) =>
+                      Image.asset('assets/images/no_image.png'),
+                  errorWidget:
+                      (BuildContext context, String url, Object error) =>
+                          const Icon(Icons.error),
+                ),
+              ),
             ),
           );
         }
@@ -257,9 +263,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
   void makeTempleDataList() {
     templeDataList = <TempleData>[];
 
-    final List<double> latList = <double>[];
-    final List<double> lngList = <double>[];
-
     final Map<String, TempleModel> dateTempleMap = ref.watch(
         templeProvider.select((TempleState value) => value.dateTempleMap));
 
@@ -269,9 +272,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
       getStartEndPointInfo(temple: temple, flag: 'start');
 
       if (widget.templeLatLngMap[temple.temple] != null) {
-        latList.add(double.parse(widget.templeLatLngMap[temple.temple]!.lat));
-        lngList.add(double.parse(widget.templeLatLngMap[temple.temple]!.lng));
-
         templeDataList.add(
           TempleData(
             name: temple.temple,
@@ -289,9 +289,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
           final TempleLatLngModel? latlng = widget.templeLatLngMap[element];
 
           if (latlng != null) {
-            latList.add(double.parse(latlng.lat));
-            lngList.add(double.parse(latlng.lng));
-
             templeDataList.add(
               TempleData(
                 name: element,
@@ -308,13 +305,6 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
       }
 
       getStartEndPointInfo(temple: temple, flag: 'end');
-    }
-
-    if (latList.isNotEmpty && lngList.isNotEmpty) {
-      minLat = latList.reduce(min);
-      maxLat = latList.reduce(max);
-      minLng = lngList.reduce(min);
-      maxLng = lngList.reduce(max);
     }
   }
 
@@ -381,6 +371,21 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
             ),
           );
       }
+    }
+  }
+
+  ///
+  void makeMinMaxLatLng() {
+    for (final TempleData element in templeDataList) {
+      latList.add(element.latitude.toDouble());
+      lngList.add(element.longitude.toDouble());
+    }
+
+    if (latList.isNotEmpty && lngList.isNotEmpty) {
+      minLat = latList.reduce(min);
+      maxLat = latList.reduce(max);
+      minLng = lngList.reduce(min);
+      maxLng = lngList.reduce(max);
     }
   }
 
