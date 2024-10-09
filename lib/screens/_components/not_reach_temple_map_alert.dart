@@ -245,6 +245,7 @@ class _NotReachTempleMapAlertState
                   from: 'NotReachTempleMapAlert',
                   templeVisitDateMap: widget.templeVisitDateMap,
                   dateTempleMap: widget.dateTempleMap,
+                  tokyoTrainList: widget.tokyoTrainList,
                 ),
                 paddingTop: context.screenSize.height * 0.6,
                 clearBarrierColor: true,

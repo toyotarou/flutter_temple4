@@ -34,6 +34,7 @@ class LatLngTempleMapAlert extends ConsumerStatefulWidget {
     required this.tokyoTrainList,
     required this.templeVisitDateMap,
     required this.dateTempleMap,
+    required this.tokyoTrainIdMap,
   });
 
   final List<LatLngTempleModel> templeList;
@@ -42,6 +43,7 @@ class LatLngTempleMapAlert extends ConsumerStatefulWidget {
   final List<TokyoTrainModel> tokyoTrainList;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
+  final Map<int, TokyoTrainModel> tokyoTrainIdMap;
 
   @override
   ConsumerState<LatLngTempleMapAlert> createState() =>
@@ -157,6 +159,9 @@ class _LatLngTempleDisplayAlertState
 
     makeMarker();
 
+    final List<int> selectTrainList = ref.watch(tokyoTrainProvider
+        .select((TokyoTrainState value) => value.selectTrainList));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -226,6 +231,10 @@ class _LatLngTempleDisplayAlertState
                           color: Colors.redAccent,
                           strokeWidth: 5,
                         ),
+
+                        if (selectTrainList.isNotEmpty) ...<Polyline<Object>>[
+                          getTrainPolyline(selectTrainList: selectTrainList),
+                        ],
                       ],
                     ),
                   ],
@@ -252,6 +261,108 @@ class _LatLngTempleDisplayAlertState
       ],
     );
   }
+
+  ///
+  // ignore: always_specify_types
+  Polyline getTrainPolyline({required List<int> selectTrainList}) {
+    print('yyyyyyyyy');
+    print(selectTrainList);
+    print('yyyyyyyyy');
+
+    // ignore: always_specify_types
+    return Polyline(points: <LatLng>[]);
+  }
+
+  /*
+
+
+
+
+
+    ///
+  Widget displayTrainCheckPanel() {
+    final List<Widget> list = <Widget>[];
+
+    final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+    for (final TokyoTrainModel element in widget.tokyoTrainList) {
+      list.add(
+        CheckboxListTile(
+          contentPadding: EdgeInsets.zero,
+          activeColor: Colors.greenAccent,
+          controlAffinity: ListTileControlAffinity.leading,
+          value: tokyoTrainState.selectTrainList.contains(element.trainNumber),
+          onChanged: (bool? value) {
+            if (!tokyoTrainState.selectTrainList
+                .contains(element.trainNumber)) {
+              if (tokyoTrainState.selectTrainList.length > 2) {
+                caution_dialog(context: context, content: 'cant add train');
+
+                return;
+              }
+            }
+
+            ref
+                .read(tokyoTrainProvider.notifier)
+                .setTrainList(trainNumber: element.trainNumber);
+          },
+          title: Text(
+            element.trainName,
+            style: const TextStyle(color: Colors.white, fontSize: 12),
+          ),
+        ),
+      );
+    }
+
+    return SingleChildScrollView(child: Column(children: list));
+  }
+
+
+
+
+  ///
+  void makePolylineList() {
+    polylineList = <Polyline<Object>>[];
+
+    final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+    final List<LatLng> points = <LatLng>[];
+
+    for (int i = 0; i < tokyoTrainState.selectTrainList.length; i++) {
+      final TokyoTrainModel? map =
+          widget.tokyoTrainIdMap[tokyoTrainState.selectTrainList[i]];
+
+      map?.station.forEach((TokyoStationModel element2) =>
+          points.add(LatLng(element2.lat.toDouble(), element2.lng.toDouble())));
+
+      polylineList.add(
+        // ignore: always_specify_types
+        Polyline(points: points, color: Colors.redAccent, strokeWidth: 5),
+      );
+    }
+  }
+
+
+
+
+
+                    children: <Widget>[
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        tileProvider: CachedTileProvider(),
+                        userAgentPackageName: 'com.example.app',
+                      ),
+                      MarkerLayer(markers: markerList),
+                      // ignore: always_specify_types
+                      PolylineLayer(polylines: polylineList),
+                    ],
+
+
+
+
+
+  */
 
   ///
   Widget displayLatLngTempleMapButtonWidget() {
@@ -426,8 +537,9 @@ class _LatLngTempleDisplayAlertState
                           station: widget.station,
                           templeVisitDateMap: widget.templeVisitDateMap,
                           dateTempleMap: widget.dateTempleMap,
+                          tokyoTrainList: widget.tokyoTrainList,
                         ),
-                        paddingTop: context.screenSize.height * 0.6,
+                        paddingTop: context.screenSize.height * 0.5,
                         clearBarrierColor: true,
                       );
                     }

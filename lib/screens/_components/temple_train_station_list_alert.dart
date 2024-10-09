@@ -16,19 +16,22 @@ import 'lat_lng_temple_map_alert.dart';
 import 'not_reach_temple_station_list_alert.dart';
 
 class TempleTrainStationListAlert extends ConsumerStatefulWidget {
-  const TempleTrainStationListAlert(
-      {super.key,
-      required this.tokyoStationMap,
-      required this.tokyoTrainList,
-      required this.templeStationMap,
-      required this.templeVisitDateMap,
-      required this.dateTempleMap});
+  const TempleTrainStationListAlert({
+    super.key,
+    required this.tokyoStationMap,
+    required this.tokyoTrainList,
+    required this.templeStationMap,
+    required this.templeVisitDateMap,
+    required this.dateTempleMap,
+    required this.tokyoTrainIdMap,
+  });
 
   final Map<String, TokyoStationModel> tokyoStationMap;
   final List<TokyoTrainModel> tokyoTrainList;
   final Map<String, List<TempleListModel>> templeStationMap;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
+  final Map<int, TokyoTrainModel> tokyoTrainIdMap;
 
   @override
   ConsumerState<TempleTrainStationListAlert> createState() =>
@@ -139,6 +142,7 @@ class _TempleTrainListAlertState
                           tokyoTrainList: widget.tokyoTrainList,
                           templeVisitDateMap: widget.templeVisitDateMap,
                           dateTempleMap: widget.dateTempleMap,
+                          tokyoTrainIdMap: widget.tokyoTrainIdMap,
                         ),
                       );
                     },

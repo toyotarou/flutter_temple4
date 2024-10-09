@@ -263,6 +263,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     templeStationMap: templeStationMap,
                     templeVisitDateMap: templeVisitDateMap,
                     dateTempleMap: dateTempleMap,
+                    tokyoTrainIdMap: tokyoTrainIdMap,
                   ),
                 ),
                 icon: const Icon(Icons.train, color: Colors.white),

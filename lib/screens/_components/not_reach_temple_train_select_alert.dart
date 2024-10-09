@@ -19,12 +19,6 @@ class NotReachTempleTrainSelectAlert extends ConsumerStatefulWidget {
 
 class _NotReachTempleTrainSelectAlertState
     extends ConsumerState<NotReachTempleTrainSelectAlert> {
-
-
-
-
-
-
   ///
   @override
   Widget build(BuildContext context) {

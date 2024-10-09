@@ -71,7 +71,7 @@ class TokyoTrain extends _$TokyoTrain {
         tokyoStationMap: stationMap,
         tokyoTrainIdMap: idMap,
       );
-    // ignore: always_specify_types
+      // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
@@ -88,5 +88,10 @@ class TokyoTrain extends _$TokyoTrain {
     }
 
     state = state.copyWith(selectTrainList: list);
+  }
+
+  ///
+  Future<void> clearTrainList() async {
+    state = state.copyWith(selectTrainList: <int>[]);
   }
 }

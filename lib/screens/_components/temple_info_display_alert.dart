@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/near_station/near_station.dart';
 import '../../controllers/routing/routing.dart';
+import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/near_station_model.dart';
 import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
+import '../../models/tokyo_train_model.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
 import 'visited_temple_photo_alert.dart';
@@ -21,6 +23,7 @@ class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
     this.station,
     required this.templeVisitDateMap,
     required this.dateTempleMap,
+    required this.tokyoTrainList,
   });
 
   final TempleData temple;
@@ -28,6 +31,7 @@ class TempleInfoDisplayAlert extends ConsumerStatefulWidget {
   final TokyoStationModel? station;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
+  final List<TokyoTrainModel> tokyoTrainList;
 
   @override
   ConsumerState<TempleInfoDisplayAlert> createState() =>
@@ -74,9 +78,31 @@ class _TempleInfoDisplayAlertState
               displayAddRemoveRoutingButton(),
               const SizedBox(height: 10),
               displayNearStation(),
-              Text(
-                (selectedNearStation != null) ? selectedNearStation.line : '',
-                style: const TextStyle(fontSize: 12),
+              GestureDetector(
+                onTap: (selectedNearStation != null)
+                    ? () {
+                        ref.read(tokyoTrainProvider.notifier).clearTrainList();
+
+                        for (final TokyoTrainModel element
+                            in widget.tokyoTrainList) {
+                          if (element.trainName == selectedNearStation.line) {
+                            ref
+                                .read(tokyoTrainProvider.notifier)
+                                .setTrainList(trainNumber: element.trainNumber);
+                          }
+                        }
+                      }
+                    : null,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                  child: Text(
+                    (selectedNearStation != null)
+                        ? selectedNearStation.line
+                        : '',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
               ),
             ],
           ),

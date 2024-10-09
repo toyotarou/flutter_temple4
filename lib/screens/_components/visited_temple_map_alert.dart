@@ -12,6 +12,7 @@ import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/temple_lat_lng_model.dart';
 import '../../models/temple_model.dart';
+import '../../models/tokyo_train_model.dart';
 import '../../utility/tile_provider.dart';
 import '../_parts/_temple_dialog.dart';
 import 'temple_info_display_alert.dart';
@@ -254,6 +255,8 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                         from: 'VisitedTempleMapAlert',
                         templeVisitDateMap: widget.templeVisitDateMap,
                         dateTempleMap: widget.dateTempleMap,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        tokyoTrainList: <TokyoTrainModel>[],
                       ),
                       paddingTop: context.screenSize.height * 0.6,
                       clearBarrierColor: true,
