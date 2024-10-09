@@ -6,7 +6,7 @@ part of 'near_station.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$nearStationHash() => r'ace14b3b2fc449b753b4b74e6e2bfde64398f4a4';
+String _$nearStationHash() => r'9b873247733857f25b6efbe2e7140a4041d0773d';
 
 /// See also [NearStation].
 @ProviderFor(NearStation)
