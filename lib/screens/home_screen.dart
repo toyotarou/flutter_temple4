@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../controllers/station/station.dart';
 import '../controllers/temple/temple.dart';
 import '../controllers/temple_lat_lng/temple_lat_lng.dart';
@@ -270,6 +271,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               IconButton(
                 onPressed: () {
+                  ref.read(tokyoTrainProvider.notifier).clearTrainList();
+
+                  ref
+                      .read(latLngTempleProvider.notifier)
+                      .clearSelectedNearStation();
+
                   ref
                       .read(templeProvider.notifier)
                       .setSelectTemple(name: '', lat: '', lng: '');

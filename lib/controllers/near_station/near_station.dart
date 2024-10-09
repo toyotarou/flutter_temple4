@@ -48,34 +48,22 @@ class NearStation extends _$NearStation {
     final Map<String, List<NearStationResponseStationModel>> map2 =
         <String, List<NearStationResponseStationModel>>{};
 
-    final List<String> stationNamesList = <String>[];
-
     for (int i = 0; i < result.response.station.length; i++) {
       final NearStationResponseStationModel val = result.response.station[i];
 
-      if (!stationNamesList.contains(val.name)) {
-        list.add(val);
+      list.add(val);
 
-        map[val.name] = <NearStationResponseStationModel>[];
-      }
+      map[val.name] = <NearStationResponseStationModel>[];
 
       map2[val.line] = <NearStationResponseStationModel>[];
-
-      stationNamesList.add(val.name);
     }
-
-    final List<String> stationNamesList2 = <String>[];
 
     for (int i = 0; i < result.response.station.length; i++) {
       final NearStationResponseStationModel val = result.response.station[i];
 
-      if (!stationNamesList2.contains(val.name)) {
-        map[val.name]?.add(val);
-      }
+      map[val.name]?.add(val);
 
       map2[val.line]?.add(val);
-
-      stationNamesList2.add(val.name);
     }
 
     state = state.copyWith(

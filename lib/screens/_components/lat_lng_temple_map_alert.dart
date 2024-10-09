@@ -478,7 +478,7 @@ class _LatLngTempleDisplayAlertState
                           dateTempleMap: widget.dateTempleMap,
                           tokyoTrainList: widget.tokyoTrainList,
                         ),
-                        paddingTop: context.screenSize.height * 0.5,
+                        paddingTop: context.screenSize.height * 0.55,
                         clearBarrierColor: true,
                       );
                     }

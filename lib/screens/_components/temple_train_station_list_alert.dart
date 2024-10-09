@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/routing/routing.dart';
 import '../../controllers/temple/temple.dart';
+import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/lat_lng_temple_model.dart';
 import '../../models/temple_list_model.dart';
@@ -132,6 +133,8 @@ class _TempleTrainListAlertState
                       ref
                           .read(templeProvider.notifier)
                           .setSelectTemple(name: '', lat: '', lng: '');
+
+                      ref.read(tokyoTrainProvider.notifier).clearTrainList();
 
                       TempleDialog(
                         context: context,

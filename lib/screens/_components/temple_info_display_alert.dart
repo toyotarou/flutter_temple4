@@ -252,15 +252,29 @@ class _TempleInfoDisplayAlertState
   Widget displayNearStation() {
     if (widget.from == 'LatLngTempleMapAlert' ||
         widget.from == 'NotReachTempleMapAlert') {
+      final NearStationResponseStationModel? selectedNearStation = ref.watch(
+          latLngTempleProvider
+              .select((LatLngTempleState value) => value.selectedNearStation));
+      //===================================//
+
       final List<NearStationResponseStationModel> nearStationList = ref.watch(
           nearStationProvider
               .select((NearStationState value) => value.nearStationList));
 
-      return Row(
-          children: nearStationList.map((NearStationResponseStationModel e) {
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
+      // ignore: always_specify_types
+      final List<NearStationResponseStationModel> nsList =
+          // ignore: always_specify_types
+          List.of(nearStationList);
+
+      nsList.sort((NearStationResponseStationModel a,
+              NearStationResponseStationModel b) =>
+          a.name.compareTo(b.name));
+
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+            children: nsList.map((NearStationResponseStationModel e) {
+          return Padding(
             padding: const EdgeInsets.only(right: 10, bottom: 5),
             child: GestureDetector(
               onTap: () {
@@ -269,13 +283,16 @@ class _TempleInfoDisplayAlertState
                     .setSelectedNearStation(station: e);
               },
               child: CircleAvatar(
-                backgroundColor: Colors.brown.withOpacity(0.8),
+                backgroundColor: (selectedNearStation != null &&
+                        e.name == selectedNearStation.name)
+                    ? Colors.brown.withOpacity(0.8)
+                    : Colors.brown.withOpacity(0.4),
                 child: Text(e.name, style: const TextStyle(fontSize: 10)),
               ),
             ),
-          ),
-        );
-      }).toList());
+          );
+        }).toList()),
+      );
     }
 
     return Container();

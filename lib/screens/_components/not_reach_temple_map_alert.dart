@@ -152,7 +152,17 @@ class _NotReachTempleMapAlertState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(tokyoTrainProvider.notifier).clearTrainList();
+
+                    ref
+                        .read(latLngTempleProvider.notifier)
+                        .clearSelectedNearStation();
+
+                    ref
+                        .read(templeProvider.notifier)
+                        .setSelectTemple(name: '', lat: '', lng: '');
+                  },
                   child: const Text(
                     'clear selected station and line',
                     style: TextStyle(color: Colors.white),
@@ -322,7 +332,7 @@ class _NotReachTempleMapAlertState
 
       polylineList.add(
         // ignore: always_specify_types
-        Polyline(points: points, color: Colors.redAccent, strokeWidth: 5),
+        Polyline(points: points, color: Colors.blueAccent, strokeWidth: 5),
       );
     }
   }
