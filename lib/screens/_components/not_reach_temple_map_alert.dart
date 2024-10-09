@@ -148,6 +148,18 @@ class _NotReachTempleMapAlertState
               },
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'clear selected station and line',
+                    style: TextStyle(color: Colors.white),
+                  )),
+              Container(),
+            ],
+          ),
         ],
       ),
     );

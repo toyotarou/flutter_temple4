@@ -68,6 +68,8 @@ class _LatLngTempleDisplayAlertState
 
   bool firstMapDisplay = false;
 
+  List<Polyline<Object>> trainPolylineList = <Polyline<Object>>[];
+
   ///
   Future<void> _loadMapTiles() async {
     // ignore: always_specify_types
@@ -233,7 +235,7 @@ class _LatLngTempleDisplayAlertState
                         ),
 
                         if (selectTrainList.isNotEmpty) ...<Polyline<Object>>[
-                          getTrainPolyline(selectTrainList: selectTrainList),
+                          getTrainPolyline(),
                         ],
                       ],
                     ),
@@ -246,7 +248,26 @@ class _LatLngTempleDisplayAlertState
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: TextButton(
+                onPressed: () {
+                  ref.read(tokyoTrainProvider.notifier).clearTrainList();
+
+                  ref
+                      .read(latLngTempleProvider.notifier)
+                      .clearSelectedNearStation();
+
+                  ref
+                      .read(templeProvider.notifier)
+                      .setSelectTemple(name: '', lat: '', lng: '');
+                },
+                child: const Text(
+                  'clear selected station and line',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
             IconButton(
               onPressed: () {
                 mapController.move(currentCenter, 13);
@@ -264,105 +285,23 @@ class _LatLngTempleDisplayAlertState
 
   ///
   // ignore: always_specify_types
-  Polyline getTrainPolyline({required List<int> selectTrainList}) {
-    print('yyyyyyyyy');
-    print(selectTrainList);
-    print('yyyyyyyyy');
-
-    // ignore: always_specify_types
-    return Polyline(points: <LatLng>[]);
-  }
-
-  /*
-
-
-
-
-
-    ///
-  Widget displayTrainCheckPanel() {
-    final List<Widget> list = <Widget>[];
-
-    final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
-
-    for (final TokyoTrainModel element in widget.tokyoTrainList) {
-      list.add(
-        CheckboxListTile(
-          contentPadding: EdgeInsets.zero,
-          activeColor: Colors.greenAccent,
-          controlAffinity: ListTileControlAffinity.leading,
-          value: tokyoTrainState.selectTrainList.contains(element.trainNumber),
-          onChanged: (bool? value) {
-            if (!tokyoTrainState.selectTrainList
-                .contains(element.trainNumber)) {
-              if (tokyoTrainState.selectTrainList.length > 2) {
-                caution_dialog(context: context, content: 'cant add train');
-
-                return;
-              }
-            }
-
-            ref
-                .read(tokyoTrainProvider.notifier)
-                .setTrainList(trainNumber: element.trainNumber);
-          },
-          title: Text(
-            element.trainName,
-            style: const TextStyle(color: Colors.white, fontSize: 12),
-          ),
-        ),
-      );
-    }
-
-    return SingleChildScrollView(child: Column(children: list));
-  }
-
-
-
-
-  ///
-  void makePolylineList() {
-    polylineList = <Polyline<Object>>[];
-
-    final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
+  Polyline getTrainPolyline() {
+    final List<int> selectTrainList = ref.watch(tokyoTrainProvider
+        .select((TokyoTrainState value) => value.selectTrainList));
 
     final List<LatLng> points = <LatLng>[];
 
-    for (int i = 0; i < tokyoTrainState.selectTrainList.length; i++) {
-      final TokyoTrainModel? map =
-          widget.tokyoTrainIdMap[tokyoTrainState.selectTrainList[i]];
+    if (selectTrainList.isNotEmpty) {
+      final TokyoTrainModel? selectedTokyoTrainMap =
+          widget.tokyoTrainIdMap[selectTrainList[0]];
 
-      map?.station.forEach((TokyoStationModel element2) =>
+      selectedTokyoTrainMap?.station.forEach((TokyoStationModel element2) =>
           points.add(LatLng(element2.lat.toDouble(), element2.lng.toDouble())));
-
-      polylineList.add(
-        // ignore: always_specify_types
-        Polyline(points: points, color: Colors.redAccent, strokeWidth: 5),
-      );
     }
+
+    // ignore: always_specify_types
+    return Polyline(points: points, color: Colors.blueAccent, strokeWidth: 5);
   }
-
-
-
-
-
-                    children: <Widget>[
-                      TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        tileProvider: CachedTileProvider(),
-                        userAgentPackageName: 'com.example.app',
-                      ),
-                      MarkerLayer(markers: markerList),
-                      // ignore: always_specify_types
-                      PolylineLayer(polylines: polylineList),
-                    ],
-
-
-
-
-
-  */
 
   ///
   Widget displayLatLngTempleMapButtonWidget() {
