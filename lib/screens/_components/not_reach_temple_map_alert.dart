@@ -269,7 +269,7 @@ class _NotReachTempleMapAlertState
                   dateTempleMap: widget.dateTempleMap,
                   tokyoTrainList: widget.tokyoTrainList,
                 ),
-                paddingTop: context.screenSize.height * 0.6,
+                paddingTop: context.screenSize.height * 0.5,
                 clearBarrierColor: true,
               );
             },
