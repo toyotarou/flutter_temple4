@@ -186,7 +186,10 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => list[index],
+            (BuildContext context, int index) => DefaultTextStyle(
+              style: const TextStyle(color: Colors.white),
+              child: list[index],
+            ),
             childCount: list.length,
           ),
         ),

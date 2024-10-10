@@ -52,6 +52,8 @@ class Temple extends _$Temple {
   TempleState build() => const TempleState();
 
   ///
+  /// home_screen.dart
+  /// visited_temple_list_alert.dart
   Future<void> getAllTemple() async {
     final HttpClient client = ref.read(httpClientProvider);
 
@@ -130,30 +132,23 @@ class Temple extends _$Temple {
   }
 
   ///
-  Future<void> doSearch({required String searchWord}) async =>
+  void doSearch({required String searchWord}) =>
       state = state.copyWith(searchWord: searchWord, doSearch: true);
 
   ///
-  Future<void> clearSearch() async =>
-      state = state.copyWith(searchWord: '', doSearch: false);
+  void clearSearch() => state = state.copyWith(searchWord: '', doSearch: false);
 
   ///
-  Future<void> setSelectYear({required String year}) async =>
+  void setSelectYear({required String year}) =>
       state = state.copyWith(selectYear: year);
 
   ///
-  Future<void> setSelectTemple({
-    required String name,
-    required String lat,
-    required String lng,
-  }) async =>
+  void setSelectTemple(
+          {required String name, required String lat, required String lng}) =>
       state = state.copyWith(
-        selectTempleName: name,
-        selectTempleLat: lat,
-        selectTempleLng: lng,
-      );
+          selectTempleName: name, selectTempleLat: lat, selectTempleLng: lng);
 
   ///
-  Future<void> setSelectVisitedTempleListKey({required int key}) async =>
+  void setSelectVisitedTempleListKey({required int key}) =>
       state = state.copyWith(selectVisitedTempleListKey: key);
 }

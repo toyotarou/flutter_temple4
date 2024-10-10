@@ -33,6 +33,7 @@ class LatLngTemple extends _$LatLngTemple {
   LatLngTempleState build() => const LatLngTempleState();
 
   ///
+  /// temple_train_station_list_alert.dart
   Future<void> getLatLngTemple({required Map<String, String> param}) async {
     final HttpClient client = ref.read(httpClientProvider);
 
@@ -72,25 +73,23 @@ class LatLngTemple extends _$LatLngTemple {
   }
 
   ///
-  Future<void> toggleListSorting() async {
+  void toggleListSorting() {
     final bool listSorting = state.listSorting;
     state = state.copyWith(listSorting: !listSorting);
   }
 
   ///
-  Future<void> setOrangeDisplay() async {
+  void setOrangeDisplay() {
     final bool orangeDisplay = state.orangeDisplay;
     state = state.copyWith(orangeDisplay: !orangeDisplay);
   }
 
   ///
-  Future<void> setSelectedNearStation(
-      {required NearStationResponseStationModel station}) async {
-    state = state.copyWith(selectedNearStation: station);
-  }
+  void setSelectedNearStation(
+          {required NearStationResponseStationModel station}) =>
+      state = state.copyWith(selectedNearStation: station);
 
   ///
-  Future<void> clearSelectedNearStation() async {
-    state = state.copyWith(selectedNearStation: null);
-  }
+  void clearSelectedNearStation() =>
+      state = state.copyWith(selectedNearStation: null);
 }

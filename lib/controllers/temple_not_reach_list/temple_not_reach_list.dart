@@ -31,6 +31,7 @@ class TempleNotReachList extends _$TempleNotReachList {
   TempleNotReachListState build() => const TempleNotReachListState();
 
   ///
+  /// XXXXXXXX no call
   Future<void> getAllNotReachTemple() async {
     final HttpClient client = ref.read(httpClientProvider);
 

@@ -37,6 +37,7 @@ class TokyoTrain extends _$TokyoTrain {
   TokyoTrainState build() => const TokyoTrainState();
 
   ///
+  /// home_screen.dart
   Future<void> getTokyoTrain() async {
     final HttpClient client = ref.read(httpClientProvider);
 
@@ -78,7 +79,7 @@ class TokyoTrain extends _$TokyoTrain {
   }
 
   ///
-  Future<void> setTrainList({required int trainNumber}) async {
+  void setTrainList({required int trainNumber}) {
     final List<int> list = <int>[...state.selectTrainList];
 
     if (list.contains(trainNumber)) {
@@ -91,7 +92,5 @@ class TokyoTrain extends _$TokyoTrain {
   }
 
   ///
-  Future<void> clearTrainList() async {
-    state = state.copyWith(selectTrainList: <int>[]);
-  }
+  void clearTrainList() => state = state.copyWith(selectTrainList: <int>[]);
 }

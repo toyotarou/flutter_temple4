@@ -47,8 +47,8 @@ class Routing extends _$Routing {
   RoutingState build() => const RoutingState();
 
   ///
-  Future<void> setRouting(
-      {required TempleData templeData, TokyoStationModel? station}) async {
+  void setRouting(
+      {required TempleData templeData, TokyoStationModel? station}) {
     final List<TempleData> list = <TempleData>[...state.routingTempleDataList];
 
     if (list.isEmpty) {
@@ -95,7 +95,7 @@ class Routing extends _$Routing {
   }
 
   ///
-  Future<void> removeGoalStation() async {
+  void removeGoalStation() {
     final List<TempleData> list = <TempleData>[...state.routingTempleDataList];
 
     int pos = 0;
@@ -113,35 +113,35 @@ class Routing extends _$Routing {
   }
 
   ///
-  Future<void> clearRoutingTempleDataList() async {
-    state = state.copyWith(routingTempleDataList: <TempleData>[]);
-  }
+  void clearRoutingTempleDataList() =>
+      state = state.copyWith(routingTempleDataList: <TempleData>[]);
 
   ///
-  Future<void> setStartStationId({required String id}) async =>
+  void setStartStationId({required String id}) =>
       state = state.copyWith(startStationId: id);
 
   ///
-  Future<void> setGoalStationId({required String id}) async =>
+  void setGoalStationId({required String id}) =>
       state = state.copyWith(goalStationId: id);
 
   ///
-  Future<void> setSelectTime({required String time}) async =>
+  void setSelectTime({required String time}) =>
       state = state.copyWith(startNow: false, startTime: time);
 
   ///
-  Future<void> setWalkSpeed({required int speed}) async =>
+  void setWalkSpeed({required int speed}) =>
       state = state.copyWith(walkSpeed: speed);
 
   ///
-  Future<void> setSpotStayTime({required int time}) async =>
+  void setSpotStayTime({required int time}) =>
       state = state.copyWith(spotStayTime: time);
 
   ///
-  Future<void> setAdjustPercent({required int adjust}) async =>
+  void setAdjustPercent({required int adjust}) =>
       state = state.copyWith(adjustPercent: adjust);
 
   ///
+  /// route_display_alert.dart
   Future<void> insertRoute() async {
     final List<TempleData> list = <TempleData>[...state.routingTempleDataList];
     final TempleData first = list.first;

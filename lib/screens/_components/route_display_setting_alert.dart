@@ -97,10 +97,8 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                           if (selectedTime != null) {
                             final String time =
                                 '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
-                            await ref
-                                .read(routingProvider.notifier)
-                                .setSelectTime(
-                                    time: '${DateTime.now().yyyymmdd} $time');
+                            ref.read(routingProvider.notifier).setSelectTime(
+                                time: '${DateTime.now().yyyymmdd} $time');
                           }
                         },
                         child: Container(
@@ -275,24 +273,24 @@ class RouteDisplaySettingAlert extends ConsumerWidget {
                 ),
                 const SizedBox(height: 30),
                 GestureDetector(
-                  onTap: () async {
+                  onTap: () {
                     if (routingState.startNow) {
-                      await ref
+                      ref
                           .watch(routingProvider.notifier)
                           .setSelectTime(time: selectedDateTime.toString());
                     }
 
-                    await ref
+                    ref
                         .watch(routingProvider.notifier)
                         .setWalkSpeed(speed: speedTextController.text.toInt());
 
-                    await ref.watch(routingProvider.notifier).setSpotStayTime(
+                    ref.watch(routingProvider.notifier).setSpotStayTime(
                         time: spotStayTimeTextController.text.toInt());
 
-                    await ref.watch(routingProvider.notifier).setAdjustPercent(
+                    ref.watch(routingProvider.notifier).setAdjustPercent(
                         adjust: adjustPercentTextController.text.toInt());
 
-                    await TempleDialog(
+                    TempleDialog(
                       // ignore: use_build_context_synchronously
                       context: context,
                       widget: const RouteDisplayAlert(),
