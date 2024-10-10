@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
+import '../../controllers/not_reach_station_line_count/not_reach_station_line_count.dart';
 import '../../controllers/routing/routing.dart';
 import '../../controllers/temple/temple.dart';
 import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/lat_lng_temple_model.dart';
+import '../../models/not_reach_station_line_count_model.dart';
 import '../../models/temple_list_model.dart';
 import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
@@ -197,13 +199,46 @@ class _TempleTrainListAlertState
     final String startStationId = ref.watch(
         routingProvider.select((RoutingState value) => value.startStationId));
 
+    final Map<String, NotReachLineCountModel> notReachLineCountMap = ref.watch(
+        notReachStationLineCountProvider.select(
+            (NotReachStationLineCountState value) =>
+                value.notReachLineCountMap));
+
+    final Map<String, NotReachStationCountModel> notReachStationCountMap =
+        ref.watch(notReachStationLineCountProvider.select(
+            (NotReachStationLineCountState value) =>
+                value.notReachStationCountMap));
+
     for (final TokyoTrainModel element in widget.tokyoTrainList) {
       list.add(
         ExpansionTile(
           collapsedIconColor: Colors.white,
-          title: Text(
-            element.trainName,
-            style: const TextStyle(fontSize: 12, color: Colors.white),
+          backgroundColor: Colors.blueAccent.withOpacity(0.1),
+          title: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.white.withOpacity(0.3)),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  element.trainName,
+                  style: const TextStyle(fontSize: 12, color: Colors.white),
+                ),
+                Text(
+                  (notReachLineCountMap[element.trainName]?.count ?? 0)
+                      .toString(),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: (notReachLineCountMap[element.trainName] != null)
+                        ? Colors.white
+                        : Colors.transparent,
+                  ),
+                ),
+              ],
+            ),
           ),
           children: element.station.map((TokyoStationModel e2) {
             return Container(
@@ -211,9 +246,7 @@ class _TempleTrainListAlertState
               margin: const EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(
-                    color: Colors.white.withOpacity(0.3),
-                  ),
+                  bottom: BorderSide(color: Colors.white.withOpacity(0.3)),
                 ),
               ),
               child: DefaultTextStyle(
@@ -227,25 +260,39 @@ class _TempleTrainListAlertState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(e2.stationName),
-                    GestureDetector(
-                      onTap: () {
-                        ref
-                            .read(latLngTempleProvider.notifier)
-                            .getLatLngTemple(param: <String, String>{
-                          'latitude': e2.lat,
-                          'longitude': e2.lng,
-                        });
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          (notReachStationCountMap[e2.stationName]?.count ?? 0)
+                              .toString(),
+                          style: TextStyle(
+                            color: (notReachStationCountMap[e2.stationName] !=
+                                    null)
+                                ? Colors.white
+                                : Colors.transparent,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(latLngTempleProvider.notifier)
+                                .getLatLngTemple(param: <String, String>{
+                              'latitude': e2.lat,
+                              'longitude': e2.lng,
+                            });
 
-                        ref
-                            .read(routingProvider.notifier)
-                            .setStartStationId(id: e2.id);
-                      },
-                      child: Icon(
-                        Icons.location_on,
-                        color: (e2.id == startStationId)
-                            ? Colors.yellowAccent.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.4),
-                      ),
+                            ref
+                                .read(routingProvider.notifier)
+                                .setStartStationId(id: e2.id);
+                          },
+                          child: Icon(
+                            Icons.location_on,
+                            color: (e2.id == startStationId)
+                                ? Colors.yellowAccent.withOpacity(0.4)
+                                : Colors.white.withOpacity(0.4),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
