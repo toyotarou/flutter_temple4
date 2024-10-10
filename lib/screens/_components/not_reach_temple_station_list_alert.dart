@@ -30,17 +30,11 @@ class _TempleNotReachStationListAlertState
   Widget build(BuildContext context) {
     makeNotReachTempleIds();
 
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
@@ -53,30 +47,40 @@ class _TempleNotReachStationListAlertState
 
   ///
   Widget displayNotReachTrain() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: widget.tokyoTrainList.map((TokyoTrainModel e) {
-          if (notReachTrainIds.contains(e.trainNumber.toString())) {
-            return ExpansionTile(
-              collapsedIconColor: Colors.white,
-              title: Text(
-                e.trainName,
-                style: const TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              children: e.station.map((TokyoStationModel e2) {
-                if (notReachStationIds.contains(e2.id)) {
-                  return displayNotReachStation(data: e2);
-                } else {
-                  return Container();
-                }
-              }).toList(),
-            );
-          } else {
-            return Container();
-          }
-        }).toList(),
-      ),
+    final List<Widget> list = <Widget>[];
+
+    for (final TokyoTrainModel element in widget.tokyoTrainList) {
+      if (notReachTrainIds.contains(element.trainNumber.toString())) {
+        list.add(
+          ExpansionTile(
+            collapsedIconColor: Colors.white,
+            title: Text(
+              element.trainName,
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            children: element.station.map((TokyoStationModel e2) {
+              if (notReachStationIds.contains(e2.id)) {
+                return displayNotReachStation(data: e2);
+              } else {
+                return Container();
+              }
+            }).toList(),
+          ),
+        );
+      } else {
+        list.add(Container());
+      }
+    }
+
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
     );
   }
 

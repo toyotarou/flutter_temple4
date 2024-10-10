@@ -35,28 +35,19 @@ class _VisitedTemplePhotoAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
-        child: DefaultTextStyle(
-          style: const TextStyle(fontSize: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 20),
-              Container(width: context.screenSize.width),
-              Text(widget.temple.name),
-              Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-              const SizedBox(height: 10),
-              Expanded(child: displayVisitedTemplePhoto()),
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 20),
+            Container(width: context.screenSize.width),
+            Text(widget.temple.name),
+            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            const SizedBox(height: 10),
+            Expanded(child: displayVisitedTemplePhoto()),
+          ],
         ),
       ),
     );
@@ -72,7 +63,10 @@ class _VisitedTemplePhotoAlertState
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: <Color>[Colors.white.withOpacity(0.1), Colors.transparent],
+              colors: <Color>[
+                Colors.white.withOpacity(0.1),
+                Colors.transparent
+              ],
               stops: const <double>[0.7, 1],
             ),
           ),
@@ -92,7 +86,8 @@ class _VisitedTemplePhotoAlertState
               imageUrl: element2,
               placeholder: (BuildContext context, String url) =>
                   Image.asset('assets/images/no_image.png'),
-              errorWidget: (BuildContext context, String url, Object error) => const Icon(Icons.error),
+              errorWidget: (BuildContext context, String url, Object error) =>
+                  const Icon(Icons.error),
             ),
           ),
         );
@@ -107,11 +102,15 @@ class _VisitedTemplePhotoAlertState
       ));
     });
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: list,
-      ),
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
     );
   }
 }

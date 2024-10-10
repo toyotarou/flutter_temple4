@@ -22,25 +22,16 @@ class _NotReachTempleTrainSelectAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
-        child: DefaultTextStyle(
-          style: const TextStyle(fontSize: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 20),
-              Container(width: context.screenSize.width),
-              Expanded(child: displayTrainCheckPanel()),
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 20),
+            Container(width: context.screenSize.width),
+            Expanded(child: displayTrainCheckPanel()),
+          ],
         ),
       ),
     );
@@ -81,6 +72,15 @@ class _NotReachTempleTrainSelectAlertState
       );
     }
 
-    return SingleChildScrollView(child: Column(children: list));
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
+    );
   }
 }

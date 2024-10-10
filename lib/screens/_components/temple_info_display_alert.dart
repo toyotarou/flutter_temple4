@@ -59,53 +59,41 @@ class _TempleInfoDisplayAlertState
         latLngTempleProvider
             .select((LatLngTempleState value) => value.selectedNearStation));
 
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
-        child: DefaultTextStyle(
-          style: const TextStyle(fontSize: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 20),
-              displayTempleInfo(),
-              displayAddRemoveRoutingButton(),
-              const SizedBox(height: 10),
-              displayNearStation(),
-              GestureDetector(
-                onTap: (selectedNearStation != null)
-                    ? () {
-                        ref.read(tokyoTrainProvider.notifier).clearTrainList();
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 20),
+            displayTempleInfo(),
+            displayAddRemoveRoutingButton(),
+            const SizedBox(height: 10),
+            displayNearStation(),
+            GestureDetector(
+              onTap: (selectedNearStation != null)
+                  ? () {
+                      ref.read(tokyoTrainProvider.notifier).clearTrainList();
 
-                        for (final TokyoTrainModel element
-                            in widget.tokyoTrainList) {
-                          if (element.trainName == selectedNearStation.line) {
-                            ref
-                                .read(tokyoTrainProvider.notifier)
-                                .setTrainList(trainNumber: element.trainNumber);
-                          }
+                      for (final TokyoTrainModel element
+                          in widget.tokyoTrainList) {
+                        if (element.trainName == selectedNearStation.line) {
+                          ref
+                              .read(tokyoTrainProvider.notifier)
+                              .setTrainList(trainNumber: element.trainNumber);
                         }
                       }
-                    : null,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-                  child: Text(
-                    (selectedNearStation != null)
-                        ? selectedNearStation.line
-                        : '',
-                    style: const TextStyle(fontSize: 12),
-                  ),
+                    }
+                  : null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                child: Text(
+                  (selectedNearStation != null) ? selectedNearStation.line : '',
+                  style: const TextStyle(fontSize: 12),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -159,7 +147,14 @@ class _TempleInfoDisplayAlertState
               Text(widget.temple.latitude),
               Text(widget.temple.longitude),
               const SizedBox(height: 10),
-              displayTempleVisitDate(),
+              SizedBox(
+                height: 80,
+                width: double.infinity,
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: displayTempleVisitDate(),
+                ),
+              ),
             ],
           ),
         ),
@@ -222,30 +217,23 @@ class _TempleInfoDisplayAlertState
       return Container();
     }
 
-    return SizedBox(
-      height: 80,
-      width: double.infinity,
-      child: Scrollbar(
-        thumbVisibility: true,
-        child: SingleChildScrollView(
-          child: Wrap(
-            children:
-                widget.templeVisitDateMap[widget.temple.name]!.map((String e) {
-              return Container(
-                width: context.screenSize.width / 5,
-                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-                margin: const EdgeInsets.all(1),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white.withOpacity(0.2)),
-                ),
-                child: Text(e, style: const TextStyle(fontSize: 12)),
-              );
-            }).toList(),
-          ),
+    final List<Widget> list = <Widget>[];
+
+    for (final String element
+        in widget.templeVisitDateMap[widget.temple.name]!) {
+      list.add(Container(
+        width: context.screenSize.width / 5,
+        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+        margin: const EdgeInsets.all(1),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white.withOpacity(0.2)),
         ),
-      ),
-    );
+        child: Text(element, style: const TextStyle(fontSize: 12)),
+      ));
+    }
+
+    return SingleChildScrollView(child: Wrap(children: list));
   }
 
   ///
@@ -270,11 +258,11 @@ class _TempleInfoDisplayAlertState
               NearStationResponseStationModel b) =>
           a.name.compareTo(b.name));
 
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-            children: nsList.map((NearStationResponseStationModel e) {
-          return Padding(
+      final List<Widget> list = <Widget>[];
+
+      for (final NearStationResponseStationModel element in nsList) {
+        list.add(
+          Padding(
             padding: const EdgeInsets.only(right: 10, bottom: 5),
             child: GestureDetector(
               onTap: () {
@@ -282,19 +270,22 @@ class _TempleInfoDisplayAlertState
 
                 ref
                     .read(latLngTempleProvider.notifier)
-                    .setSelectedNearStation(station: e);
+                    .setSelectedNearStation(station: element);
               },
               child: CircleAvatar(
                 backgroundColor: (selectedNearStation != null &&
-                        e.name == selectedNearStation.name)
+                        element.name == selectedNearStation.name)
                     ? Colors.brown.withOpacity(0.8)
                     : Colors.brown.withOpacity(0.4),
-                child: Text(e.name, style: const TextStyle(fontSize: 10)),
+                child: Text(element.name, style: const TextStyle(fontSize: 10)),
               ),
             ),
-          );
-        }).toList()),
-      );
+          ),
+        );
+      }
+
+      return SingleChildScrollView(
+          scrollDirection: Axis.horizontal, child: Row(children: list));
     }
 
     return Container();

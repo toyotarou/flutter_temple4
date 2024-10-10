@@ -25,17 +25,11 @@ class _GoalStationSettingAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
@@ -48,22 +42,28 @@ class _GoalStationSettingAlertState
 
   ///
   Widget displayGoalTrain() {
-//    final tokyoTrainState = ref.watch(tokyoTrainProvider);
+    final List<Widget> list = <Widget>[];
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: widget.tokyoTrainList.map((TokyoTrainModel e) {
-          return ExpansionTile(
-            collapsedIconColor: Colors.white,
-            title: Text(e.trainName,
-                style: const TextStyle(fontSize: 12, color: Colors.white)),
-            children: e.station
-                .map((TokyoStationModel e2) => displayGoalStation(data: e2))
-                .toList(),
-          );
-        }).toList(),
-      ),
+    for (final TokyoTrainModel element in widget.tokyoTrainList) {
+      list.add(ExpansionTile(
+        collapsedIconColor: Colors.white,
+        title: Text(element.trainName,
+            style: const TextStyle(fontSize: 12, color: Colors.white)),
+        children: element.station
+            .map((TokyoStationModel e2) => displayGoalStation(data: e2))
+            .toList(),
+      ));
+    }
+
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
     );
   }
 

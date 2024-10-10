@@ -46,17 +46,11 @@ class _TempleTrainListAlertState
   ///
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
@@ -70,7 +64,7 @@ class _TempleTrainListAlertState
               ),
             ),
             const SizedBox(height: 20),
-            displayTokyoTrainList(),
+            Expanded(child: displayTokyoTrainList()),
           ],
         ),
       ),
@@ -198,71 +192,79 @@ class _TempleTrainListAlertState
 
   ///
   Widget displayTokyoTrainList() {
+    final List<Widget> list = <Widget>[];
+
     final String startStationId = ref.watch(
         routingProvider.select((RoutingState value) => value.startStationId));
 
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: widget.tokyoTrainList.map((TokyoTrainModel e) {
-            return ExpansionTile(
-              collapsedIconColor: Colors.white,
-              title: Text(
-                e.trainName,
-                style: const TextStyle(fontSize: 12, color: Colors.white),
+    for (final TokyoTrainModel element in widget.tokyoTrainList) {
+      list.add(
+        ExpansionTile(
+          collapsedIconColor: Colors.white,
+          title: Text(
+            element.trainName,
+            style: const TextStyle(fontSize: 12, color: Colors.white),
+          ),
+          children: element.station.map((TokyoStationModel e2) {
+            return Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
               ),
-              children: e.station.map((TokyoStationModel e2) {
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.white.withOpacity(0.3),
+              child: DefaultTextStyle(
+                style: TextStyle(
+                  color: (e2.id == startStationId)
+                      ? Colors.yellowAccent
+                      : Colors.white,
+                  fontSize: 12,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(e2.stationName),
+                    GestureDetector(
+                      onTap: () {
+                        ref
+                            .read(latLngTempleProvider.notifier)
+                            .getLatLngTemple(param: <String, String>{
+                          'latitude': e2.lat,
+                          'longitude': e2.lng,
+                        });
+
+                        ref
+                            .read(routingProvider.notifier)
+                            .setStartStationId(id: e2.id);
+                      },
+                      child: Icon(
+                        Icons.location_on,
+                        color: (e2.id == startStationId)
+                            ? Colors.yellowAccent.withOpacity(0.4)
+                            : Colors.white.withOpacity(0.4),
                       ),
                     ),
-                  ),
-                  child: DefaultTextStyle(
-                    style: TextStyle(
-                      color: (e2.id == startStationId)
-                          ? Colors.yellowAccent
-                          : Colors.white,
-                      fontSize: 12,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(e2.stationName),
-                        GestureDetector(
-                          onTap: () {
-                            ref
-                                .read(latLngTempleProvider.notifier)
-                                .getLatLngTemple(param: <String, String>{
-                              'latitude': e2.lat,
-                              'longitude': e2.lng,
-                            });
-
-                            ref
-                                .read(routingProvider.notifier)
-                                .setStartStationId(id: e2.id);
-                          },
-                          child: Icon(
-                            Icons.location_on,
-                            color: (e2.id == startStationId)
-                                ? Colors.yellowAccent.withOpacity(0.4)
-                                : Colors.white.withOpacity(0.4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+                  ],
+                ),
+              ),
             );
           }).toList(),
         ),
-      ),
+      );
+    }
+
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
     );
   }
 

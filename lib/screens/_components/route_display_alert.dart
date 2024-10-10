@@ -18,44 +18,35 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
   ///
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero,
-      content: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        width: double.infinity,
-        height: double.infinity,
-        child: DefaultTextStyle(
-          style: const TextStyle(fontSize: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 20),
-              Container(width: context.screenSize.width),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                    onPressed: () {
-                      ref.read(routingProvider.notifier).insertRoute();
-                    },
-                    icon: const Icon(
-                      Icons.input,
-                      color: Colors.white,
-                    ),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 20),
+            Container(width: context.screenSize.width),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    ref.read(routingProvider.notifier).insertRoute();
+                  },
+                  icon: const Icon(
+                    Icons.input,
+                    color: Colors.white,
                   ),
-                  Container(),
-                ],
-              ),
-              Divider(
-                color: Colors.white.withOpacity(0.5),
-                thickness: 5,
-              ),
-              Expanded(child: displayRoute()),
-            ],
-          ),
+                ),
+                Container(),
+              ],
+            ),
+            Divider(
+              color: Colors.white.withOpacity(0.5),
+              thickness: 5,
+            ),
+            Expanded(child: displayRoute()),
+          ],
         ),
       ),
     );
@@ -68,7 +59,8 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
     final RoutingState routingState = ref.watch(routingProvider);
 
     final DateFormat timeFormat = DateFormat('HH:mm');
-    final String startTime = timeFormat.format(DateTime.parse(routingState.startTime));
+    final String startTime =
+        timeFormat.format(DateTime.parse(routingState.startTime));
 
     String keepEndTime = '';
 
@@ -105,7 +97,8 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
 
       //------------------------//
       String st = (i == 0) ? startTime : keepEndTime;
-      final int spotStayTime = (exMark.length == 1) ? routingState.spotStayTime : 0;
+      final int spotStayTime =
+          (exMark.length == 1) ? routingState.spotStayTime : 0;
       st = getTimeStr(time: st, minutes: spotStayTime);
       final String endTime = getTimeStr(time: st, minutes: walkMinutes);
       //------------------------//
@@ -189,7 +182,16 @@ class _RouteDisplayAlertState extends ConsumerState<RouteDisplayAlert> {
       keepEndTime = endTime;
     }
 
-    return SingleChildScrollView(child: Column(children: list));
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) => list[index],
+            childCount: list.length,
+          ),
+        ),
+      ],
+    );
   }
 
   ///
