@@ -278,6 +278,8 @@ class _TempleInfoDisplayAlertState
             padding: const EdgeInsets.only(right: 10, bottom: 5),
             child: GestureDetector(
               onTap: () {
+                ref.read(tokyoTrainProvider.notifier).clearTrainList();
+
                 ref
                     .read(latLngTempleProvider.notifier)
                     .setSelectedNearStation(station: e);
