@@ -45,11 +45,15 @@ class _TempleInfoDisplayAlertState
   void initState() {
     super.initState();
 
-    if (widget.from == 'LatLngTempleMapAlert' ||
-        widget.from == 'NotReachTempleMapAlert') {
-      ref.read(nearStationProvider.notifier).getNearStation(
-          latitude: widget.temple.latitude, longitude: widget.temple.longitude);
-    }
+    // if (widget.from == 'LatLngTempleMapAlert' ||
+    //     widget.from == 'NotReachTempleMapAlert') {
+    //   ref.read(nearStationProvider.notifier).getNearStation(
+    //       latitude: widget.temple.latitude, longitude: widget.temple.longitude);
+    // }
+    //
+    //
+    //
+    //
   }
 
   ///
@@ -257,44 +261,54 @@ class _TempleInfoDisplayAlertState
               .select((LatLngTempleState value) => value.selectedNearStation));
       //===================================//
 
-      final List<NearStationResponseStationModel> nearStationList = ref.watch(
-          nearStationProvider
-              .select((NearStationState value) => value.nearStationList));
-
-      // ignore: always_specify_types
-      final List<NearStationResponseStationModel> nsList =
-          // ignore: always_specify_types
-          List.of(nearStationList);
-
-      nsList.sort((NearStationResponseStationModel a,
-              NearStationResponseStationModel b) =>
-          a.name.compareTo(b.name));
-
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-            children: nsList.map((NearStationResponseStationModel e) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 10, bottom: 5),
-            child: GestureDetector(
-              onTap: () {
-                ref
-                    .read(latLngTempleProvider.notifier)
-                    .setSelectedNearStation(station: e);
-              },
-              child: CircleAvatar(
-                backgroundColor: (selectedNearStation != null &&
-                        e.name == selectedNearStation.name)
-                    ? Colors.brown.withOpacity(0.8)
-                    : Colors.brown.withOpacity(0.4),
-                child: Text(e.name, style: const TextStyle(fontSize: 10)),
-              ),
+      return ref
+          .watch(
+            nearStationProvider(
+              latitude: widget.temple.latitude,
+              longitude: widget.temple.longitude,
             ),
-          );
-        }).toList()),
-      );
-    }
+          )
+          .when(
+            data: (NearStationState value) {
+              final List<NearStationResponseStationModel> nsList =
+                  // ignore: always_specify_types
+                  List.of(value.nearStationList);
 
-    return Container();
+              nsList.sort((NearStationResponseStationModel a,
+                      NearStationResponseStationModel b) =>
+                  a.name.compareTo(b.name));
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                    children: nsList.map((NearStationResponseStationModel e) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 10, bottom: 5),
+                    child: GestureDetector(
+                      onTap: () {
+                        ref
+                            .read(latLngTempleProvider.notifier)
+                            .setSelectedNearStation(station: e);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: (selectedNearStation != null &&
+                                e.name == selectedNearStation.name)
+                            ? Colors.brown.withOpacity(0.8)
+                            : Colors.brown.withOpacity(0.4),
+                        child:
+                            Text(e.name, style: const TextStyle(fontSize: 10)),
+                      ),
+                    ),
+                  );
+                }).toList()),
+              );
+            },
+            error: (Object error, StackTrace stackTrace) =>
+                const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: CircularProgressIndicator()),
+          );
+    } else {
+      return Container();
+    }
   }
 }

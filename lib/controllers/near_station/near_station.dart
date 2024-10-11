@@ -27,11 +27,14 @@ class NearStation extends _$NearStation {
 
   ///
   @override
-  NearStationState build() => const NearStationState();
+  Future<NearStationState> build(
+      {required String latitude, required String longitude}) async {
+    return getNearStation(latitude: latitude, longitude: longitude);
+  }
 
   ///
   /// temple_info_display_alert.dart
-  Future<void> getNearStation(
+  Future<NearStationState> getNearStation(
       {required String latitude, required String longitude}) async {
     final String url =
         'https://express.heartrails.com/api/json?method=getStations&x=$longitude&y=$latitude';
@@ -67,7 +70,7 @@ class NearStation extends _$NearStation {
       map2[val.line]?.add(val);
     }
 
-    state = state.copyWith(
+    return NearStationState(
       nearStationList: list,
       nearStationNameMap: map,
       nearStationLineMap: map2,
