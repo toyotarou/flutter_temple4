@@ -42,22 +42,6 @@ class _TempleInfoDisplayAlertState
     extends ConsumerState<TempleInfoDisplayAlert> {
   ///
   @override
-  void initState() {
-    super.initState();
-
-    // if (widget.from == 'LatLngTempleMapAlert' ||
-    //     widget.from == 'NotReachTempleMapAlert') {
-    //   ref.read(nearStationProvider.notifier).getNearStation(
-    //       latitude: widget.temple.latitude, longitude: widget.temple.longitude);
-    // }
-    //
-    //
-    //
-    //
-  }
-
-  ///
-  @override
   Widget build(BuildContext context) {
     final NearStationResponseStationModel? selectedNearStation = ref.watch(
         latLngTempleProvider
