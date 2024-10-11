@@ -316,10 +316,11 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
         point = temple.endPoint;
     }
 
-    final Map<String, StationModel> stationMap = ref.watch(
-        stationProvider.select((StationState value) => value.stationMap));
+    final AsyncValue<StationState> stationState = ref.watch(stationProvider);
+    final Map<String, StationModel>? stationMap =
+        stationState.value?.stationMap;
 
-    if (stationMap[point] != null) {
+    if (stationMap != null && stationMap[point] != null) {
       templeDataList.add(
         TempleData(
           name: stationMap[point]!.stationName,

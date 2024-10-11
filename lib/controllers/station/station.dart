@@ -25,18 +25,18 @@ class Station extends _$Station {
 
   ///
   @override
-  StationState build() => const StationState();
+  Future<StationState> build() async => getAllStation();
 
   ///
   /// home_screen.dart
-  Future<void> getAllStation() async {
+  Future<StationState> getAllStation() async {
     final HttpClient client = ref.read(httpClientProvider);
+
+    final List<StationModel> list = <StationModel>[];
+    final Map<String, StationModel> map = <String, StationModel>{};
 
     // ignore: always_specify_types
     await client.post(path: APIPath.getAllStation).then((value) {
-      final List<StationModel> list = <StationModel>[];
-      final Map<String, StationModel> map = <String, StationModel>{};
-
       // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
         final StationModel val = StationModel.fromJson(
@@ -48,10 +48,11 @@ class Station extends _$Station {
         map[val.id.toString()] = val;
       }
 
-      state = state.copyWith(stationList: list, stationMap: map);
       // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
+
+    return StationState(stationList: list, stationMap: map);
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../controllers/lat_lng_temple/lat_lng_temple.dart';
-import '../controllers/station/station.dart';
 import '../controllers/temple/temple.dart';
 import '../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../controllers/temple_list/temple_list.dart';
@@ -52,8 +51,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.read(templeListProvider.notifier).getAllTempleListTemple();
 
     ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
-
-    ref.read(stationProvider.notifier).getAllStation();
 
     // ignore: always_specify_types
     globalKeyList = List.generate(100, (int index) => GlobalKey());
