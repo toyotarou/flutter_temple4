@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../controllers/station/station.dart';
 import '../../controllers/temple/temple.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
@@ -21,14 +22,10 @@ import 'temple_photo_gallery_alert.dart';
 
 class TempleDetailMapAlert extends ConsumerStatefulWidget {
   const TempleDetailMapAlert(
-      {super.key,
-      required this.date,
-      required this.templeLatLngMap,
-      required this.stationMap});
+      {super.key, required this.date, required this.templeLatLngMap});
 
   final DateTime date;
   final Map<String, TempleLatLngModel> templeLatLngMap;
-  final Map<String, StationModel> stationMap;
 
   @override
   ConsumerState<TempleDetailMapAlert> createState() =>
@@ -319,13 +316,16 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
         point = temple.endPoint;
     }
 
-    if (widget.stationMap[point] != null) {
+    final Map<String, StationModel> stationMap = ref.watch(
+        stationProvider.select((StationState value) => value.stationMap));
+
+    if (stationMap[point] != null) {
       templeDataList.add(
         TempleData(
-          name: widget.stationMap[point]!.stationName,
-          address: widget.stationMap[point]!.address,
-          latitude: widget.stationMap[point]!.lat,
-          longitude: widget.stationMap[point]!.lng,
+          name: stationMap[point]!.stationName,
+          address: stationMap[point]!.address,
+          latitude: stationMap[point]!.lat,
+          longitude: stationMap[point]!.lng,
           mark: (flag == 'end')
               ? (temple.startPoint == temple.endPoint)
                   ? 'S/E'

@@ -11,7 +11,6 @@ import '../controllers/temple_list/temple_list.dart';
 import '../controllers/temple_not_reach_list/temple_not_reach_list.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
-import '../models/station_model.dart';
 import '../models/temple_lat_lng_model.dart';
 import '../models/temple_list_model.dart';
 import '../models/temple_model.dart';
@@ -421,9 +420,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         templeLatLngProvider
             .select((TempleLatLngState value) => value.templeLatLngMap));
 
-    final Map<String, StationModel> stationMap = ref.watch(
-        stationProvider.select((StationState value) => value.stationMap));
-
     return Card(
       color: Colors.black.withOpacity(0.3),
       child: ListTile(
@@ -477,10 +473,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onTap: () => TempleDialog(
                 context: context,
                 widget: TempleDetailMapAlert(
-                  date: data.date,
-                  templeLatLngMap: templeLatLngMap,
-                  stationMap: stationMap,
-                ),
+                    date: data.date, templeLatLngMap: templeLatLngMap),
               ),
               child: const Icon(
                 Icons.call_made,
