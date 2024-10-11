@@ -16,7 +16,6 @@ import '../../models/tokyo_train_model.dart';
 import '../_parts/_caution_dialog.dart';
 import '../_parts/_temple_dialog.dart';
 import 'lat_lng_temple_map_alert.dart';
-import 'not_reach_temple_station_list_alert.dart';
 
 class TempleTrainStationListAlert extends ConsumerStatefulWidget {
   const TempleTrainStationListAlert({
@@ -58,12 +57,7 @@ class _TempleTrainListAlertState
             Container(width: context.screenSize.width),
             DefaultTextStyle(
               style: const TextStyle(fontSize: 12),
-              child: Column(
-                children: <Widget>[
-                  displaySelectedStation(),
-                  displayTempleTrainStationListButton(),
-                ],
-              ),
+              child: displaySelectedStation(),
             ),
             const SizedBox(height: 20),
             Expanded(child: displayTokyoTrainList()),
@@ -82,79 +76,49 @@ class _TempleTrainListAlertState
         latLngTempleProvider
             .select((LatLngTempleState value) => value.latLngTempleList));
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Container(),
-        Row(
-          children: <Widget>[
-            IconButton(
-              onPressed: () {
-                TempleDialog(
-                  context: context,
-                  widget: NotReachTempleStationListAlert(
-                    tokyoTrainList: widget.tokyoTrainList,
-                    templeStationMap: widget.templeStationMap,
-                  ),
-                  paddingLeft: context.screenSize.width * 0.2,
-                );
-              },
-              icon: Icon(
-                Icons.train,
-                color: Colors.white.withOpacity(0.4),
-              ),
-            ),
-            IconButton(
-              onPressed: (startStationId == '')
-                  ? null
-                  : () {
-                      if (latLngTempleList.isEmpty) {
-                        caution_dialog(context: context, content: 'no hit');
+    return IconButton(
+      onPressed: (startStationId == '')
+          ? null
+          : () {
+              if (latLngTempleList.isEmpty) {
+                caution_dialog(context: context, content: 'no hit');
 
-                        return;
-                      }
+                return;
+              }
 
-                      ref
-                          .read(routingProvider.notifier)
-                          .clearRoutingTempleDataList();
+              ref.read(routingProvider.notifier).clearRoutingTempleDataList();
 
-                      ref
-                          .read(routingProvider.notifier)
-                          .setGoalStationId(id: '');
+              ref.read(routingProvider.notifier).setGoalStationId(id: '');
 
-                      ref
-                          .read(latLngTempleProvider.notifier)
-                          .clearSelectedNearStation();
+              ref
+                  .read(latLngTempleProvider.notifier)
+                  .clearSelectedNearStation();
 
-                      ref
-                          .read(templeProvider.notifier)
-                          .setSelectTemple(name: '', lat: '', lng: '');
+              ref
+                  .read(templeProvider.notifier)
+                  .setSelectTemple(name: '', lat: '', lng: '');
 
-                      ref.read(tokyoTrainProvider.notifier).clearTrainList();
+              ref.read(tokyoTrainProvider.notifier).clearTrainList();
 
-                      TempleDialog(
-                        context: context,
-                        widget: LatLngTempleMapAlert(
-                          templeList: latLngTempleList,
-                          station: widget.tokyoStationMap[startStationId],
-                          tokyoStationMap: widget.tokyoStationMap,
-                          tokyoTrainList: widget.tokyoTrainList,
-                          templeVisitDateMap: widget.templeVisitDateMap,
-                          dateTempleMap: widget.dateTempleMap,
-                          tokyoTrainIdMap: widget.tokyoTrainIdMap,
-                        ),
-                      );
-                    },
-              icon: Icon(
-                Icons.map,
-                color: (startStationId != '' && latLngTempleList.isNotEmpty)
-                    ? Colors.yellowAccent.withOpacity(0.4)
-                    : Colors.white.withOpacity(0.4),
-              ),
-            ),
-          ],
-        ),
-      ],
+              TempleDialog(
+                context: context,
+                widget: LatLngTempleMapAlert(
+                  templeList: latLngTempleList,
+                  station: widget.tokyoStationMap[startStationId],
+                  tokyoStationMap: widget.tokyoStationMap,
+                  tokyoTrainList: widget.tokyoTrainList,
+                  templeVisitDateMap: widget.templeVisitDateMap,
+                  dateTempleMap: widget.dateTempleMap,
+                  tokyoTrainIdMap: widget.tokyoTrainIdMap,
+                ),
+              );
+            },
+      icon: Icon(
+        Icons.map,
+        color: (startStationId != '' && latLngTempleList.isNotEmpty)
+            ? Colors.yellowAccent.withOpacity(0.4)
+            : Colors.white.withOpacity(0.4),
+      ),
     );
   }
 
@@ -177,15 +141,20 @@ class _TempleTrainListAlertState
               ? widget.tokyoStationMap[startStationId]!.stationName
               : '-----',
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        Row(
           children: <Widget>[
-            Text(latLngTempleList.length.toString()),
-            Text(reachTempleNum.toString()),
-            Text(
-              (latLngTempleList.length - reachTempleNum).toString(),
-              style: const TextStyle(color: Colors.orangeAccent),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(latLngTempleList.length.toString()),
+                Text(reachTempleNum.toString()),
+                Text(
+                  (latLngTempleList.length - reachTempleNum).toString(),
+                  style: const TextStyle(color: Colors.orangeAccent),
+                ),
+              ],
             ),
+            SizedBox(width: 40, child: displayTempleTrainStationListButton()),
           ],
         ),
       ],
