@@ -7,11 +7,11 @@ part of 'not_reach_station_line_count.dart';
 // **************************************************************************
 
 String _$notReachStationLineCountHash() =>
-    r'821dc3991e45e8ec4e5402ed15062024906c5132';
+    r'efc97220f9d169abe3c3f5d0bca713d569917c60';
 
 /// See also [NotReachStationLineCount].
 @ProviderFor(NotReachStationLineCount)
-final notReachStationLineCountProvider = NotifierProvider<
+final notReachStationLineCountProvider = AsyncNotifierProvider<
     NotReachStationLineCount, NotReachStationLineCountState>.internal(
   NotReachStationLineCount.new,
   name: r'notReachStationLineCountProvider',
@@ -22,6 +22,7 @@ final notReachStationLineCountProvider = NotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$NotReachStationLineCount = Notifier<NotReachStationLineCountState>;
+typedef _$NotReachStationLineCount
+    = AsyncNotifier<NotReachStationLineCountState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -199,15 +199,15 @@ class _TempleTrainListAlertState
     final String startStationId = ref.watch(
         routingProvider.select((RoutingState value) => value.startStationId));
 
-    final Map<String, NotReachLineCountModel> notReachLineCountMap = ref.watch(
-        notReachStationLineCountProvider.select(
-            (NotReachStationLineCountState value) =>
-                value.notReachLineCountMap));
+    final AsyncValue<NotReachStationLineCountState>
+        notReachStationLineCountState =
+        ref.watch(notReachStationLineCountProvider);
 
-    final Map<String, NotReachStationCountModel> notReachStationCountMap =
-        ref.watch(notReachStationLineCountProvider.select(
-            (NotReachStationLineCountState value) =>
-                value.notReachStationCountMap));
+    final Map<String, NotReachLineCountModel>? notReachLineCountMap =
+        notReachStationLineCountState.value?.notReachLineCountMap;
+
+    final Map<String, NotReachStationCountModel>? notReachStationCountMap =
+        notReachStationLineCountState.value?.notReachStationCountMap;
 
     for (final TokyoTrainModel element in widget.tokyoTrainList) {
       list.add(
@@ -227,16 +227,18 @@ class _TempleTrainListAlertState
                   element.trainName,
                   style: const TextStyle(fontSize: 12, color: Colors.white),
                 ),
-                Text(
-                  (notReachLineCountMap[element.trainName]?.count ?? 0)
-                      .toString(),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: (notReachLineCountMap[element.trainName] != null)
-                        ? Colors.white
-                        : Colors.transparent,
+                if (notReachLineCountMap != null) ...<Widget>[
+                  Text(
+                    (notReachLineCountMap[element.trainName]?.count ?? 0)
+                        .toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: (notReachLineCountMap[element.trainName] != null)
+                          ? Colors.white
+                          : Colors.transparent,
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -262,16 +264,19 @@ class _TempleTrainListAlertState
                     Text(e2.stationName),
                     Row(
                       children: <Widget>[
-                        Text(
-                          (notReachStationCountMap[e2.stationName]?.count ?? 0)
-                              .toString(),
-                          style: TextStyle(
-                            color: (notReachStationCountMap[e2.stationName] !=
-                                    null)
-                                ? Colors.white
-                                : Colors.transparent,
+                        if (notReachStationCountMap != null) ...<Widget>[
+                          Text(
+                            (notReachStationCountMap[e2.stationName]?.count ??
+                                    0)
+                                .toString(),
+                            style: TextStyle(
+                              color: (notReachStationCountMap[e2.stationName] !=
+                                      null)
+                                  ? Colors.white
+                                  : Colors.transparent,
+                            ),
                           ),
-                        ),
+                        ],
                         GestureDetector(
                           onTap: () {
                             ref
