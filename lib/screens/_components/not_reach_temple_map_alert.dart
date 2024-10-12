@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/temple/temple.dart';
+import '../../controllers/temple_list/temple_list.dart';
 import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
@@ -27,14 +28,12 @@ class NotReachTempleMapAlert extends ConsumerStatefulWidget {
       {super.key,
       required this.templeLatLngList,
       required this.tokyoTrainIdMap,
-      required this.templeListList,
       required this.tokyoTrainList,
       required this.templeVisitDateMap,
       required this.dateTempleMap});
 
   final List<TempleLatLngModel> templeLatLngList;
   final Map<int, TokyoTrainModel> tokyoTrainIdMap;
-  final List<TempleListModel> templeListList;
   final List<TokyoTrainModel> tokyoTrainList;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
@@ -189,51 +188,58 @@ class _NotReachTempleMapAlertState
       jogaiTempleAddressList2.add('東京都${element.address}');
     }
 
-    final List<double> latList = <double>[];
-    final List<double> lngList = <double>[];
+    final AsyncValue<TempleListState> templeListState =
+        ref.watch(templeListProvider);
+    final List<TempleListModel>? templeListList =
+        templeListState.value?.templeListList;
 
-    for (int i = 0; i < widget.templeListList.length; i++) {
-      if (jogaiTempleNameList.contains(widget.templeListList[i].name)) {
-        continue;
+    if (templeListList != null) {
+      final List<double> latList = <double>[];
+      final List<double> lngList = <double>[];
+
+      for (int i = 0; i < templeListList.length; i++) {
+        if (jogaiTempleNameList.contains(templeListList[i].name)) {
+          continue;
+        }
+
+        if (jogaiTempleAddressList.contains(templeListList[i].address)) {
+          continue;
+        }
+
+        if (jogaiTempleAddressList2.contains(templeListList[i].address)) {
+          continue;
+        }
+
+        if (jogaiTempleAddressList
+            .contains('東京都${templeListList[i].address}')) {
+          continue;
+        }
+
+        if (jogaiTempleAddressList2
+            .contains('東京都${templeListList[i].address}')) {
+          continue;
+        }
+
+        latList.add(double.parse(templeListList[i].lat));
+        lngList.add(double.parse(templeListList[i].lng));
+
+        templeDataList.add(
+          TempleData(
+            name: templeListList[i].name,
+            address: templeListList[i].address,
+            latitude: templeListList[i].lat,
+            longitude: templeListList[i].lng,
+            mark: templeListList[i].id.toString(),
+          ),
+        );
       }
 
-      if (jogaiTempleAddressList.contains(widget.templeListList[i].address)) {
-        continue;
+      if (latList.isNotEmpty && lngList.isNotEmpty) {
+        minLat = latList.reduce(min);
+        maxLat = latList.reduce(max);
+        minLng = lngList.reduce(min);
+        maxLng = lngList.reduce(max);
       }
-
-      if (jogaiTempleAddressList2.contains(widget.templeListList[i].address)) {
-        continue;
-      }
-
-      if (jogaiTempleAddressList
-          .contains('東京都${widget.templeListList[i].address}')) {
-        continue;
-      }
-
-      if (jogaiTempleAddressList2
-          .contains('東京都${widget.templeListList[i].address}')) {
-        continue;
-      }
-
-      latList.add(double.parse(widget.templeListList[i].lat));
-      lngList.add(double.parse(widget.templeListList[i].lng));
-
-      templeDataList.add(
-        TempleData(
-          name: widget.templeListList[i].name,
-          address: widget.templeListList[i].address,
-          latitude: widget.templeListList[i].lat,
-          longitude: widget.templeListList[i].lng,
-          mark: widget.templeListList[i].id.toString(),
-        ),
-      );
-    }
-
-    if (latList.isNotEmpty && lngList.isNotEmpty) {
-      minLat = latList.reduce(min);
-      maxLat = latList.reduce(max);
-      minLng = lngList.reduce(min);
-      maxLng = lngList.reduce(max);
     }
   }
 

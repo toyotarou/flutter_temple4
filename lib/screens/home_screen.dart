@@ -10,7 +10,6 @@ import '../controllers/temple_list/temple_list.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
 import '../models/temple_lat_lng_model.dart';
-import '../models/temple_list_model.dart';
 import '../models/temple_model.dart';
 import '../models/tokyo_station_model.dart';
 import '../models/tokyo_train_model.dart';
@@ -195,9 +194,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final List<TokyoTrainModel> tokyoTrainList = ref.watch(tokyoTrainProvider
         .select((TokyoTrainState value) => value.tokyoTrainList));
 
-    final List<TempleListModel> templeListList = ref.watch(templeListProvider
-        .select((TempleListState value) => value.templeListList));
-
     final Map<int, TokyoTrainModel> tokyoTrainIdMap = ref.watch(
         tokyoTrainProvider
             .select((TokyoTrainState value) => value.tokyoTrainIdMap));
@@ -276,7 +272,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     widget: NotReachTempleMapAlert(
                       templeLatLngList: templeLatLngList,
                       tokyoTrainIdMap: tokyoTrainIdMap,
-                      templeListList: templeListList,
                       tokyoTrainList: tokyoTrainList,
                       templeVisitDateMap: templeVisitDateMap,
                       dateTempleMap: dateTempleMap,

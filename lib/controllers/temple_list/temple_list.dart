@@ -28,20 +28,28 @@ class TempleList extends _$TempleList {
 
   ///
   @override
-  TempleListState build() => const TempleListState();
+  Future<TempleListState> build() async {
+    // return const TempleListState();
+    //
+    //
+    //
+    //
+
+    return getAllTempleListTemple();
+  }
 
   ///
   /// home_screen.dart
-  Future<void> getAllTempleListTemple() async {
+  Future<TempleListState> getAllTempleListTemple() async {
+    final List<TempleListModel> list = <TempleListModel>[];
+    final Map<String, TempleListModel> map = <String, TempleListModel>{};
+    final Map<String, List<TempleListModel>> templeStationMap =
+        <String, List<TempleListModel>>{};
+
     final HttpClient client = ref.read(httpClientProvider);
 
     // ignore: always_specify_types
     await client.post(path: APIPath.getTempleListTemple).then((value) {
-      final List<TempleListModel> list = <TempleListModel>[];
-      final Map<String, TempleListModel> map = <String, TempleListModel>{};
-      final Map<String, List<TempleListModel>> templeStationMap =
-          <String, List<TempleListModel>>{};
-
       // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
         final TempleListModel val = TempleListModel.fromJson(
@@ -69,14 +77,15 @@ class TempleList extends _$TempleList {
         });
       }
 
-      state = state.copyWith(
-        templeListList: list,
-        templeListMap: map,
-        templeStationMap: templeStationMap,
-      );
       // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
+
+    return TempleListState(
+      templeListList: list,
+      templeListMap: map,
+      templeStationMap: templeStationMap,
+    );
   }
 }
