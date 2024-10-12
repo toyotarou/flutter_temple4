@@ -28,15 +28,7 @@ class TempleList extends _$TempleList {
 
   ///
   @override
-  Future<TempleListState> build() async {
-    // return const TempleListState();
-    //
-    //
-    //
-    //
-
-    return getAllTempleListTemple();
-  }
+  Future<TempleListState> build() async => getAllTempleListTemple();
 
   ///
   /// home_screen.dart
