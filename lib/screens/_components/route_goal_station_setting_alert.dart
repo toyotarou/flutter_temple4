@@ -8,20 +8,20 @@ import '../../models/common/temple_data.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
 
-class GoalStationSettingAlert extends ConsumerStatefulWidget {
-  const GoalStationSettingAlert(
+class RouteGoalStationSettingAlert extends ConsumerStatefulWidget {
+  const RouteGoalStationSettingAlert(
       {super.key, required this.tokyoStationMap, required this.tokyoTrainList});
 
   final Map<String, TokyoStationModel> tokyoStationMap;
   final List<TokyoTrainModel> tokyoTrainList;
 
   @override
-  ConsumerState<GoalStationSettingAlert> createState() =>
+  ConsumerState<RouteGoalStationSettingAlert> createState() =>
       _GoalStationSettingAlertState();
 }
 
 class _GoalStationSettingAlertState
-    extends ConsumerState<GoalStationSettingAlert> {
+    extends ConsumerState<RouteGoalStationSettingAlert> {
   ///
   @override
   Widget build(BuildContext context) {

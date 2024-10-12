@@ -16,8 +16,8 @@ import '../models/tokyo_station_model.dart';
 import '../models/tokyo_train_model.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
+import '_components/route_train_station_list_alert.dart';
 import '_components/temple_detail_map_alert.dart';
-import '_components/temple_train_station_list_alert.dart';
 import '_components/visited_temple_map_alert.dart';
 import '_parts/_temple_dialog.dart';
 import 'function.dart';
@@ -249,7 +249,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               IconButton(
                 onPressed: () => TempleDialog(
                   context: context,
-                  widget: TempleTrainStationListAlert(
+                  widget: RouteTrainStationListAlert(
                     tokyoStationMap: tokyoStationMap,
                     tokyoTrainList: tokyoTrainList,
                     templeVisitDateMap: templeVisitDateMap,

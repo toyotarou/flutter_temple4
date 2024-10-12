@@ -21,12 +21,12 @@ import '../../utility/tile_provider.dart';
 import '../_parts/_caution_dialog.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
-import 'goal_station_setting_alert.dart';
+import 'route_goal_station_setting_alert.dart';
 import 'route_display_setting_alert.dart';
 import 'temple_info_display_alert.dart';
 
-class LatLngTempleMapAlert extends ConsumerStatefulWidget {
-  const LatLngTempleMapAlert({
+class RouteSettingMapAlert extends ConsumerStatefulWidget {
+  const RouteSettingMapAlert({
     super.key,
     required this.templeList,
     this.station,
@@ -46,12 +46,12 @@ class LatLngTempleMapAlert extends ConsumerStatefulWidget {
   final Map<int, TokyoTrainModel> tokyoTrainIdMap;
 
   @override
-  ConsumerState<LatLngTempleMapAlert> createState() =>
+  ConsumerState<RouteSettingMapAlert> createState() =>
       _LatLngTempleDisplayAlertState();
 }
 
 class _LatLngTempleDisplayAlertState
-    extends ConsumerState<LatLngTempleMapAlert> {
+    extends ConsumerState<RouteSettingMapAlert> {
   List<TempleData> templeDataList = <TempleData>[];
 
   List<Marker> markerList = <Marker>[];
@@ -360,7 +360,7 @@ class _LatLngTempleDisplayAlertState
 
                         TempleDialog(
                           context: context,
-                          widget: GoalStationSettingAlert(
+                          widget: RouteGoalStationSettingAlert(
                             tokyoStationMap: widget.tokyoStationMap,
                             tokyoTrainList: widget.tokyoTrainList,
                           ),
