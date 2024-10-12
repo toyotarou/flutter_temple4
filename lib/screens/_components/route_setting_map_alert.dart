@@ -21,8 +21,8 @@ import '../../utility/tile_provider.dart';
 import '../_parts/_caution_dialog.dart';
 import '../_parts/_temple_dialog.dart';
 import '../function.dart';
-import 'route_goal_station_setting_alert.dart';
 import 'route_display_setting_alert.dart';
+import 'route_goal_station_setting_alert.dart';
 import 'temple_info_display_alert.dart';
 
 class RouteSettingMapAlert extends ConsumerStatefulWidget {
