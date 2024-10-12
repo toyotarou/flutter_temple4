@@ -31,7 +31,7 @@ class TempleList extends _$TempleList {
   Future<TempleListState> build() async => getAllTempleListTemple();
 
   ///
-  /// home_screen.dart
+  /// not_reach_temple_map_alert.dart
   Future<TempleListState> getAllTempleListTemple() async {
     final List<TempleListModel> list = <TempleListModel>[];
     final Map<String, TempleListModel> map = <String, TempleListModel>{};
