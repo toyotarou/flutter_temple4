@@ -9,7 +9,6 @@ import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/lat_lng_temple_model.dart';
 import '../../models/not_reach_station_line_count_model.dart';
-import '../../models/temple_list_model.dart';
 import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
@@ -22,7 +21,6 @@ class TempleTrainStationListAlert extends ConsumerStatefulWidget {
     super.key,
     required this.tokyoStationMap,
     required this.tokyoTrainList,
-    required this.templeStationMap,
     required this.templeVisitDateMap,
     required this.dateTempleMap,
     required this.tokyoTrainIdMap,
@@ -30,7 +28,6 @@ class TempleTrainStationListAlert extends ConsumerStatefulWidget {
 
   final Map<String, TokyoStationModel> tokyoStationMap;
   final List<TokyoTrainModel> tokyoTrainList;
-  final Map<String, List<TempleListModel>> templeStationMap;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
   final Map<int, TokyoTrainModel> tokyoTrainIdMap;
