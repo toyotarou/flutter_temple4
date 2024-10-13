@@ -73,12 +73,6 @@ class LatLngTemple extends _$LatLngTemple {
   }
 
   ///
-  void toggleListSorting() {
-    final bool listSorting = state.listSorting;
-    state = state.copyWith(listSorting: !listSorting);
-  }
-
-  ///
   void setOrangeDisplay() {
     final bool orangeDisplay = state.orangeDisplay;
     state = state.copyWith(orangeDisplay: !orangeDisplay);
@@ -86,10 +80,12 @@ class LatLngTemple extends _$LatLngTemple {
 
   ///
   void setSelectedNearStation(
-          {required NearStationResponseStationModel station}) =>
-      state = state.copyWith(selectedNearStation: station);
+      {required NearStationResponseStationModel station}) {
+    state = state.copyWith(selectedNearStation: station);
+  }
 
   ///
-  void clearSelectedNearStation() =>
-      state = state.copyWith(selectedNearStation: null);
+  void clearSelectedNearStation() {
+    state = state.copyWith(selectedNearStation: null);
+  }
 }
