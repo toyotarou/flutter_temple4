@@ -5,11 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../controllers/temple/temple.dart';
-import '../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../controllers/temple_list/temple_list.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
-import '../models/temple_lat_lng_model.dart';
 import '../models/temple_model.dart';
 import '../models/tokyo_station_model.dart';
 import '../models/tokyo_train_model.dart';
@@ -43,8 +41,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
 
     ref.read(templeProvider.notifier).getAllTemple();
-
-    ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
 
     ref.read(templeListProvider.notifier).getAllTempleListTemple();
 
@@ -176,14 +172,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   Widget displayHomeButton() {
-    final List<TempleLatLngModel> templeLatLngList = ref.watch(
-        templeLatLngProvider
-            .select((TempleLatLngState value) => value.templeLatLngList));
-
-    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
-        templeLatLngProvider
-            .select((TempleLatLngState value) => value.templeLatLngMap));
-
     final List<TempleModel> templeList = ref
         .watch(templeProvider.select((TempleState value) => value.templeList));
 
@@ -222,7 +210,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 TempleDialog(
                   context: context,
                   widget: VisitedTempleMapAlert(
-                    templeLatLngMap: templeLatLngMap,
                     templeList: templeList,
                     templeVisitDateMap: templeVisitDateMap,
                     dateTempleMap: dateTempleMap,
@@ -270,7 +257,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   TempleDialog(
                     context: context,
                     widget: NotReachTempleMapAlert(
-                      templeLatLngList: templeLatLngList,
                       tokyoTrainIdMap: tokyoTrainIdMap,
                       tokyoTrainList: tokyoTrainList,
                       templeVisitDateMap: templeVisitDateMap,
@@ -402,10 +388,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       {required TempleModel data, required String selectYear}) {
     final TempleState templeState = ref.watch(templeProvider);
 
-    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
-        templeLatLngProvider
-            .select((TempleLatLngState value) => value.templeLatLngMap));
-
     return Card(
       color: Colors.black.withOpacity(0.3),
       child: ListTile(
@@ -458,8 +440,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             GestureDetector(
               onTap: () => TempleDialog(
                 context: context,
-                widget: TempleDetailMapAlert(
-                    date: data.date, templeLatLngMap: templeLatLngMap),
+                widget: TempleDetailMapAlert(date: data.date),
               ),
               child: const Icon(
                 Icons.call_made,

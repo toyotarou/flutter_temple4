@@ -26,19 +26,20 @@ class TempleLatLng extends _$TempleLatLng {
 
   ///
   @override
-  TempleLatLngState build() => const TempleLatLngState();
+  Future<TempleLatLngState> build() async => getAllTempleLatLng();
 
   ///
-  /// home_screen.dart
-  /// visited_temple_list_alert.dart
-  Future<void> getAllTempleLatLng() async {
+  /// temple_detail_map_alert.dart
+  /// not_reach_temple_map_alert.dart
+  /// visited_temple_map_alert.dart
+  Future<TempleLatLngState> getAllTempleLatLng() async {
     final HttpClient client = ref.read(httpClientProvider);
+
+    final List<TempleLatLngModel> list = <TempleLatLngModel>[];
+    final Map<String, TempleLatLngModel> map = <String, TempleLatLngModel>{};
 
     // ignore: always_specify_types
     await client.post(path: APIPath.getTempleLatLng).then((value) {
-      final List<TempleLatLngModel> list = <TempleLatLngModel>[];
-      final Map<String, TempleLatLngModel> map = <String, TempleLatLngModel>{};
-
       // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['list'].length.toString().toInt(); i++) {
         final TempleLatLngModel val = TempleLatLngModel.fromJson(
@@ -50,10 +51,11 @@ class TempleLatLng extends _$TempleLatLng {
         map[val.temple] = val;
       }
 
-      state = state.copyWith(templeLatLngList: list, templeLatLngMap: map);
-    // ignore: always_specify_types
+      // ignore: always_specify_types
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
+
+    return TempleLatLngState(templeLatLngList: list, templeLatLngMap: map);
   }
 }

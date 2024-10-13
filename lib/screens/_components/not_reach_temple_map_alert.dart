@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../../controllers/temple/temple.dart';
+import '../../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../../controllers/temple_list/temple_list.dart';
 import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
@@ -26,13 +27,11 @@ import 'temple_info_display_alert.dart';
 class NotReachTempleMapAlert extends ConsumerStatefulWidget {
   const NotReachTempleMapAlert(
       {super.key,
-      required this.templeLatLngList,
       required this.tokyoTrainIdMap,
       required this.tokyoTrainList,
       required this.templeVisitDateMap,
       required this.dateTempleMap});
 
-  final List<TempleLatLngModel> templeLatLngList;
   final Map<int, TokyoTrainModel> tokyoTrainIdMap;
   final List<TokyoTrainModel> tokyoTrainList;
   final Map<String, List<String>> templeVisitDateMap;
@@ -182,10 +181,17 @@ class _NotReachTempleMapAlertState
     final List<String> jogaiTempleAddressList = <String>[];
     final List<String> jogaiTempleAddressList2 = <String>[];
 
-    for (final TempleLatLngModel element in widget.templeLatLngList) {
-      jogaiTempleNameList.add(element.temple);
-      jogaiTempleAddressList.add(element.address);
-      jogaiTempleAddressList2.add('東京都${element.address}');
+    final AsyncValue<TempleLatLngState> templeLatLngState =
+        ref.watch(templeLatLngProvider);
+    final List<TempleLatLngModel>? templeLatLngList =
+        templeLatLngState.value?.templeLatLngList;
+
+    if (templeLatLngList != null) {
+      for (final TempleLatLngModel element in templeLatLngList) {
+        jogaiTempleNameList.add(element.temple);
+        jogaiTempleAddressList.add(element.address);
+        jogaiTempleAddressList2.add('東京都${element.address}');
+      }
     }
 
     final AsyncValue<TempleListState> templeListState =

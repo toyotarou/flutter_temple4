@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../controllers/station/station.dart';
 import '../../controllers/temple/temple.dart';
+import '../../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../../extensions/extensions.dart';
 import '../../models/common/temple_data.dart';
 import '../../models/station_model.dart';
@@ -21,11 +22,9 @@ import 'temple_course_display_alert.dart';
 import 'temple_photo_gallery_alert.dart';
 
 class TempleDetailMapAlert extends ConsumerStatefulWidget {
-  const TempleDetailMapAlert(
-      {super.key, required this.date, required this.templeLatLngMap});
+  const TempleDetailMapAlert({super.key, required this.date});
 
   final DateTime date;
-  final Map<String, TempleLatLngModel> templeLatLngMap;
 
   @override
   ConsumerState<TempleDetailMapAlert> createState() =>
@@ -260,6 +259,11 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
   void makeTempleDataList() {
     templeDataList = <TempleData>[];
 
+    final AsyncValue<TempleLatLngState> templeLatLngState =
+        ref.watch(templeLatLngProvider);
+    final Map<String, TempleLatLngModel>? templeLatLngMap =
+        templeLatLngState.value?.templeLatLngMap;
+
     final Map<String, TempleModel> dateTempleMap = ref.watch(
         templeProvider.select((TempleState value) => value.dateTempleMap));
 
@@ -268,37 +272,39 @@ class _TempleDetailDialogState extends ConsumerState<TempleDetailMapAlert> {
     if (temple != null) {
       getStartEndPointInfo(temple: temple, flag: 'start');
 
-      if (widget.templeLatLngMap[temple.temple] != null) {
-        templeDataList.add(
-          TempleData(
-            name: temple.temple,
-            address: widget.templeLatLngMap[temple.temple]!.address,
-            latitude: widget.templeLatLngMap[temple.temple]!.lat,
-            longitude: widget.templeLatLngMap[temple.temple]!.lng,
-            mark: '01',
-          ),
-        );
-      }
+      if (templeLatLngMap != null) {
+        if (templeLatLngMap[temple.temple] != null) {
+          templeDataList.add(
+            TempleData(
+              name: temple.temple,
+              address: templeLatLngMap[temple.temple]!.address,
+              latitude: templeLatLngMap[temple.temple]!.lat,
+              longitude: templeLatLngMap[temple.temple]!.lng,
+              mark: '01',
+            ),
+          );
+        }
 
-      if (temple.memo != '') {
-        int i = 2;
-        temple.memo.split('、').forEach((String element) {
-          final TempleLatLngModel? latlng = widget.templeLatLngMap[element];
+        if (temple.memo != '') {
+          int i = 2;
+          temple.memo.split('、').forEach((String element) {
+            final TempleLatLngModel? latlng = templeLatLngMap[element];
 
-          if (latlng != null) {
-            templeDataList.add(
-              TempleData(
-                name: element,
-                address: latlng.address,
-                latitude: latlng.lat,
-                longitude: latlng.lng,
-                mark: i.toString().padLeft(2, '0'),
-              ),
-            );
-          }
+            if (latlng != null) {
+              templeDataList.add(
+                TempleData(
+                  name: element,
+                  address: latlng.address,
+                  latitude: latlng.lat,
+                  longitude: latlng.lng,
+                  mark: i.toString().padLeft(2, '0'),
+                ),
+              );
+            }
 
-          i++;
-        });
+            i++;
+          });
+        }
       }
 
       getStartEndPointInfo(temple: temple, flag: 'end');

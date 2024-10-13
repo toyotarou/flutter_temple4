@@ -21,12 +21,10 @@ import 'visited_temple_list_alert.dart';
 class VisitedTempleMapAlert extends ConsumerStatefulWidget {
   const VisitedTempleMapAlert(
       {super.key,
-      required this.templeLatLngMap,
       required this.templeList,
       required this.templeVisitDateMap,
       required this.dateTempleMap});
 
-  final Map<String, TempleLatLngModel> templeLatLngMap;
   final List<TempleModel> templeList;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
@@ -78,7 +76,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                   TempleDialog(
                     context: context,
                     widget: VisitedTempleListAlert(
-                      templeLatLngMap: widget.templeLatLngMap,
                       templeList: widget.templeList,
                       templeVisitDateMap: widget.templeVisitDateMap,
                       dateTempleMap: widget.dateTempleMap,
@@ -100,7 +97,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                     TempleDialog(
                       context: context,
                       widget: VisitedTempleMapAlert(
-                        templeLatLngMap: widget.templeLatLngMap,
                         templeList: widget.templeList,
                         templeVisitDateMap: widget.templeVisitDateMap,
                         dateTempleMap: widget.dateTempleMap,
@@ -193,33 +189,36 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
         }
       });
 
-    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
-        templeLatLngProvider
-            .select((TempleLatLngState value) => value.templeLatLngMap));
+    final AsyncValue<TempleLatLngState> templeLatLngState =
+        ref.watch(templeLatLngProvider);
+    final Map<String, TempleLatLngModel>? templeLatLngMap =
+        templeLatLngState.value?.templeLatLngMap;
 
-    for (final String element in templeNamesList) {
-      final TempleLatLngModel? temple = templeLatLngMap[element];
+    if (templeLatLngMap != null) {
+      for (final String element in templeNamesList) {
+        final TempleLatLngModel? temple = templeLatLngMap[element];
 
-      if (temple != null) {
-        latList.add(double.parse(temple.lat));
-        lngList.add(double.parse(temple.lng));
+        if (temple != null) {
+          latList.add(double.parse(temple.lat));
+          lngList.add(double.parse(temple.lng));
 
-        templeDataList.add(
-          TempleData(
-            name: temple.temple,
-            address: temple.address,
-            latitude: temple.lat,
-            longitude: temple.lng,
-          ),
-        );
+          templeDataList.add(
+            TempleData(
+              name: temple.temple,
+              address: temple.address,
+              latitude: temple.lat,
+              longitude: temple.lng,
+            ),
+          );
+        }
       }
-    }
 
-    if (latList.isNotEmpty && lngList.isNotEmpty) {
-      minLat = latList.reduce(min);
-      maxLat = latList.reduce(max);
-      minLng = lngList.reduce(min);
-      maxLng = lngList.reduce(max);
+      if (latList.isNotEmpty && lngList.isNotEmpty) {
+        minLat = latList.reduce(min);
+        maxLat = latList.reduce(max);
+        minLng = lngList.reduce(min);
+        maxLng = lngList.reduce(max);
+      }
     }
   }
 

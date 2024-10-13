@@ -13,12 +13,10 @@ import 'visited_temple_map_alert.dart';
 class VisitedTempleListAlert extends ConsumerStatefulWidget {
   const VisitedTempleListAlert(
       {super.key,
-      required this.templeLatLngMap,
       required this.templeList,
       required this.templeVisitDateMap,
       required this.dateTempleMap});
 
-  final Map<String, TempleLatLngModel> templeLatLngMap;
   final List<TempleModel> templeList;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
@@ -40,8 +38,6 @@ class _VisitedTempleListAlertState
     super.initState();
 
     ref.read(templeProvider.notifier).getAllTemple();
-
-    ref.read(templeLatLngProvider.notifier).getAllTempleLatLng();
 
     // ignore: always_specify_types
     globalKeyList2 = List.generate(100, (int index) => GlobalKey());
@@ -236,9 +232,10 @@ class _VisitedTempleListAlertState
 
   ///
   Widget displayVisitedMainTempleList({required TempleModel data}) {
-    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
-        templeLatLngProvider
-            .select((TempleLatLngState value) => value.templeLatLngMap));
+    final AsyncValue<TempleLatLngState> templeLatLngState =
+        ref.watch(templeLatLngProvider);
+    final Map<String, TempleLatLngModel>? templeLatLngMap =
+        templeLatLngState.value?.templeLatLngMap;
 
     final TempleState templeState = ref.watch(templeProvider);
 
@@ -274,15 +271,17 @@ class _VisitedTempleListAlertState
           ),
           GestureDetector(
             onTap: () {
-              ref.read(templeProvider.notifier).setSelectTemple(
-                    name: data.temple,
-                    lat: (templeLatLngMap[data.temple] != null)
-                        ? templeLatLngMap[data.temple]!.lat
-                        : '',
-                    lng: (templeLatLngMap[data.temple] != null)
-                        ? templeLatLngMap[data.temple]!.lng
-                        : '',
-                  );
+              if (templeLatLngMap != null) {
+                ref.read(templeProvider.notifier).setSelectTemple(
+                      name: data.temple,
+                      lat: (templeLatLngMap[data.temple] != null)
+                          ? templeLatLngMap[data.temple]!.lat
+                          : '',
+                      lng: (templeLatLngMap[data.temple] != null)
+                          ? templeLatLngMap[data.temple]!.lng
+                          : '',
+                    );
+              }
 
               Navigator.pop(context);
               Navigator.pop(context);
@@ -290,7 +289,6 @@ class _VisitedTempleListAlertState
               TempleDialog(
                 context: context,
                 widget: VisitedTempleMapAlert(
-                  templeLatLngMap: widget.templeLatLngMap,
                   templeList: widget.templeList,
                   templeVisitDateMap: widget.templeVisitDateMap,
                   dateTempleMap: widget.dateTempleMap,
@@ -313,9 +311,10 @@ class _VisitedTempleListAlertState
   ///
   Widget displayVisitedSubTempleList(
       {required TempleModel data, required String data2}) {
-    final Map<String, TempleLatLngModel> templeLatLngMap = ref.watch(
-        templeLatLngProvider
-            .select((TempleLatLngState value) => value.templeLatLngMap));
+    final AsyncValue<TempleLatLngState> templeLatLngState =
+        ref.watch(templeLatLngProvider);
+    final Map<String, TempleLatLngModel>? templeLatLngMap =
+        templeLatLngState.value?.templeLatLngMap;
 
     final TempleState templeState = ref.watch(templeProvider);
 
@@ -351,15 +350,17 @@ class _VisitedTempleListAlertState
           ),
           GestureDetector(
             onTap: () {
-              ref.read(templeProvider.notifier).setSelectTemple(
-                    name: data2,
-                    lat: (templeLatLngMap[data2] != null)
-                        ? templeLatLngMap[data2]!.lat
-                        : '',
-                    lng: (templeLatLngMap[data2] != null)
-                        ? templeLatLngMap[data2]!.lng
-                        : '',
-                  );
+              if (templeLatLngMap != null) {
+                ref.read(templeProvider.notifier).setSelectTemple(
+                      name: data2,
+                      lat: (templeLatLngMap[data2] != null)
+                          ? templeLatLngMap[data2]!.lat
+                          : '',
+                      lng: (templeLatLngMap[data2] != null)
+                          ? templeLatLngMap[data2]!.lng
+                          : '',
+                    );
+              }
 
               Navigator.pop(context);
               Navigator.pop(context);
@@ -367,7 +368,6 @@ class _VisitedTempleListAlertState
               TempleDialog(
                 context: context,
                 widget: VisitedTempleMapAlert(
-                  templeLatLngMap: widget.templeLatLngMap,
                   templeList: widget.templeList,
                   templeVisitDateMap: widget.templeVisitDateMap,
                   dateTempleMap: widget.dateTempleMap,
