@@ -21,6 +21,8 @@ class LatLngTempleState with _$LatLngTempleState {
     @Default(false) bool listSorting,
     @Default(false) bool orangeDisplay,
     NearStationResponseStationModel? selectedNearStation,
+    @Default('') String paramLat,
+    @Default('') String paramLng,
   }) = _LatLngTempleState;
 }
 
@@ -34,14 +36,14 @@ class LatLngTemple extends _$LatLngTemple {
 
   ///
   /// temple_train_station_list_alert.dart
-  Future<void> getLatLngTemple({required Map<String, String> param}) async {
+  Future<void> getLatLngTemple() async {
     final HttpClient client = ref.read(httpClientProvider);
 
     await client.post(
       path: APIPath.getLatLngTemple,
       body: <String, dynamic>{
-        'latitude': param['latitude'],
-        'longitude': param['longitude'],
+        'latitude': state.paramLat,
+        'longitude': state.paramLng,
         'radius': 10
       },
       // ignore: always_specify_types
@@ -70,6 +72,16 @@ class LatLngTemple extends _$LatLngTemple {
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
+  }
+
+  ///
+  void setParamLatLng({required String latitude, required String longitude}) {
+    state = state.copyWith(paramLat: latitude, paramLng: longitude);
+  }
+
+  ///
+  void clearParamLatLng() {
+    state = state.copyWith(paramLat: '', paramLng: '');
   }
 
   ///

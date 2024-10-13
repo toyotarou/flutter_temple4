@@ -97,6 +97,8 @@ class _TempleTrainListAlertState
 
               ref.read(tokyoTrainProvider.notifier).clearTrainList();
 
+              ref.read(latLngTempleProvider.notifier).clearParamLatLng();
+
               TempleDialog(
                 context: context,
                 widget: RouteSettingMapAlert(
@@ -244,13 +246,15 @@ class _TempleTrainListAlertState
                           ),
                         ],
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             ref
                                 .read(latLngTempleProvider.notifier)
-                                .getLatLngTemple(param: <String, String>{
-                              'latitude': e2.lat,
-                              'longitude': e2.lng,
-                            });
+                                .setParamLatLng(
+                                    latitude: e2.lat, longitude: e2.lng);
+
+                            await ref
+                                .read(latLngTempleProvider.notifier)
+                                .getLatLngTemple();
 
                             ref
                                 .read(routingProvider.notifier)
