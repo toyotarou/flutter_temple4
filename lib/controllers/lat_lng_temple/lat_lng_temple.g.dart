@@ -6,7 +6,7 @@ part of 'lat_lng_temple.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$latLngTempleHash() => r'300dec0acd17b69b54ce20a2bb84ea6fdc837e52';
+String _$latLngTempleHash() => r'bba518513d05b66e5e278a98cafecb310976767e';
 
 /// See also [LatLngTemple].
 @ProviderFor(LatLngTemple)

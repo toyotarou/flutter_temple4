@@ -6,15 +6,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../controllers/temple/temple.dart';
 import '../controllers/temple_list/temple_list.dart';
+import '../controllers/tokyo_jinjachou_temple/tokyo_jinjachou_temple.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
 import '../models/temple_model.dart';
+import '../models/tokyo_jinjachou_temple_model.dart';
 import '../models/tokyo_station_model.dart';
 import '../models/tokyo_train_model.dart';
 import '../utility/utility.dart';
 import '_components/not_reach_temple_map_alert.dart';
 import '_components/route_train_station_list_alert.dart';
 import '_components/temple_detail_map_alert.dart';
+import '_components/tokyo_jinjachou_temple_list_alert.dart';
 import '_components/visited_temple_map_alert.dart';
 import '_parts/_temple_dialog.dart';
 import 'function.dart';
@@ -46,6 +49,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
 
+    ref.read(tokyoJinjachouTempleProvider.notifier).getTokyoJinjachouTemple();
+
     // ignore: always_specify_types
     globalKeyList = List.generate(100, (int index) => GlobalKey());
   }
@@ -63,28 +68,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         width: context.screenSize.width,
         height: context.screenSize.height,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bg.png'),
-            fit: BoxFit.fitHeight,
-          ),
+          image: DecorationImage(image: AssetImage('assets/images/bg.png'), fit: BoxFit.fitHeight),
         ),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.black.withOpacity(0.7),
           appBar: AppBar(
-            title: Text(
-              'Temple List',
-              style: TextStyle(color: Colors.white.withOpacity(0.4)),
-            ),
+            title: Text('Temple List', style: TextStyle(color: Colors.white.withOpacity(0.4))),
             centerTitle: true,
             backgroundColor: Colors.transparent,
             bottom: displayHomeAppBar(),
           ),
           body: Column(
-            children: <Widget>[
-              const SizedBox(height: 10),
-              Expanded(child: displayTempleList()),
-            ],
+            children: <Widget>[const SizedBox(height: 10), Expanded(child: displayTempleList())],
           ),
         ),
       ),
@@ -133,25 +129,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final List<Widget> list = <Widget>[];
 
     // ignore: always_specify_types
-    final selectYear = ref
-        .watch(templeProvider.select((TempleState value) => value.selectYear));
+    final selectYear = ref.watch(templeProvider.select((TempleState value) => value.selectYear));
 
     for (int i = 0; i < yearList.length; i++) {
       list.add(
         GestureDetector(
           onTap: () {
-            ref
-                .read(templeProvider.notifier)
-                .setSelectYear(year: yearList[i].toString());
+            ref.read(templeProvider.notifier).setSelectYear(year: yearList[i].toString());
 
             scrollToIndex(i);
           },
           child: Text(
             yearList[i].toString(),
-            style: TextStyle(
-                color: (selectYear == yearList[i].toString())
-                    ? Colors.yellowAccent
-                    : Colors.white),
+            style: TextStyle(color: (selectYear == yearList[i].toString()) ? Colors.yellowAccent : Colors.white),
           ),
         ),
       );
@@ -164,33 +154,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<void> scrollToIndex(int index) async {
     final BuildContext target = globalKeyList[index].currentContext!;
 
-    await Scrollable.ensureVisible(
-      target,
-      duration: const Duration(milliseconds: 1000),
-    );
+    await Scrollable.ensureVisible(target, duration: const Duration(milliseconds: 1000));
   }
 
   ///
   Widget displayHomeButton() {
-    final List<TempleModel> templeList = ref
-        .watch(templeProvider.select((TempleState value) => value.templeList));
+    final List<TempleModel> templeList = ref.watch(templeProvider.select((TempleState value) => value.templeList));
 
-    final Map<String, TokyoStationModel> tokyoStationMap = ref.watch(
-        tokyoTrainProvider
-            .select((TokyoTrainState value) => value.tokyoStationMap));
+    final Map<String, TokyoStationModel> tokyoStationMap =
+        ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoStationMap));
 
-    final List<TokyoTrainModel> tokyoTrainList = ref.watch(tokyoTrainProvider
-        .select((TokyoTrainState value) => value.tokyoTrainList));
+    final List<TokyoTrainModel> tokyoTrainList =
+        ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoTrainList));
 
-    final Map<int, TokyoTrainModel> tokyoTrainIdMap = ref.watch(
-        tokyoTrainProvider
-            .select((TokyoTrainState value) => value.tokyoTrainIdMap));
+    final Map<int, TokyoTrainModel> tokyoTrainIdMap =
+        ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoTrainIdMap));
 
-    final Map<String, List<String>> templeVisitDateMap = ref.watch(
-        templeProvider.select((TempleState value) => value.templeVisitDateMap));
+    final Map<String, List<String>> templeVisitDateMap =
+        ref.watch(templeProvider.select((TempleState value) => value.templeVisitDateMap));
 
-    final Map<String, TempleModel> dateTempleMap = ref.watch(
-        templeProvider.select((TempleState value) => value.dateTempleMap));
+    final Map<String, TempleModel> dateTempleMap =
+        ref.watch(templeProvider.select((TempleState value) => value.dateTempleMap));
+
+    final List<TokyoJinjachouTempleModel> tokyoJinjachouTempleList = ref.watch(
+        tokyoJinjachouTempleProvider.select((TokyoJinjachouTempleState value) => value.tokyoJinjachouTempleList));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,13 +186,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: <Widget>[
             IconButton(
               onPressed: () {
-                ref
-                    .read(templeProvider.notifier)
-                    .setSelectTemple(name: '', lat: '', lng: '');
+                ref.read(templeProvider.notifier).setSelectTemple(name: '', lat: '', lng: '');
 
-                ref
-                    .read(templeProvider.notifier)
-                    .setSelectVisitedTempleListKey(key: -1);
+                ref.read(templeProvider.notifier).setSelectVisitedTempleListKey(key: -1);
 
                 TempleDialog(
                   context: context,
@@ -223,12 +206,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.orangeAccent.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(10),
-          ),
+          decoration:
+              BoxDecoration(color: Colors.orangeAccent.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
           child: Row(
             children: <Widget>[
+              IconButton(
+                onPressed: () {
+                  TempleDialog(
+                    context: context,
+                    widget: TokyoJinjachouTempleListAlert(tokyoJinjachouTempleList: tokyoJinjachouTempleList),
+                  );
+                },
+                icon: const Icon(Icons.ac_unit, color: Colors.white),
+              ),
               IconButton(
                 onPressed: () => TempleDialog(
                   context: context,
@@ -246,13 +236,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onPressed: () {
                   ref.read(tokyoTrainProvider.notifier).clearTrainList();
 
-                  ref
-                      .read(latLngTempleProvider.notifier)
-                      .clearSelectedNearStation();
+                  ref.read(latLngTempleProvider.notifier).clearSelectedNearStation();
 
-                  ref
-                      .read(templeProvider.notifier)
-                      .setSelectTemple(name: '', lat: '', lng: '');
+                  ref.read(templeProvider.notifier).setSelectTemple(name: '', lat: '', lng: '');
 
                   TempleDialog(
                     context: context,
@@ -264,8 +250,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   );
                 },
-                icon:
-                    const Icon(FontAwesomeIcons.toriiGate, color: Colors.white),
+                icon: const Icon(FontAwesomeIcons.toriiGate, color: Colors.white),
               ),
               const SizedBox(width: 20),
             ],
@@ -293,29 +278,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             controller: searchWordEditingController,
             decoration: InputDecoration(
               isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               filled: true,
               fillColor: Colors.white.withOpacity(0.2),
-              border: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
+              border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
             ),
-            onTapOutside: (PointerDownEvent event) =>
-                FocusManager.instance.primaryFocus?.unfocus(),
+            onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
             onChanged: (String value) {},
           ),
         ),
         IconButton(
-          onPressed: () => ref
-              .read(templeProvider.notifier)
-              .doSearch(searchWord: searchWordEditingController.text),
+          onPressed: () => ref.read(templeProvider.notifier).doSearch(searchWord: searchWordEditingController.text),
           icon: const Icon(Icons.search, color: Colors.white),
         ),
       ],
@@ -346,9 +321,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 children: <Widget>[
                   Text(element.date.year.toString()),
                   Text((templeState.templeCountMap[element.date.yyyy] != null)
-                      ? templeState.templeCountMap[element.date.yyyy]!.length
-                          .toString()
-                      : 0.toString()),
+                      ? templeState.templeCountMap[element.date.yyyy]!.length.toString()
+                      : 0.toString())
                 ],
               ),
             ),
@@ -363,8 +337,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (templeState.doSearch) {
         final RegExp reg = RegExp(templeState.searchWord);
 
-        if (reg.firstMatch(element.temple) != null ||
-            reg.firstMatch(element.memo) != null) {
+        if (reg.firstMatch(element.temple) != null || reg.firstMatch(element.memo) != null) {
           dispFlag = true;
         } else {
           dispFlag = false;
@@ -372,9 +345,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
 
       if (dispFlag) {
-        list.add(
-          displayHomeCard(data: element, selectYear: templeState.selectYear),
-        );
+        list.add(displayHomeCard(data: element, selectYear: templeState.selectYear));
       }
 
       keepYear = element.date.year;
@@ -384,8 +355,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   ///
-  Widget displayHomeCard(
-      {required TempleModel data, required String selectYear}) {
+  Widget displayHomeCard({required TempleModel data, required String selectYear}) {
     final TempleState templeState = ref.watch(templeProvider);
 
     return Card(
@@ -393,27 +363,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: ListTile(
         leading: SizedBox(
           width: 40,
-          child: (data.date.year.toString() == selectYear ||
-                  templeState.searchWord != '')
+          child: (data.date.year.toString() == selectYear || templeState.searchWord != '')
               ? CachedNetworkImage(
                   imageUrl: data.thumbnail,
-                  placeholder: (BuildContext context, String url) =>
-                      Image.asset('assets/images/no_image.png'),
-                  errorWidget:
-                      (BuildContext context, String url, Object error) =>
-                          const Icon(Icons.error),
+                  placeholder: (BuildContext context, String url) => Image.asset('assets/images/no_image.png'),
+                  errorWidget: (BuildContext context, String url, Object error) => const Icon(Icons.error),
                 )
-              : Container(
-                  decoration:
-                      BoxDecoration(color: Colors.grey.withOpacity(0.3)),
-                ),
+              : Container(decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3))),
         ),
         title: DefaultTextStyle(
           style: const TextStyle(fontSize: 12),
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: context.screenSize.height / 8,
-            ),
+            constraints: BoxConstraints(minHeight: context.screenSize.height / 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -442,16 +403,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 context: context,
                 widget: TempleDetailMapAlert(date: data.date),
               ),
-              child: const Icon(
-                Icons.call_made,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.call_made, color: Colors.white),
             ),
             CircleAvatar(
               radius: 15,
-              backgroundColor: utility.getLeadingBgColor(
-                month: data.date.yyyymmdd.split('-')[1],
-              ),
+              backgroundColor: utility.getLeadingBgColor(month: data.date.yyyymmdd.split('-')[1]),
               child: Text(
                 data.date.yyyymmdd.split('-')[1],
                 style: const TextStyle(color: Colors.white, fontSize: 12),
