@@ -6,11 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../controllers/lat_lng_temple/lat_lng_temple.dart';
 import '../controllers/temple/temple.dart';
 import '../controllers/temple_list/temple_list.dart';
-import '../controllers/tokyo_jinjachou_temple/tokyo_jinjachou_temple.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
 import '../models/temple_model.dart';
-import '../models/tokyo_jinjachou_temple_model.dart';
 import '../models/tokyo_station_model.dart';
 import '../models/tokyo_train_model.dart';
 import '../utility/utility.dart';
@@ -48,8 +46,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.read(templeListProvider.notifier).getAllTempleListTemple();
 
     ref.read(tokyoTrainProvider.notifier).getTokyoTrain();
-
-    ref.read(tokyoJinjachouTempleProvider.notifier).getTokyoJinjachouTemple();
 
     // ignore: always_specify_types
     globalKeyList = List.generate(100, (int index) => GlobalKey());
@@ -176,9 +172,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final Map<String, TempleModel> dateTempleMap =
         ref.watch(templeProvider.select((TempleState value) => value.dateTempleMap));
 
-    final List<TokyoJinjachouTempleModel> tokyoJinjachouTempleList = ref.watch(
-        tokyoJinjachouTempleProvider.select((TokyoJinjachouTempleState value) => value.tokyoJinjachouTempleList));
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -214,7 +207,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onPressed: () {
                   TempleDialog(
                     context: context,
-                    widget: TokyoJinjachouTempleListAlert(tokyoJinjachouTempleList: tokyoJinjachouTempleList),
+                    widget: const TokyoJinjachouTempleListAlert(),
                   );
                 },
                 icon: const Icon(Icons.ac_unit, color: Colors.white),

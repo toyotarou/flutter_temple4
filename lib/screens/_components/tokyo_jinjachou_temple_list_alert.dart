@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controllers/temple_lat_lng/temple_lat_lng.dart';
+import '../../controllers/temple_list/temple_list.dart';
 import '../../extensions/extensions.dart';
-import '../../models/tokyo_jinjachou_temple_model.dart';
+import '../../models/temple_lat_lng_model.dart';
+import '../../models/temple_list_model.dart';
 
 class TokyoJinjachouTempleListAlert extends ConsumerStatefulWidget {
-  const TokyoJinjachouTempleListAlert({super.key, required this.tokyoJinjachouTempleList});
-
-  final List<TokyoJinjachouTempleModel> tokyoJinjachouTempleList;
+  const TokyoJinjachouTempleListAlert({super.key});
 
   @override
   ConsumerState<TokyoJinjachouTempleListAlert> createState() => _TokyoJinjachouTempleListAlertState();
 }
 
 class _TokyoJinjachouTempleListAlertState extends ConsumerState<TokyoJinjachouTempleListAlert> {
+  List<int> idList = <int>[];
+
+  ///
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +42,73 @@ class _TokyoJinjachouTempleListAlertState extends ConsumerState<TokyoJinjachouTe
   Widget _displayTokyoJinjachouTempleList() {
     final List<Widget> list = <Widget>[];
 
-    for (final TokyoJinjachouTempleModel element in widget.tokyoJinjachouTempleList) {
-      list.add(Text(element.name));
+    final List<String> jogaiTempleNameList = <String>[];
+    final List<String> jogaiTempleAddressList = <String>[];
+    final List<String> jogaiTempleAddressList2 = <String>[];
+
+    final AsyncValue<TempleLatLngState> templeLatLngState = ref.watch(templeLatLngProvider);
+    final List<TempleLatLngModel>? templeLatLngList = templeLatLngState.value?.templeLatLngList;
+
+    if (templeLatLngList != null) {
+      for (final TempleLatLngModel element in templeLatLngList) {
+        jogaiTempleNameList.add(element.temple);
+        jogaiTempleAddressList.add(element.address);
+        jogaiTempleAddressList2.add('東京都${element.address}');
+      }
+    }
+
+    final AsyncValue<TempleListState> templeListState = ref.watch(templeListProvider);
+    final List<TempleListModel>? templeListList = templeListState.value?.templeListList;
+
+    if (templeListList != null) {
+      for (int i = 0; i < templeListList.length; i++) {
+        if (jogaiTempleNameList.contains(templeListList[i].name)) {
+          idList.add(templeListList[i].id);
+        }
+
+        if (jogaiTempleAddressList.contains(templeListList[i].address)) {
+          idList.add(templeListList[i].id);
+        }
+
+        if (jogaiTempleAddressList2.contains(templeListList[i].address)) {
+          idList.add(templeListList[i].id);
+        }
+
+        if (jogaiTempleAddressList.contains('東京都${templeListList[i].address}')) {
+          idList.add(templeListList[i].id);
+        }
+
+        if (jogaiTempleAddressList2.contains('東京都${templeListList[i].address}')) {
+          idList.add(templeListList[i].id);
+        }
+      }
+    }
+
+    idList = idList.toSet().toList();
+
+    if (templeListList != null) {
+      for (int i = 0; i < templeListList.length; i++) {
+        list.add(Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+          child: Row(
+            children: <Widget>[
+              CircleAvatar(
+                backgroundColor: (idList.contains(templeListList[i].id)) ? Colors.yellowAccent : Colors.white,
+                radius: 10,
+              ),
+              const SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(templeListList[i].name),
+                  Text(templeListList[i].address),
+                ],
+              ),
+            ],
+          ),
+        ));
+      }
     }
 
     return CustomScrollView(
