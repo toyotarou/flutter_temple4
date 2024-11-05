@@ -8,7 +8,14 @@ import '../../models/temple_lat_lng_model.dart';
 import '../../models/temple_list_model.dart';
 
 class TokyoJinjachouTempleListAlert extends ConsumerStatefulWidget {
-  const TokyoJinjachouTempleListAlert({super.key});
+  const TokyoJinjachouTempleListAlert({
+    super.key,
+    required this.templeVisitDateMap,
+    required this.idBaseComplementTempleVisitedDateMap,
+  });
+
+  final Map<String, List<String>> templeVisitDateMap;
+  final Map<String, List<DateTime>> idBaseComplementTempleVisitedDateMap;
 
   @override
   ConsumerState<TokyoJinjachouTempleListAlert> createState() => _TokyoJinjachouTempleListAlertState();
@@ -88,6 +95,16 @@ class _TokyoJinjachouTempleListAlertState extends ConsumerState<TokyoJinjachouTe
 
     if (templeListList != null) {
       for (int i = 0; i < templeListList.length; i++) {
+        List<String> dateList = <String>[];
+        if (idList.contains(templeListList[i].id)) {
+          if (widget.templeVisitDateMap[templeListList[i].name] != null) {
+            dateList = widget.templeVisitDateMap[templeListList[i].name]!;
+          } else {
+            widget.idBaseComplementTempleVisitedDateMap[templeListList[i].id.toString()]
+                ?.forEach((DateTime element) => dateList.add(element.yyyymmdd));
+          }
+        }
+
         list.add(Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
@@ -103,6 +120,7 @@ class _TokyoJinjachouTempleListAlertState extends ConsumerState<TokyoJinjachouTe
                 children: <Widget>[
                   Text(templeListList[i].name),
                   Text(templeListList[i].address),
+                  Text(dateList.length.toString()),
                 ],
               ),
             ],

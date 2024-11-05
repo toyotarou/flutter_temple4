@@ -35,8 +35,7 @@ class TempleState with _$TempleState {
     @Default(-1) int selectVisitedTempleListKey,
 
     //
-    @Default(<String, List<String>>{})
-    Map<String, List<String>> templeVisitDateMap,
+    @Default(<String, List<String>>{}) Map<String, List<String>> templeVisitDateMap,
 
     //
     @Default(<String, List<String>>{}) Map<String, List<String>> templeCountMap,
@@ -132,23 +131,18 @@ class Temple extends _$Temple {
   }
 
   ///
-  void doSearch({required String searchWord}) =>
-      state = state.copyWith(searchWord: searchWord, doSearch: true);
+  void doSearch({required String searchWord}) => state = state.copyWith(searchWord: searchWord, doSearch: true);
 
   ///
   void clearSearch() => state = state.copyWith(searchWord: '', doSearch: false);
 
   ///
-  void setSelectYear({required String year}) =>
-      state = state.copyWith(selectYear: year);
+  void setSelectYear({required String year}) => state = state.copyWith(selectYear: year);
 
   ///
-  void setSelectTemple(
-          {required String name, required String lat, required String lng}) =>
-      state = state.copyWith(
-          selectTempleName: name, selectTempleLat: lat, selectTempleLng: lng);
+  void setSelectTemple({required String name, required String lat, required String lng}) =>
+      state = state.copyWith(selectTempleName: name, selectTempleLat: lat, selectTempleLng: lng);
 
   ///
-  void setSelectVisitedTempleListKey({required int key}) =>
-      state = state.copyWith(selectVisitedTempleListKey: key);
+  void setSelectVisitedTempleListKey({required int key}) => state = state.copyWith(selectVisitedTempleListKey: key);
 }

@@ -8,7 +8,8 @@ enum APIPath {
   getLatLngTemple,
   insertTempleRoute,
   getTempleNotReachTrain,
-  tokyoJinjachouTempleList
+  tokyoJinjachouTempleList,
+  getComplementTempleVisitedDate
 }
 
 extension APIPathExtension on APIPath {
@@ -34,6 +35,8 @@ extension APIPathExtension on APIPath {
         return 'getTempleNotReachTrain';
       case APIPath.tokyoJinjachouTempleList:
         return 'tokyoJinjachouTempleList';
+      case APIPath.getComplementTempleVisitedDate:
+        return 'getComplementTempleVisitedDate';
     }
   }
 }
