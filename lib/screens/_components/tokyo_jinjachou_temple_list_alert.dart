@@ -4,18 +4,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../controllers/temple_lat_lng/temple_lat_lng.dart';
 import '../../controllers/temple_list/temple_list.dart';
 import '../../extensions/extensions.dart';
+import '../../models/common/temple_data.dart';
 import '../../models/temple_lat_lng_model.dart';
 import '../../models/temple_list_model.dart';
+import '../../models/temple_model.dart';
+import '../_parts/_temple_dialog.dart';
+import 'visited_temple_photo_alert.dart';
 
 class TokyoJinjachouTempleListAlert extends ConsumerStatefulWidget {
-  const TokyoJinjachouTempleListAlert({
-    super.key,
-    required this.templeVisitDateMap,
-    required this.idBaseComplementTempleVisitedDateMap,
-  });
+  const TokyoJinjachouTempleListAlert(
+      {super.key,
+      required this.templeVisitDateMap,
+      required this.idBaseComplementTempleVisitedDateMap,
+      required this.dateTempleMap});
 
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, List<DateTime>> idBaseComplementTempleVisitedDateMap;
+  final Map<String, TempleModel> dateTempleMap;
 
   @override
   ConsumerState<TokyoJinjachouTempleListAlert> createState() => _TokyoJinjachouTempleListAlertState();
@@ -105,27 +110,76 @@ class _TokyoJinjachouTempleListAlertState extends ConsumerState<TokyoJinjachouTe
           }
         }
 
-        list.add(Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-          child: Row(
-            children: <Widget>[
-              CircleAvatar(
-                backgroundColor: (idList.contains(templeListList[i].id)) ? Colors.yellowAccent : Colors.white,
-                radius: 10,
-              ),
-              const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(templeListList[i].name),
-                  Text(templeListList[i].address),
-                  Text(dateList.length.toString()),
-                ],
-              ),
-            ],
+        list.add(
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundColor: (idList.contains(templeListList[i].id))
+                          ? Colors.yellowAccent.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
+                      radius: 15,
+                      child: Text(templeListList[i].id.toString(), style: const TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(dateList.length.toString(), style: const TextStyle(color: Colors.white)),
+                  ],
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(templeListList[i].name),
+                      Text(templeListList[i].address),
+                      const SizedBox(height: 5),
+                      if (dateList.isEmpty) ...<Widget>[
+                        const Padding(padding: EdgeInsets.all(10), child: Text('not visit')),
+                      ],
+                      if (dateList.isNotEmpty) ...<Widget>[
+                        SizedBox(
+                          width: double.infinity,
+                          child: Wrap(
+                              children: dateList.map((String e) {
+                            return Container(
+                              margin: const EdgeInsets.all(3),
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.3))),
+                              child: Text(e),
+                            );
+                          }).toList()),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                    onTap: () {
+                      TempleDialog(
+                        context: context,
+                        widget: VisitedTemplePhotoAlert(
+                          templeVisitDateMap: widget.templeVisitDateMap,
+                          dateTempleMap: widget.dateTempleMap,
+                          temple: TempleData(
+                            name: templeListList[i].name,
+                            address: templeListList[i].address,
+                            latitude: templeListList[i].lat,
+                            longitude: templeListList[i].lng,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Icon(Icons.call_made, color: Colors.white)),
+              ],
+            ),
           ),
-        ));
+        );
       }
     }
 

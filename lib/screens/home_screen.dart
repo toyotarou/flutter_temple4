@@ -217,6 +217,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     widget: TokyoJinjachouTempleListAlert(
                       templeVisitDateMap: templeVisitDateMap,
                       idBaseComplementTempleVisitedDateMap: idBaseComplementTempleVisitedDateMap,
+                      dateTempleMap: dateTempleMap,
                     ),
                   );
                 },
