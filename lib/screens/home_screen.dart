@@ -278,6 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         Expanded(
           child: TextFormField(
+            style: const TextStyle(color: Colors.white),
             autovalidateMode: AutovalidateMode.onUserInteraction,
             controller: searchWordEditingController,
             decoration: InputDecoration(

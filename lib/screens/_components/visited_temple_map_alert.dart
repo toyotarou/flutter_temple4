@@ -20,18 +20,14 @@ import 'visited_temple_list_alert.dart';
 
 class VisitedTempleMapAlert extends ConsumerStatefulWidget {
   const VisitedTempleMapAlert(
-      {super.key,
-      required this.templeList,
-      required this.templeVisitDateMap,
-      required this.dateTempleMap});
+      {super.key, required this.templeList, required this.templeVisitDateMap, required this.dateTempleMap});
 
   final List<TempleModel> templeList;
   final Map<String, List<String>> templeVisitDateMap;
   final Map<String, TempleModel> dateTempleMap;
 
   @override
-  ConsumerState<VisitedTempleMapAlert> createState() =>
-      _VisitedTempleMapAlertState();
+  ConsumerState<VisitedTempleMapAlert> createState() => _VisitedTempleMapAlertState();
 }
 
 class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
@@ -88,9 +84,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
               if (templeState.selectTempleName != '') ...<Widget>[
                 IconButton(
                   onPressed: () {
-                    ref
-                        .read(templeProvider.notifier)
-                        .setSelectTemple(name: '', lat: '', lng: '');
+                    ref.read(templeProvider.notifier).setSelectTemple(name: '', lat: '', lng: '');
 
                     Navigator.pop(context);
 
@@ -126,29 +120,21 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                   mapController: mapController,
                   options: (templeState.selectTempleName != '')
                       ? MapOptions(
-                          initialCenter: LatLng(
-                            templeState.selectTempleLat.toDouble(),
-                            templeState.selectTempleLng.toDouble(),
-                          ),
+                          initialCenter:
+                              LatLng(templeState.selectTempleLat.toDouble(), templeState.selectTempleLng.toDouble()),
                           initialZoom: 16,
                           maxZoom: 17,
                           minZoom: 3,
                         )
                       : MapOptions(
                           initialCameraFit: CameraFit.bounds(
-                            bounds: LatLngBounds.fromPoints(
-                              <LatLng>[
-                                LatLng(minLat, maxLng),
-                                LatLng(maxLat, minLng)
-                              ],
-                            ),
+                            bounds: LatLngBounds.fromPoints(<LatLng>[LatLng(minLat, maxLng), LatLng(maxLat, minLng)]),
                             padding: const EdgeInsets.all(50),
                           ),
                         ),
                   children: <Widget>[
                     TileLayer(
-                      urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       tileProvider: CachedTileProvider(),
                       userAgentPackageName: 'com.example.app',
                     ),
@@ -170,15 +156,12 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
     final List<double> latList = <double>[];
     final List<double> lngList = <double>[];
 
-    final List<TempleModel> templeList = ref
-        .watch(templeProvider.select((TempleState value) => value.templeList));
+    final List<TempleModel> templeList = ref.watch(templeProvider.select((TempleState value) => value.templeList));
 
     final List<String> templeNamesList = <String>[];
 
     templeList
-      ..forEach((TempleModel element) {
-        templeNamesList.add(element.temple);
-      })
+      ..forEach((TempleModel element) => templeNamesList.add(element.temple))
       ..forEach((TempleModel element) {
         if (element.memo != '') {
           element.memo.split('、').forEach((String element2) {
@@ -189,27 +172,22 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
         }
       });
 
-    final AsyncValue<TempleLatLngState> templeLatLngState =
-        ref.watch(templeLatLngProvider);
-    final Map<String, TempleLatLngModel>? templeLatLngMap =
-        templeLatLngState.value?.templeLatLngMap;
+    final AsyncValue<TempleLatLngState> templeLatLngState = ref.watch(templeLatLngProvider);
+    final Map<String, TempleLatLngModel>? templeLatLngMap = templeLatLngState.value?.templeLatLngMap;
 
     if (templeLatLngMap != null) {
       for (final String element in templeNamesList) {
         final TempleLatLngModel? temple = templeLatLngMap[element];
 
         if (temple != null) {
-          latList.add(double.parse(temple.lat));
-          lngList.add(double.parse(temple.lng));
+          if (temple.lat != 'null' && temple.lng != 'null') {
+            latList.add(double.parse(temple.lat));
+            lngList.add(double.parse(temple.lng));
 
-          templeDataList.add(
-            TempleData(
-              name: temple.temple,
-              address: temple.address,
-              latitude: temple.lat,
-              longitude: temple.lng,
-            ),
-          );
+            templeDataList.add(
+              TempleData(name: temple.temple, address: temple.address, latitude: temple.lat, longitude: temple.lng),
+            );
+          }
         }
       }
 
@@ -231,10 +209,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
     for (int i = 0; i < templeDataList.length; i++) {
       markerList.add(
         Marker(
-          point: LatLng(
-            templeDataList[i].latitude.toDouble(),
-            templeDataList[i].longitude.toDouble(),
-          ),
+          point: LatLng(templeDataList[i].latitude.toDouble(), templeDataList[i].longitude.toDouble()),
           width: 40,
           height: 40,
           child: GestureDetector(
@@ -262,18 +237,12 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                     );
                   },
             child: CircleAvatar(
-              backgroundColor:
-                  (templeState.selectTempleName == templeDataList[i].name &&
-                          templeState.selectTempleLat ==
-                              templeDataList[i].latitude &&
-                          templeState.selectTempleLng ==
-                              templeDataList[i].longitude)
-                      ? Colors.redAccent.withOpacity(0.5)
-                      : Colors.pinkAccent.withOpacity(0.5),
-              child: const Text(
-                '',
-                style: TextStyle(fontSize: 10, color: Colors.black),
-              ),
+              backgroundColor: (templeState.selectTempleName == templeDataList[i].name &&
+                      templeState.selectTempleLat == templeDataList[i].latitude &&
+                      templeState.selectTempleLng == templeDataList[i].longitude)
+                  ? Colors.redAccent.withOpacity(0.5)
+                  : Colors.pinkAccent.withOpacity(0.5),
+              child: const Text('', style: TextStyle(fontSize: 10, color: Colors.black)),
             ),
           ),
         ),
