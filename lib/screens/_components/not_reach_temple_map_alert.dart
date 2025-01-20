@@ -21,6 +21,7 @@ import '../../models/temple_model.dart';
 import '../../models/tokyo_station_model.dart';
 import '../../models/tokyo_train_model.dart';
 import '../../utility/tile_provider.dart';
+import '../_parts/not_reach_temple_train_select_parts.dart';
 import '../_parts/temple_info_display_parts.dart';
 import '../_parts/temple_overlay.dart';
 
@@ -66,7 +67,9 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
 
   List<Marker> markerList = <Marker>[];
 
-  final List<OverlayEntry> _bigEntries = <OverlayEntry>[];
+  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
+
+  final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
 
   ///
   @override
@@ -119,6 +122,45 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
               // ignore: always_specify_types
               PolylineLayer(polylines: polylineList),
             ],
+          ),
+          Positioned(
+            top: 5,
+            right: 5,
+            left: 5,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(),
+                Container(
+                  decoration:
+                      BoxDecoration(color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
+                  child: IconButton(
+                    onPressed: () {
+                      ref.read(appParamProvider.notifier).setSecondOverlayParams(secondEntries: _secondEntries);
+
+                      addSecondOverlay(
+                        context: context,
+                        secondEntries: _secondEntries,
+                        setStateCallback: setState,
+                        width: context.screenSize.width,
+                        height: context.screenSize.height * 0.3,
+                        color: Colors.blueGrey.withOpacity(0.3),
+                        initialPosition: Offset(0, context.screenSize.height * 0.7),
+                        widget: Consumer(
+                          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                            return notReachTempleTrainSelectParts(
+                                context: context, ref: ref, tokyoTrainList: widget.tokyoTrainList);
+                          },
+                        ),
+                        onPositionChanged: (Offset newPos) =>
+                            ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                      );
+                    },
+                    icon: const Icon(Icons.info),
+                  ),
+                ),
+              ],
+            ),
           ),
           if (isLoading) ...<Widget>[const Center(child: CircularProgressIndicator())],
         ],
@@ -257,10 +299,7 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
     for (int i = 0; i < templeDataList.length; i++) {
       markerList.add(
         Marker(
-          point: LatLng(
-            templeDataList[i].latitude.toDouble(),
-            templeDataList[i].longitude.toDouble(),
-          ),
+          point: LatLng(templeDataList[i].latitude.toDouble(), templeDataList[i].longitude.toDouble()),
           width: 40,
           height: 40,
           child: GestureDetector(
@@ -268,12 +307,14 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
               ref.read(templeProvider.notifier).setSelectTemple(
                   name: templeDataList[i].name, lat: templeDataList[i].latitude, lng: templeDataList[i].longitude);
 
-              addBigOverlay(
+              ref.read(appParamProvider.notifier).setFirstOverlayParams(firstEntries: _firstEntries);
+
+              addFirstOverlay(
                 context: context,
-                bigEntries: _bigEntries,
+                firstEntries: _firstEntries,
                 setStateCallback: setState,
                 width: context.screenSize.width * 0.5,
-                height: 180,
+                height: 300,
                 color: Colors.blueGrey.withOpacity(0.3),
                 initialPosition: initialPosition,
                 widget: Consumer(
@@ -288,6 +329,7 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
                       dateTempleMap: widget.dateTempleMap,
                       tokyoTrainList: widget.tokyoTrainList,
                       appParamState: appParamState,
+                      ref: ref,
                     );
                   },
                 ),
@@ -415,7 +457,9 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
 //       backgroundColor: Colors.transparent,
 //       body: Column(
 //         children: <Widget>[
+
 //           const SizedBox(height: 10),
+
 //           Container(
 //             padding: const EdgeInsets.symmetric(horizontal: 20),
 //             child: Row(
@@ -441,6 +485,7 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
 //               ],
 //             ),
 //           ),
+
 //           Expanded(
 //             child: FutureBuilder<void>(
 //               future: _loadMapTiles(),
@@ -481,6 +526,7 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
 //               },
 //             ),
 //           ),
+
 //           Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: <Widget>[
@@ -503,6 +549,7 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
 //               Container(),
 //             ],
 //           ),
+
 //         ],
 //       ),
 //     );

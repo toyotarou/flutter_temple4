@@ -40,7 +40,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
 
   List<Marker> markerList = <Marker>[];
 
-  final List<OverlayEntry> _bigEntries = <OverlayEntry>[];
+  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
 
   final MapController mapController = MapController();
 
@@ -213,12 +213,12 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                           lng: templeDataList[i].longitude,
                         );
 
-                    addBigOverlay(
+                    addFirstOverlay(
                       context: context,
-                      bigEntries: _bigEntries,
+                      firstEntries: _firstEntries,
                       setStateCallback: setState,
                       width: context.screenSize.width * 0.5,
-                      height: 180,
+                      height: 300,
                       color: Colors.blueGrey.withOpacity(0.3),
                       initialPosition: initialPosition,
                       widget: Consumer(
@@ -234,6 +234,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                             // ignore: prefer_const_literals_to_create_immutables
                             tokyoTrainList: <TokyoTrainModel>[],
                             appParamState: appParamState,
+                            ref: ref,
                           );
                         },
                       ),

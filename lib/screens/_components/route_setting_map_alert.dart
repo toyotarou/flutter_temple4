@@ -57,7 +57,7 @@ class _RouteSettingMapAlertState extends ConsumerState<RouteSettingMapAlert> {
 
   List<Marker> markerList = <Marker>[];
 
-  final List<OverlayEntry> _bigEntries = <OverlayEntry>[];
+  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
 
   final MapController mapController = MapController();
 
@@ -272,12 +272,12 @@ class _RouteSettingMapAlertState extends ConsumerState<RouteSettingMapAlert> {
                             lng: templeDataList[i].longitude,
                           );
 
-                      addBigOverlay(
+                      addFirstOverlay(
                         context: context,
-                        bigEntries: _bigEntries,
+                        firstEntries: _firstEntries,
                         setStateCallback: setState,
                         width: context.screenSize.width * 0.5,
-                        height: 180,
+                        height: 300,
                         color: Colors.blueGrey.withOpacity(0.3),
                         initialPosition: initialPosition,
                         widget: Consumer(
@@ -293,6 +293,7 @@ class _RouteSettingMapAlertState extends ConsumerState<RouteSettingMapAlert> {
                               dateTempleMap: widget.dateTempleMap,
                               tokyoTrainList: widget.tokyoTrainList,
                               appParamState: appParamState,
+                              ref: ref,
                             );
                           },
                         ),

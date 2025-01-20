@@ -33,12 +33,10 @@ class RouteTrainStationListAlert extends ConsumerStatefulWidget {
   final Map<int, TokyoTrainModel> tokyoTrainIdMap;
 
   @override
-  ConsumerState<RouteTrainStationListAlert> createState() =>
-      _TempleTrainListAlertState();
+  ConsumerState<RouteTrainStationListAlert> createState() => _TempleTrainListAlertState();
 }
 
-class _TempleTrainListAlertState
-    extends ConsumerState<RouteTrainStationListAlert> {
+class _TempleTrainListAlertState extends ConsumerState<RouteTrainStationListAlert> {
   int reachTempleNum = 0;
 
   ///
@@ -66,12 +64,10 @@ class _TempleTrainListAlertState
 
   ///
   Widget displayTempleTrainStationListButton() {
-    final String startStationId = ref.watch(
-        routingProvider.select((RoutingState value) => value.startStationId));
+    final String startStationId = ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
 
-    final List<LatLngTempleModel> latLngTempleList = ref.watch(
-        latLngTempleProvider
-            .select((LatLngTempleState value) => value.latLngTempleList));
+    final List<LatLngTempleModel> latLngTempleList =
+        ref.watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList));
 
     return IconButton(
       onPressed: (startStationId == '')
@@ -87,13 +83,9 @@ class _TempleTrainListAlertState
 
               ref.read(routingProvider.notifier).setGoalStationId(id: '');
 
-              ref
-                  .read(latLngTempleProvider.notifier)
-                  .clearSelectedNearStation();
+              ref.read(latLngTempleProvider.notifier).clearSelectedNearStation();
 
-              ref
-                  .read(templeProvider.notifier)
-                  .setSelectTemple(name: '', lat: '', lng: '');
+              ref.read(templeProvider.notifier).setSelectTemple(name: '', lat: '', lng: '');
 
               ref.read(tokyoTrainProvider.notifier).clearTrainList();
 
@@ -110,6 +102,8 @@ class _TempleTrainListAlertState
                   dateTempleMap: widget.dateTempleMap,
                   tokyoTrainIdMap: widget.tokyoTrainIdMap,
                 ),
+                executeFunctionWhenDialogClose: true,
+                ref: ref,
               );
             },
       icon: Icon(
@@ -123,12 +117,10 @@ class _TempleTrainListAlertState
 
   ///
   Widget displaySelectedStation() {
-    final String startStationId = ref.watch(
-        routingProvider.select((RoutingState value) => value.startStationId));
+    final String startStationId = ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
 
-    final List<LatLngTempleModel> latLngTempleList = ref.watch(
-        latLngTempleProvider
-            .select((LatLngTempleState value) => value.latLngTempleList));
+    final List<LatLngTempleModel> latLngTempleList =
+        ref.watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList));
 
     getReachTempleNum();
 
@@ -164,11 +156,9 @@ class _TempleTrainListAlertState
   Widget displayTokyoTrainList() {
     final List<Widget> list = <Widget>[];
 
-    final String startStationId = ref.watch(
-        routingProvider.select((RoutingState value) => value.startStationId));
+    final String startStationId = ref.watch(routingProvider.select((RoutingState value) => value.startStationId));
 
-    final AsyncValue<NotReachStationLineCountState>
-        notReachStationLineCountState =
+    final AsyncValue<NotReachStationLineCountState> notReachStationLineCountState =
         ref.watch(notReachStationLineCountProvider);
 
     final Map<String, NotReachLineCountModel>? notReachLineCountMap =
@@ -197,13 +187,10 @@ class _TempleTrainListAlertState
                 ),
                 if (notReachLineCountMap != null) ...<Widget>[
                   Text(
-                    (notReachLineCountMap[element.trainName]?.count ?? 0)
-                        .toString(),
+                    (notReachLineCountMap[element.trainName]?.count ?? 0).toString(),
                     style: TextStyle(
                       fontSize: 12,
-                      color: (notReachLineCountMap[element.trainName] != null)
-                          ? Colors.white
-                          : Colors.transparent,
+                      color: (notReachLineCountMap[element.trainName] != null) ? Colors.white : Colors.transparent,
                     ),
                   ),
                 ],
@@ -221,9 +208,7 @@ class _TempleTrainListAlertState
               ),
               child: DefaultTextStyle(
                 style: TextStyle(
-                  color: (e2.id == startStationId)
-                      ? Colors.yellowAccent
-                      : Colors.white,
+                  color: (e2.id == startStationId) ? Colors.yellowAccent : Colors.white,
                   fontSize: 12,
                 ),
                 child: Row(
@@ -234,31 +219,20 @@ class _TempleTrainListAlertState
                       children: <Widget>[
                         if (notReachStationCountMap != null) ...<Widget>[
                           Text(
-                            (notReachStationCountMap[e2.stationName]?.count ??
-                                    0)
-                                .toString(),
+                            (notReachStationCountMap[e2.stationName]?.count ?? 0).toString(),
                             style: TextStyle(
-                              color: (notReachStationCountMap[e2.stationName] !=
-                                      null)
-                                  ? Colors.white
-                                  : Colors.transparent,
+                              color:
+                                  (notReachStationCountMap[e2.stationName] != null) ? Colors.white : Colors.transparent,
                             ),
                           ),
                         ],
                         GestureDetector(
                           onTap: () async {
-                            ref
-                                .read(latLngTempleProvider.notifier)
-                                .setParamLatLng(
-                                    latitude: e2.lat, longitude: e2.lng);
+                            ref.read(latLngTempleProvider.notifier).setParamLatLng(latitude: e2.lat, longitude: e2.lng);
 
-                            await ref
-                                .read(latLngTempleProvider.notifier)
-                                .getLatLngTemple();
+                            await ref.read(latLngTempleProvider.notifier).getLatLngTemple();
 
-                            ref
-                                .read(routingProvider.notifier)
-                                .setStartStationId(id: e2.id);
+                            ref.read(routingProvider.notifier).setStartStationId(id: e2.id);
                           },
                           child: Icon(
                             Icons.location_on,
@@ -295,8 +269,7 @@ class _TempleTrainListAlertState
     reachTempleNum = 0;
 
     ref
-        .watch(latLngTempleProvider
-            .select((LatLngTempleState value) => value.latLngTempleList))
+        .watch(latLngTempleProvider.select((LatLngTempleState value) => value.latLngTempleList))
         .forEach((LatLngTempleModel element) {
       if (element.cnt > 0) {
         reachTempleNum++;

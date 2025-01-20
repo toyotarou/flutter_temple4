@@ -16,22 +16,13 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$AppParamsResponseState {
-// DateTime? calendarSelectedDate,
-// GeolocModel? selectedTimeGeoloc,
-// @Default(true) bool isMarkerShow,
-// @Default('') String selectedHour,
   double get currentZoom => throw _privateConstructorUsedError;
-  int get currentPaddingIndex =>
-      throw _privateConstructorUsedError; // LatLng? currentCenter,
-// @Default(false) bool isTempleCircleShow,
-// GeolocModel? polylineGeolocModel,
-// TempleInfoModel? selectedTemple,
-// @Default(-1) int timeGeolocDisplayStart,
-// @Default(-1) int timeGeolocDisplayEnd,
-  List<OverlayEntry>? get bigEntries => throw _privateConstructorUsedError;
-  void Function(void Function())? get setStateCallback =>
-      throw _privateConstructorUsedError;
+  int get currentPaddingIndex => throw _privateConstructorUsedError;
   Offset? get overlayPosition => throw _privateConstructorUsedError;
+
+  ///
+  List<OverlayEntry>? get firstEntries => throw _privateConstructorUsedError;
+  List<OverlayEntry>? get secondEntries => throw _privateConstructorUsedError;
 
   /// Create a copy of AppParamsResponseState
   /// with the given fields replaced by the non-null parameter values.
@@ -49,9 +40,9 @@ abstract class $AppParamsResponseStateCopyWith<$Res> {
   $Res call(
       {double currentZoom,
       int currentPaddingIndex,
-      List<OverlayEntry>? bigEntries,
-      void Function(void Function())? setStateCallback,
-      Offset? overlayPosition});
+      Offset? overlayPosition,
+      List<OverlayEntry>? firstEntries,
+      List<OverlayEntry>? secondEntries});
 }
 
 /// @nodoc
@@ -72,9 +63,9 @@ class _$AppParamsResponseStateCopyWithImpl<$Res,
   $Res call({
     Object? currentZoom = null,
     Object? currentPaddingIndex = null,
-    Object? bigEntries = freezed,
-    Object? setStateCallback = freezed,
     Object? overlayPosition = freezed,
+    Object? firstEntries = freezed,
+    Object? secondEntries = freezed,
   }) {
     return _then(_value.copyWith(
       currentZoom: null == currentZoom
@@ -85,18 +76,18 @@ class _$AppParamsResponseStateCopyWithImpl<$Res,
           ? _value.currentPaddingIndex
           : currentPaddingIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      bigEntries: freezed == bigEntries
-          ? _value.bigEntries
-          : bigEntries // ignore: cast_nullable_to_non_nullable
-              as List<OverlayEntry>?,
-      setStateCallback: freezed == setStateCallback
-          ? _value.setStateCallback
-          : setStateCallback // ignore: cast_nullable_to_non_nullable
-              as void Function(void Function())?,
       overlayPosition: freezed == overlayPosition
           ? _value.overlayPosition
           : overlayPosition // ignore: cast_nullable_to_non_nullable
               as Offset?,
+      firstEntries: freezed == firstEntries
+          ? _value.firstEntries
+          : firstEntries // ignore: cast_nullable_to_non_nullable
+              as List<OverlayEntry>?,
+      secondEntries: freezed == secondEntries
+          ? _value.secondEntries
+          : secondEntries // ignore: cast_nullable_to_non_nullable
+              as List<OverlayEntry>?,
     ) as $Val);
   }
 }
@@ -113,9 +104,9 @@ abstract class _$$AppParamsResponseStateImplCopyWith<$Res>
   $Res call(
       {double currentZoom,
       int currentPaddingIndex,
-      List<OverlayEntry>? bigEntries,
-      void Function(void Function())? setStateCallback,
-      Offset? overlayPosition});
+      Offset? overlayPosition,
+      List<OverlayEntry>? firstEntries,
+      List<OverlayEntry>? secondEntries});
 }
 
 /// @nodoc
@@ -135,9 +126,9 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
   $Res call({
     Object? currentZoom = null,
     Object? currentPaddingIndex = null,
-    Object? bigEntries = freezed,
-    Object? setStateCallback = freezed,
     Object? overlayPosition = freezed,
+    Object? firstEntries = freezed,
+    Object? secondEntries = freezed,
   }) {
     return _then(_$AppParamsResponseStateImpl(
       currentZoom: null == currentZoom
@@ -148,18 +139,18 @@ class __$$AppParamsResponseStateImplCopyWithImpl<$Res>
           ? _value.currentPaddingIndex
           : currentPaddingIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      bigEntries: freezed == bigEntries
-          ? _value._bigEntries
-          : bigEntries // ignore: cast_nullable_to_non_nullable
-              as List<OverlayEntry>?,
-      setStateCallback: freezed == setStateCallback
-          ? _value.setStateCallback
-          : setStateCallback // ignore: cast_nullable_to_non_nullable
-              as void Function(void Function())?,
       overlayPosition: freezed == overlayPosition
           ? _value.overlayPosition
           : overlayPosition // ignore: cast_nullable_to_non_nullable
               as Offset?,
+      firstEntries: freezed == firstEntries
+          ? _value._firstEntries
+          : firstEntries // ignore: cast_nullable_to_non_nullable
+              as List<OverlayEntry>?,
+      secondEntries: freezed == secondEntries
+          ? _value._secondEntries
+          : secondEntries // ignore: cast_nullable_to_non_nullable
+              as List<OverlayEntry>?,
     ));
   }
 }
@@ -170,51 +161,47 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
   const _$AppParamsResponseStateImpl(
       {this.currentZoom = 0,
       this.currentPaddingIndex = 5,
-      final List<OverlayEntry>? bigEntries,
-      this.setStateCallback,
-      this.overlayPosition})
-      : _bigEntries = bigEntries;
+      this.overlayPosition,
+      final List<OverlayEntry>? firstEntries,
+      final List<OverlayEntry>? secondEntries})
+      : _firstEntries = firstEntries,
+        _secondEntries = secondEntries;
 
-// DateTime? calendarSelectedDate,
-// GeolocModel? selectedTimeGeoloc,
-// @Default(true) bool isMarkerShow,
-// @Default('') String selectedHour,
   @override
   @JsonKey()
   final double currentZoom;
   @override
   @JsonKey()
   final int currentPaddingIndex;
-// LatLng? currentCenter,
-// @Default(false) bool isTempleCircleShow,
-// GeolocModel? polylineGeolocModel,
-// TempleInfoModel? selectedTemple,
-// @Default(-1) int timeGeolocDisplayStart,
-// @Default(-1) int timeGeolocDisplayEnd,
-  final List<OverlayEntry>? _bigEntries;
-// LatLng? currentCenter,
-// @Default(false) bool isTempleCircleShow,
-// GeolocModel? polylineGeolocModel,
-// TempleInfoModel? selectedTemple,
-// @Default(-1) int timeGeolocDisplayStart,
-// @Default(-1) int timeGeolocDisplayEnd,
   @override
-  List<OverlayEntry>? get bigEntries {
-    final value = _bigEntries;
+  final Offset? overlayPosition;
+
+  ///
+  final List<OverlayEntry>? _firstEntries;
+
+  ///
+  @override
+  List<OverlayEntry>? get firstEntries {
+    final value = _firstEntries;
     if (value == null) return null;
-    if (_bigEntries is EqualUnmodifiableListView) return _bigEntries;
+    if (_firstEntries is EqualUnmodifiableListView) return _firstEntries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<OverlayEntry>? _secondEntries;
+  @override
+  List<OverlayEntry>? get secondEntries {
+    final value = _secondEntries;
+    if (value == null) return null;
+    if (_secondEntries is EqualUnmodifiableListView) return _secondEntries;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
   @override
-  final void Function(void Function())? setStateCallback;
-  @override
-  final Offset? overlayPosition;
-
-  @override
   String toString() {
-    return 'AppParamsResponseState(currentZoom: $currentZoom, currentPaddingIndex: $currentPaddingIndex, bigEntries: $bigEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition)';
+    return 'AppParamsResponseState(currentZoom: $currentZoom, currentPaddingIndex: $currentPaddingIndex, overlayPosition: $overlayPosition, firstEntries: $firstEntries, secondEntries: $secondEntries)';
   }
 
   @override
@@ -226,12 +213,12 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
                 other.currentZoom == currentZoom) &&
             (identical(other.currentPaddingIndex, currentPaddingIndex) ||
                 other.currentPaddingIndex == currentPaddingIndex) &&
-            const DeepCollectionEquality()
-                .equals(other._bigEntries, _bigEntries) &&
-            (identical(other.setStateCallback, setStateCallback) ||
-                other.setStateCallback == setStateCallback) &&
             (identical(other.overlayPosition, overlayPosition) ||
-                other.overlayPosition == overlayPosition));
+                other.overlayPosition == overlayPosition) &&
+            const DeepCollectionEquality()
+                .equals(other._firstEntries, _firstEntries) &&
+            const DeepCollectionEquality()
+                .equals(other._secondEntries, _secondEntries));
   }
 
   @override
@@ -239,9 +226,9 @@ class _$AppParamsResponseStateImpl implements _AppParamsResponseState {
       runtimeType,
       currentZoom,
       currentPaddingIndex,
-      const DeepCollectionEquality().hash(_bigEntries),
-      setStateCallback,
-      overlayPosition);
+      overlayPosition,
+      const DeepCollectionEquality().hash(_firstEntries),
+      const DeepCollectionEquality().hash(_secondEntries));
 
   /// Create a copy of AppParamsResponseState
   /// with the given fields replaced by the non-null parameter values.
@@ -257,29 +244,22 @@ abstract class _AppParamsResponseState implements AppParamsResponseState {
   const factory _AppParamsResponseState(
       {final double currentZoom,
       final int currentPaddingIndex,
-      final List<OverlayEntry>? bigEntries,
-      final void Function(void Function())? setStateCallback,
-      final Offset? overlayPosition}) = _$AppParamsResponseStateImpl;
+      final Offset? overlayPosition,
+      final List<OverlayEntry>? firstEntries,
+      final List<OverlayEntry>? secondEntries}) = _$AppParamsResponseStateImpl;
 
-// DateTime? calendarSelectedDate,
-// GeolocModel? selectedTimeGeoloc,
-// @Default(true) bool isMarkerShow,
-// @Default('') String selectedHour,
   @override
   double get currentZoom;
   @override
-  int get currentPaddingIndex; // LatLng? currentCenter,
-// @Default(false) bool isTempleCircleShow,
-// GeolocModel? polylineGeolocModel,
-// TempleInfoModel? selectedTemple,
-// @Default(-1) int timeGeolocDisplayStart,
-// @Default(-1) int timeGeolocDisplayEnd,
-  @override
-  List<OverlayEntry>? get bigEntries;
-  @override
-  void Function(void Function())? get setStateCallback;
+  int get currentPaddingIndex;
   @override
   Offset? get overlayPosition;
+
+  ///
+  @override
+  List<OverlayEntry>? get firstEntries;
+  @override
+  List<OverlayEntry>? get secondEntries;
 
   /// Create a copy of AppParamsResponseState
   /// with the given fields replaced by the non-null parameter values.

@@ -8,8 +8,10 @@ class AppParamsResponseState with _$AppParamsResponseState {
   const factory AppParamsResponseState({
     @Default(0) double currentZoom,
     @Default(5) int currentPaddingIndex,
-    List<OverlayEntry>? bigEntries,
-    void Function(VoidCallback fn)? setStateCallback,
     Offset? overlayPosition,
+
+    ///
+    List<OverlayEntry>? firstEntries,
+    List<OverlayEntry>? secondEntries,
   }) = _AppParamsResponseState;
 }

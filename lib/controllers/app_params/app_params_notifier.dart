@@ -16,12 +16,12 @@ class AppParamNotifier extends StateNotifier<AppParamsResponseState> {
   void setCurrentZoom({required double zoom}) => state = state.copyWith(currentZoom: zoom);
 
   ///
-  void setTempleGeolocTimeCircleAvatarParams({
-    required List<OverlayEntry>? bigEntries,
-    required void Function(VoidCallback fn)? setStateCallback,
-  }) {
-    state = state.copyWith(bigEntries: bigEntries, setStateCallback: setStateCallback);
-  }
+  void setFirstOverlayParams({required List<OverlayEntry>? firstEntries}) =>
+      state = state.copyWith(firstEntries: firstEntries);
+
+  ///
+  void setSecondOverlayParams({required List<OverlayEntry>? secondEntries}) =>
+      state = state.copyWith(secondEntries: secondEntries);
 
   ///
   void updateOverlayPosition(Offset newPos) => state = state.copyWith(overlayPosition: newPos);

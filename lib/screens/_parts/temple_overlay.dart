@@ -107,9 +107,10 @@ OverlayEntry createDraggableOverlayEntry({
 
 //=======================================================//
 
-void addBigOverlay({
+///
+void addFirstOverlay({
   required BuildContext context,
-  required List<OverlayEntry> bigEntries,
+  required List<OverlayEntry> firstEntries,
   required void Function(VoidCallback fn) setStateCallback,
   required double width,
   required double height,
@@ -118,11 +119,11 @@ void addBigOverlay({
   required Widget widget,
   required ValueChanged<Offset> onPositionChanged,
 }) {
-  if (bigEntries.isNotEmpty) {
-    for (final OverlayEntry e in bigEntries) {
+  if (firstEntries.isNotEmpty) {
+    for (final OverlayEntry e in firstEntries) {
       e.remove();
     }
-    setStateCallback(() => bigEntries.clear());
+    setStateCallback(() => firstEntries.clear());
   }
 
   late OverlayEntry entry;
@@ -134,26 +135,71 @@ void addBigOverlay({
     color: color,
     onRemove: () {
       entry.remove();
-      setStateCallback(() => bigEntries.remove(entry));
+      setStateCallback(() => firstEntries.remove(entry));
     },
     widget: widget,
     onPositionChanged: (Offset newOffset) => onPositionChanged(newOffset),
   );
 
-  setStateCallback(() => bigEntries.add(entry));
+  setStateCallback(() => firstEntries.add(entry));
+  Overlay.of(context).insert(entry);
+}
+
+///
+void addSecondOverlay({
+  required BuildContext context,
+  required List<OverlayEntry> secondEntries,
+  required void Function(VoidCallback fn) setStateCallback,
+  required double width,
+  required double height,
+  required Color color,
+  required Offset initialPosition,
+  required Widget widget,
+  required ValueChanged<Offset> onPositionChanged,
+}) {
+  if (secondEntries.isNotEmpty) {
+    for (final OverlayEntry e in secondEntries) {
+      e.remove();
+    }
+    setStateCallback(() => secondEntries.clear());
+  }
+
+  late OverlayEntry entry;
+  entry = createDraggableOverlayEntry(
+    context: context,
+    initialOffset: initialPosition,
+    width: width,
+    height: height,
+    color: color,
+    onRemove: () {
+      entry.remove();
+      setStateCallback(() => secondEntries.remove(entry));
+    },
+    widget: widget,
+    onPositionChanged: (Offset newOffset) => onPositionChanged(newOffset),
+  );
+
+  setStateCallback(() => secondEntries.add(entry));
   Overlay.of(context).insert(entry);
 }
 
 ///
 void closeAllOverlays({required WidgetRef ref}) {
-  final List<OverlayEntry>? bigEntries =
-      ref.watch(appParamProvider.select((AppParamsResponseState value) => value.bigEntries));
-  final void Function(void Function())? setStateCallback =
-      ref.watch(appParamProvider.select((AppParamsResponseState value) => value.setStateCallback));
+  final List<OverlayEntry>? firstEntries =
+      ref.watch(appParamProvider.select((AppParamsResponseState value) => value.firstEntries));
 
-  if (bigEntries != null && setStateCallback != null) {
-    for (final OverlayEntry e in bigEntries) {
+  if (firstEntries != null) {
+    for (final OverlayEntry e in firstEntries) {
       e.remove();
+    }
+  }
+
+  final List<OverlayEntry>? secondEntries =
+      ref.watch(appParamProvider.select((AppParamsResponseState value) => value.secondEntries));
+
+  if (secondEntries != null) {
+    for (final OverlayEntry e2 in secondEntries) {
+      e2.remove();
     }
   }
 }

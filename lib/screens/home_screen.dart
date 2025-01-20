@@ -198,6 +198,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     dateTempleMap: dateTempleMap,
                   ),
                   clearBarrierColor: true,
+                  executeFunctionWhenDialogClose: true,
+                  ref: ref,
                 );
               },
               icon: const Icon(Icons.map, color: Colors.white),
@@ -252,6 +254,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       templeVisitDateMap: templeVisitDateMap,
                       dateTempleMap: dateTempleMap,
                     ),
+                    executeFunctionWhenDialogClose: true,
+                    ref: ref,
                   );
                 },
                 icon: const Icon(FontAwesomeIcons.toriiGate, color: Colors.white),
