@@ -57,8 +57,6 @@ class _RouteSettingMapAlertState extends ConsumerState<RouteSettingMapAlert> {
 
   List<Marker> markerList = <Marker>[];
 
-  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
-
   final MapController mapController = MapController();
 
   double currentZoomEightTeen = 18;
@@ -68,6 +66,10 @@ class _RouteSettingMapAlertState extends ConsumerState<RouteSettingMapAlert> {
   double? currentZoom;
 
   bool getBoundsZoomValue = false;
+
+  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
+
+  final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
 
   ///
   @override
@@ -299,6 +301,7 @@ class _RouteSettingMapAlertState extends ConsumerState<RouteSettingMapAlert> {
                         ),
                         onPositionChanged: (Offset newPos) =>
                             ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                        secondEntries: _secondEntries,
                       );
                     }
                   },

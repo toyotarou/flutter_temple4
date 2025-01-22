@@ -111,6 +111,7 @@ OverlayEntry createDraggableOverlayEntry({
 void addFirstOverlay({
   required BuildContext context,
   required List<OverlayEntry> firstEntries,
+  required List<OverlayEntry> secondEntries,
   required void Function(VoidCallback fn) setStateCallback,
   required double width,
   required double height,
@@ -138,12 +139,21 @@ void addFirstOverlay({
       setStateCallback(() => firstEntries.remove(entry));
     },
     widget: widget,
-    onPositionChanged: (Offset newOffset) => onPositionChanged(newOffset),
+    onPositionChanged: onPositionChanged,
   );
 
   setStateCallback(() => firstEntries.add(entry));
-  Overlay.of(context).insert(entry);
+
+  final OverlayState overlayState = Overlay.of(context);
+
+  if (secondEntries.isNotEmpty) {
+    overlayState.insert(entry, above: secondEntries.last);
+  } else {
+    overlayState.insert(entry);
+  }
 }
+
+//=======================================================//
 
 ///
 void addSecondOverlay({
@@ -176,7 +186,7 @@ void addSecondOverlay({
       setStateCallback(() => secondEntries.remove(entry));
     },
     widget: widget,
-    onPositionChanged: (Offset newOffset) => onPositionChanged(newOffset),
+    onPositionChanged: onPositionChanged,
   );
 
   setStateCallback(() => secondEntries.add(entry));

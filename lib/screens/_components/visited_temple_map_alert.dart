@@ -40,8 +40,6 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
 
   List<Marker> markerList = <Marker>[];
 
-  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
-
   final MapController mapController = MapController();
 
   double currentZoomEightTeen = 18;
@@ -51,6 +49,10 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
   double? currentZoom;
 
   bool getBoundsZoomValue = false;
+
+  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
+
+  final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
 
   ///
   @override
@@ -240,6 +242,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                       ),
                       onPositionChanged: (Offset newPos) =>
                           ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                      secondEntries: _secondEntries,
                     );
                   },
             child: CircleAvatar(
