@@ -156,7 +156,7 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
                             ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
                       );
                     },
-                    icon: const Icon(Icons.info),
+                    icon: const Icon(Icons.train, color: Colors.white),
                   ),
                 ),
               ],

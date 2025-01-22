@@ -23,8 +23,8 @@ Widget notReachTempleTrainSelectParts(
             value: tokyoTrainState.selectTrainList.contains(element.trainNumber),
             onChanged: (bool? value) {
               if (!tokyoTrainState.selectTrainList.contains(element.trainNumber)) {
-                if (tokyoTrainState.selectTrainList.length >= 3) {
-                  caution_dialog(context: context, content: 'cant add train');
+                if (tokyoTrainState.selectTrainList.isNotEmpty) {
+                  caution_dialog(context: context, content: 'cant select train');
 
                   return;
                 }
