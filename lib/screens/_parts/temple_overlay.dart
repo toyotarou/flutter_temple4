@@ -30,6 +30,7 @@ OverlayEntry createDraggableOverlayEntry({
   required VoidCallback onRemove,
   required Widget widget,
   required ValueChanged<Offset> onPositionChanged,
+  bool? fixedFlag,
 }) {
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -55,26 +56,34 @@ OverlayEntry createDraggableOverlayEntry({
                   height: 40,
                   width: double.infinity,
                   child: Listener(
-                    onPointerMove: (PointerMoveEvent event) {
-                      if (event.buttons == 1) {
-                        item.position += event.delta;
+                    // ignore: use_if_null_to_convert_nulls_to_bools
+                    onPointerMove: (fixedFlag == true)
+                        ? null
+                        : (PointerMoveEvent event) {
+                            if (event.buttons == 1) {
+                              item.position += event.delta;
 
-                        final double maxX = screenSize.width - item.width;
-                        final double maxY = screenSize.height - item.height;
-                        final num clampedX = item.position.dx.clamp(0, maxX);
-                        final num clampedY = item.position.dy.clamp(0, maxY);
+                              final double maxX = screenSize.width - item.width;
+                              final double maxY = screenSize.height - item.height;
+                              final num clampedX = item.position.dx.clamp(0, maxX);
+                              final num clampedY = item.position.dy.clamp(0, maxY);
 
-                        item.position = Offset(double.parse(clampedX.toString()), double.parse(clampedY.toString()));
+                              item.position =
+                                  Offset(double.parse(clampedX.toString()), double.parse(clampedY.toString()));
 
-                        onPositionChanged(item.position);
+                              onPositionChanged(item.position);
 
-                        item.entry.markNeedsBuild();
-                      }
-                    },
+                              item.entry.markNeedsBuild();
+                            }
+                          },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Icon(Icons.drag_indicator, color: Colors.white),
+                        // ignore: use_if_null_to_convert_nulls_to_bools
+                        if (fixedFlag == true)
+                          const Icon(Icons.check_box_outline_blank, color: Colors.transparent)
+                        else
+                          const Icon(Icons.drag_indicator, color: Colors.white),
                         const Expanded(child: Text('')),
                         IconButton(onPressed: onRemove, icon: const Icon(Icons.close, color: Colors.white)),
                       ],
@@ -119,6 +128,7 @@ void addFirstOverlay({
   required Offset initialPosition,
   required Widget widget,
   required ValueChanged<Offset> onPositionChanged,
+  bool? fixedFlag,
 }) {
   if (firstEntries.isNotEmpty) {
     for (final OverlayEntry e in firstEntries) {
@@ -140,6 +150,7 @@ void addFirstOverlay({
     },
     widget: widget,
     onPositionChanged: onPositionChanged,
+    fixedFlag: fixedFlag,
   );
 
   setStateCallback(() => firstEntries.add(entry));
@@ -166,6 +177,7 @@ void addSecondOverlay({
   required Offset initialPosition,
   required Widget widget,
   required ValueChanged<Offset> onPositionChanged,
+  bool? fixedFlag,
 }) {
   if (secondEntries.isNotEmpty) {
     for (final OverlayEntry e in secondEntries) {
@@ -187,6 +199,7 @@ void addSecondOverlay({
     },
     widget: widget,
     onPositionChanged: onPositionChanged,
+    fixedFlag: fixedFlag,
   );
 
   setStateCallback(() => secondEntries.add(entry));

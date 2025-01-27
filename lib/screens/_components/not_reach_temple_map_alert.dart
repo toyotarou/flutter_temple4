@@ -149,11 +149,16 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
                         widget: Consumer(
                           builder: (BuildContext context, WidgetRef ref, Widget? child) {
                             return notReachTempleTrainSelectParts(
-                                context: context, ref: ref, tokyoTrainList: widget.tokyoTrainList);
+                              context: context,
+                              ref: ref,
+                              tokyoTrainList: widget.tokyoTrainList,
+                              setDefaultBoundsMap: setDefaultBoundsMap,
+                            );
                           },
                         ),
                         onPositionChanged: (Offset newPos) =>
                             ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                        fixedFlag: true,
                       );
                     },
                     icon: const Icon(Icons.train, color: Colors.white),
@@ -243,6 +248,25 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
     if (templeDataList.length > 1) {
       final int currentPaddingIndex =
           ref.watch(appParamProvider.select((AppParamsResponseState value) => value.currentPaddingIndex));
+
+      final TokyoTrainState tokyoTrainState = ref.watch(tokyoTrainProvider);
+
+      final List<double> stationLatList = <double>[];
+      final List<double> stationLngList = <double>[];
+
+      if (tokyoTrainState.selectTrainList.isNotEmpty) {
+        final TokyoTrainModel? map = widget.tokyoTrainIdMap[tokyoTrainState.selectTrainList[0]];
+
+        map?.station.forEach((TokyoStationModel element) {
+          stationLatList.add(element.lat.toDouble());
+          stationLngList.add(element.lng.toDouble());
+        });
+
+        minLat = stationLatList.reduce(min);
+        maxLat = stationLatList.reduce(max);
+        minLng = stationLngList.reduce(min);
+        maxLng = stationLngList.reduce(max);
+      }
 
       final LatLngBounds bounds = LatLngBounds.fromPoints(<LatLng>[LatLng(minLat, maxLng), LatLng(maxLat, minLng)]);
 
