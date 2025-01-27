@@ -19,18 +19,16 @@ Widget notReachTempleTrainSelectParts(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        SizedBox(
+          height: context.screenSize.height * 0.18,
+          child: displayNotReachTempleTrainSelectList(tokyoTrainList: tokyoTrainList, context: context, ref: ref),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(),
             Row(
               children: <Widget>[
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
-                  onPressed: () => ref.read(tokyoTrainProvider.notifier).clearTrainList(),
-                  child: const Text('clear select'),
-                ),
-                const SizedBox(width: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
                   onPressed: () {
@@ -44,13 +42,21 @@ Widget notReachTempleTrainSelectParts(
                   },
                   child: const Text('map fit'),
                 ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
+                  onPressed: () => ref.read(tokyoTrainProvider.notifier).clearTrainList(),
+                  child: const Text('clear select'),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent.withOpacity(0.2)),
+                  onPressed: () => setDefaultBoundsMap(),
+                  child: const Text('default range'),
+                ),
               ],
             ),
           ],
-        ),
-        SizedBox(
-          height: context.screenSize.height * 0.15,
-          child: displayNotReachTempleTrainSelectList(tokyoTrainList: tokyoTrainList, context: context, ref: ref),
         ),
       ],
     ),
@@ -66,23 +72,29 @@ Widget displayNotReachTempleTrainSelectList(
     child: Column(
       children: tokyoTrainList.map(
         (TokyoTrainModel element) {
-          return CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            activeColor: Colors.greenAccent,
-            controlAffinity: ListTileControlAffinity.leading,
-            value: tokyoTrainState.selectTrainList.contains(element.trainNumber),
-            onChanged: (bool? value) {
-              if (!tokyoTrainState.selectTrainList.contains(element.trainNumber)) {
-                if (tokyoTrainState.selectTrainList.isNotEmpty) {
-                  caution_dialog(context: context, content: 'cant select train');
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Checkbox(
+                activeColor: Colors.greenAccent,
+                value: tokyoTrainState.selectTrainList.contains(element.trainNumber),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: const VisualDensity(vertical: -2),
+                onChanged: (bool? value) {
+                  if (!tokyoTrainState.selectTrainList.contains(element.trainNumber)) {
+                    if (tokyoTrainState.selectTrainList.isNotEmpty) {
+                      caution_dialog(context: context, content: 'cant select train');
 
-                  return;
-                }
-              }
+                      return;
+                    }
+                  }
 
-              ref.read(tokyoTrainProvider.notifier).setTrainList(trainNumber: element.trainNumber);
-            },
-            title: Text(element.trainName, style: const TextStyle(color: Colors.white, fontSize: 12)),
+                  ref.read(tokyoTrainProvider.notifier).setTrainList(trainNumber: element.trainNumber);
+                },
+              ),
+              const SizedBox(width: 4), // 自由にスペースを指定
+              Expanded(child: Text(element.trainName, style: const TextStyle(color: Colors.white, fontSize: 12))),
+            ],
           );
         },
       ).toList(),

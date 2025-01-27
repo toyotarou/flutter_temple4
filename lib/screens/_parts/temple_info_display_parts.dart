@@ -37,18 +37,34 @@ Widget templeInfoDisplayParts({
         Text(temple.latitude),
         Text(temple.longitude),
         const SizedBox(height: 10),
-        displayAddRemoveRoutingButton(from: from, ref: ref, temple: temple, station: station),
-        const SizedBox(height: 10),
-        displayNearStation(from: from, ref: ref, temple: temple),
-        const SizedBox(height: 10),
-        displayTempleVisitDate(from: from, temple: temple, context: context, templeVisitDateMap: templeVisitDateMap),
-        const SizedBox(height: 10),
-        displayVisitedTemplePhoto(
+        if (from == 'NotReachTempleMapAlert') ...<Widget>[
+          ///
+          displayNearStation(from: from, ref: ref, temple: temple),
+          const SizedBox(height: 10),
+        ],
+        if (from == 'LatLngTempleMapAlert') ...<Widget>[
+          ///
+          displayNearStation(from: from, ref: ref, temple: temple),
+          const SizedBox(height: 10),
+
+          ///
+          displayAddRemoveRoutingButton(from: from, ref: ref, temple: temple, station: station),
+          const SizedBox(height: 10),
+        ],
+        if (from == 'VisitedTempleMapAlert') ...<Widget>[
+          ///
+          displayTempleVisitDate(from: from, temple: temple, context: context, templeVisitDateMap: templeVisitDateMap),
+          const SizedBox(height: 10),
+
+          ///
+          displayVisitedTemplePhoto(
             context: context,
             from: from,
             templeVisitDateMap: templeVisitDateMap,
             temple: temple,
-            dateTempleMap: dateTempleMap),
+            dateTempleMap: dateTempleMap,
+          ),
+        ],
       ],
     ),
   );
@@ -56,60 +72,52 @@ Widget templeInfoDisplayParts({
 
 ///
 Widget displayNearStation({required String from, required WidgetRef ref, required TempleData temple}) {
-  if (from == 'LatLngTempleMapAlert' || from == 'NotReachTempleMapAlert') {
-    final NearStationResponseStationModel? selectedNearStation =
-        ref.watch(latLngTempleProvider.select((LatLngTempleState value) => value.selectedNearStation));
-    //===================================//
+  final NearStationResponseStationModel? selectedNearStation =
+      ref.watch(latLngTempleProvider.select((LatLngTempleState value) => value.selectedNearStation));
+  //===================================//
 
-    return ref
-        .watch(
-          nearStationProvider(
-            latitude: temple.latitude,
-            longitude: temple.longitude,
-          ),
-        )
-        .when(
-          data: (NearStationState value) {
-            // ignore: always_specify_types
-            final List<NearStationResponseStationModel> nsList = List.of(value.nearStationList);
+  return ref
+      .watch(
+        nearStationProvider(
+          latitude: temple.latitude,
+          longitude: temple.longitude,
+        ),
+      )
+      .when(
+        data: (NearStationState value) {
+          // ignore: always_specify_types
+          final List<NearStationResponseStationModel> nsList = List.of(value.nearStationList);
 
-            nsList.sort(
-                (NearStationResponseStationModel a, NearStationResponseStationModel b) => a.name.compareTo(b.name));
+          nsList
+              .sort((NearStationResponseStationModel a, NearStationResponseStationModel b) => a.name.compareTo(b.name));
 
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                  children: nsList.map((NearStationResponseStationModel e) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 10, bottom: 5),
-                  child: GestureDetector(
-                    onTap: () => ref.read(latLngTempleProvider.notifier).setSelectedNearStation(station: e),
-                    child: CircleAvatar(
-                      backgroundColor: (selectedNearStation != null && e.name == selectedNearStation.name)
-                          ? Colors.brown.withOpacity(0.8)
-                          : Colors.brown.withOpacity(0.4),
-                      child: Text(e.name, style: const TextStyle(fontSize: 10)),
-                    ),
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                children: nsList.map((NearStationResponseStationModel e) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 10, bottom: 5),
+                child: GestureDetector(
+                  onTap: () => ref.read(latLngTempleProvider.notifier).setSelectedNearStation(station: e),
+                  child: CircleAvatar(
+                    backgroundColor: (selectedNearStation != null && e.name == selectedNearStation.name)
+                        ? Colors.brown.withOpacity(0.8)
+                        : Colors.brown.withOpacity(0.4),
+                    child: Text(e.name, style: const TextStyle(fontSize: 10)),
                   ),
-                );
-              }).toList()),
-            );
-          },
-          error: (Object error, StackTrace stackTrace) => const Center(child: CircularProgressIndicator()),
-          loading: () => const Center(child: CircularProgressIndicator()),
-        );
-  } else {
-    return Container();
-  }
+                ),
+              );
+            }).toList()),
+          );
+        },
+        error: (Object error, StackTrace stackTrace) => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: CircularProgressIndicator()),
+      );
 }
 
 ///
 Widget displayAddRemoveRoutingButton(
     {required String from, required WidgetRef ref, required TempleData temple, TokyoStationModel? station}) {
-  if (from != 'LatLngTempleMapAlert') {
-    return Container();
-  }
-
   final List<TempleData> routingTempleDataList =
       ref.watch(routingProvider.select((RoutingState value) => value.routingTempleDataList));
 
@@ -137,10 +145,6 @@ Widget displayTempleVisitDate(
     required TempleData temple,
     required BuildContext context,
     required Map<String, List<String>> templeVisitDateMap}) {
-  if (from != 'VisitedTempleMapAlert') {
-    return Container();
-  }
-
   return SizedBox(
     height: 80,
     width: double.infinity,
@@ -173,10 +177,6 @@ Widget displayVisitedTemplePhoto(
     required Map<String, List<String>> templeVisitDateMap,
     required TempleData temple,
     required Map<String, TempleModel> dateTempleMap}) {
-  if (from != 'VisitedTempleMapAlert') {
-    return Container();
-  }
-
   return GestureDetector(
     onTap: () {
       TempleDialog(

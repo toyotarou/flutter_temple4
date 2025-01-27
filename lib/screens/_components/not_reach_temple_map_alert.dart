@@ -338,7 +338,7 @@ class _NotReachTempleMapAlertState extends ConsumerState<NotReachTempleMapAlert>
                 firstEntries: _firstEntries,
                 setStateCallback: setState,
                 width: context.screenSize.width * 0.5,
-                height: 300,
+                height: 170,
                 color: Colors.blueGrey.withOpacity(0.3),
                 initialPosition: initialPosition,
                 widget: Consumer(
