@@ -168,23 +168,20 @@ Widget displayTempleVisitDate(
   return SizedBox(
     height: 80,
     width: double.infinity,
-    child: Scrollbar(
-      thumbVisibility: true,
-      child: SingleChildScrollView(
-        child: Wrap(
-          children: templeVisitDateMap[temple.name]!.map((String e) {
-            return Container(
-              width: context.screenSize.width / 5,
-              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-              margin: const EdgeInsets.all(1),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
-              ),
-              child: Text(e, style: const TextStyle(fontSize: 12)),
-            );
-          }).toList(),
-        ),
+    child: SingleChildScrollView(
+      child: Wrap(
+        children: templeVisitDateMap[temple.name]!.map((String e) {
+          return Container(
+            width: context.screenSize.width / 5,
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+            margin: const EdgeInsets.all(1),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white.withOpacity(0.2)),
+            ),
+            child: Text(e, style: const TextStyle(fontSize: 10)),
+          );
+        }).toList(),
       ),
     ),
   );
@@ -197,16 +194,21 @@ Widget displayVisitedTemplePhoto(
     required Map<String, List<String>> templeVisitDateMap,
     required TempleData temple,
     required Map<String, TempleModel> dateTempleMap}) {
-  return GestureDetector(
-    onTap: () {
-      TempleDialog(
-        context: context,
-        widget: VisitedTemplePhotoAlert(
-            templeVisitDateMap: templeVisitDateMap, temple: temple, dateTempleMap: dateTempleMap),
-        paddingTop: context.screenSize.height * 0.1,
-        paddingLeft: context.screenSize.width * 0.2,
-      );
-    },
-    child: const Icon(Icons.photo, color: Colors.white),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      Text((templeVisitDateMap[temple.name] != null) ? templeVisitDateMap[temple.name]!.length.toString() : '0'),
+      GestureDetector(
+        onTap: () {
+          TempleDialog(
+            context: context,
+            widget: VisitedTemplePhotoAlert(
+                templeVisitDateMap: templeVisitDateMap, temple: temple, dateTempleMap: dateTempleMap),
+            paddingTop: context.screenSize.height * 0.5,
+          );
+        },
+        child: const Icon(Icons.photo, color: Colors.white),
+      ),
+    ],
   );
 }

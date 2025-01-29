@@ -220,7 +220,7 @@ class _VisitedTempleMapAlertState extends ConsumerState<VisitedTempleMapAlert> {
                       firstEntries: _firstEntries,
                       setStateCallback: setState,
                       width: context.screenSize.width * 0.5,
-                      height: 300,
+                      height: 250,
                       color: Colors.blueGrey.withOpacity(0.3),
                       initialPosition: initialPosition,
                       widget: Consumer(
