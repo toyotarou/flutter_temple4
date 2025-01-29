@@ -91,23 +91,43 @@ Widget displayNearStation({required String from, required WidgetRef ref, require
           nsList
               .sort((NearStationResponseStationModel a, NearStationResponseStationModel b) => a.name.compareTo(b.name));
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-                children: nsList.map((NearStationResponseStationModel e) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 10, bottom: 5),
-                child: GestureDetector(
-                  onTap: () => ref.read(latLngTempleProvider.notifier).setSelectedNearStation(station: e),
-                  child: CircleAvatar(
-                    backgroundColor: (selectedNearStation != null && e.name == selectedNearStation.name)
-                        ? Colors.brown.withOpacity(0.8)
-                        : Colors.brown.withOpacity(0.4),
-                    child: Text(e.name, style: const TextStyle(fontSize: 10)),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(),
+                  TextButton(
+                    onPressed: () {
+                      ref.read(latLngTempleProvider.notifier).clearSelectedNearStation();
+                    },
+                    child: const Text(
+                      'clear station',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.normal),
+                    ),
                   ),
-                ),
-              );
-            }).toList()),
+                ],
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                    children: nsList.map((NearStationResponseStationModel e) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 10, bottom: 5),
+                    child: GestureDetector(
+                      onTap: () => ref.read(latLngTempleProvider.notifier).setSelectedNearStation(station: e),
+                      child: CircleAvatar(
+                        backgroundColor: (selectedNearStation != null && e.name == selectedNearStation.name)
+                            ? Colors.brown.withOpacity(0.8)
+                            : Colors.brown.withOpacity(0.4),
+                        child: Text(e.name, style: const TextStyle(fontSize: 10)),
+                      ),
+                    ),
+                  );
+                }).toList()),
+              ),
+            ],
           );
         },
         error: (Object error, StackTrace stackTrace) => const Center(child: CircularProgressIndicator()),
